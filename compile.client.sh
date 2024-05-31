@@ -1,6 +1,5 @@
 #!/bin/bash 
 
-
 export LD_LIBRARY_PATH=./MsQuic/bin:$LD_LIBRARY_PATH
 
 if ! g++ ./client/client.cpp -o./build/client \
