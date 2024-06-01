@@ -1,5 +1,4 @@
 #include "QuicServer.h"
-#include <cstdio>
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)

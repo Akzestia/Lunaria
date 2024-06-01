@@ -1,7 +1,4 @@
 #include "QuicClient.h"
-#include <cstdio>
-#include <cstdlib>
-
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
 #endif

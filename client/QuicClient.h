@@ -8,6 +8,8 @@
 #include <iostream>
 #include <mutex>
 #include <sys/stat.h>
+#include <cstdio>
+#include <cstdlib>
 
 class QuicClient {
 public:
