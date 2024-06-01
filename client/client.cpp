@@ -1,6 +1,7 @@
 #include "../Entities/Message.h"
 #include "QuicClient.h"
 #include <cstdio>
+#include "../proto/test.pb.h"
 
 int main() {
 
@@ -12,6 +13,9 @@ int main() {
 
   Message m = Message();
 
+  Person p = Person();
+  p.set_name("Aksestia");
+  std::cout << p.name() << "\n";
   client.send<Message>(m, 0x01);
   
   ch = getchar();

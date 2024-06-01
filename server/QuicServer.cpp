@@ -416,6 +416,16 @@ QuicServer::~QuicServer() {
         this->Host = nullptr;
     }
 
+    if(this->cert != nullptr){
+        delete[] this->cert;
+        this->cert = nullptr;
+    }
+
+    if(this->key != nullptr){
+        delete[] this->key;
+        this->key = nullptr;
+    }
+
     if (this->MsQuic != nullptr) {
         if (this->Configuration != nullptr) {
             this->MsQuic->ConfigurationClose(this->Configuration);
