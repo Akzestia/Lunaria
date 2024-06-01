@@ -2,7 +2,7 @@
 
 export LD_LIBRARY_PATH=./MsQuic/bin:$LD_LIBRARY_PATH
 
-if ! g++ ./client/client.cpp -o./build/client \
+if ! g++ -g ./client/client.cpp -o./build/client \
 	-L./MsQuic/bin -lmsquic \
 	-lstdc++ \
 	./client/QuicClient.cpp; then

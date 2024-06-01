@@ -2,7 +2,7 @@
 
 export LD_LIBRARY_PATH=./MsQuic/bin:$LD_LIBRARY_PATH
 
-if ! g++ ./server/server.cpp -o./build/server \
+if ! g++ -g ./server/server.cpp -o./build/server \
 	-L./MsQuic/bin -lmsquic \
 	-lstdc++ \
 	./server/QuicServer.cpp; then 
