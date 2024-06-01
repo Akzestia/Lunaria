@@ -109,6 +109,7 @@ public:
     );
 
     _IRQL_requires_max_(DISPATCH_LEVEL)
+    ~QuicClient();
         _Function_class_(QUIC_STREAM_CALLBACK)
         QUIC_STATUS
         QUIC_API ClientStreamCallback(
@@ -122,7 +123,6 @@ public:
         _In_opt_ void* Context,
         _Inout_ QUIC_STREAM_EVENT* Event
     );
-
 private:
     QUIC_CREDENTIAL_CONFIG CredConfig;
     uint16_t UdpPort;
@@ -143,5 +143,4 @@ private:
 
     uint8_t DecodeHexChar(_In_ char c);
 
-    ~QuicClient();
 };

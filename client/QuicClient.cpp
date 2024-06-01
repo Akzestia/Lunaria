@@ -139,55 +139,7 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientStreamCallback(
 }
 
 void QuicClient::sendMessage(const Message& message) {
-    HQUIC Stream = NULL;
-    QUIC_BUFFER* SendBuffer;
-
-    std::vector<uint8_t> serializedMessage = message.Serialize();
-
-    SendBuffer = (QUIC_BUFFER*)malloc(sizeof(QUIC_BUFFER));
-    if (SendBuffer == NULL) {
-        printf("SendBuffer allocation failed!\n");
-        Status = QUIC_STATUS_OUT_OF_MEMORY;
-        goto Error;
-    }
-
-    SendBuffer->Buffer = (uint8_t*)malloc(serializedMessage.size());
-    if (SendBuffer->Buffer == NULL) {
-        printf("SendBuffer->Buffer allocation failed!\n");
-        free(SendBuffer);
-        Status = QUIC_STATUS_OUT_OF_MEMORY;
-        goto Error;
-    }
-
-    std::copy(serializedMessage.begin(), serializedMessage.end(), SendBuffer->Buffer);
-    SendBuffer->Length = serializedMessage.size();
-
-    if (QUIC_FAILED(Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE, QuicClient::StaticClientStreamCallback, this, &Stream))) {
-        printf("StreamOpen failed, 0x%x!\n", Status);
-        goto Error;
-    }
-
-    printf("[strm][%p] Starting...\n", Stream);
-
-    if (QUIC_FAILED(Status = MsQuic->StreamStart(Stream, QUIC_STREAM_START_FLAG_NONE))) {
-        printf("StreamStart failed, 0x%x!\n", Status);
-        MsQuic->StreamClose(Stream);
-        goto Error;
-    }
-
-    printf("[strm][%p] Sending data...\n", Stream);
-
-    if (QUIC_FAILED(Status = MsQuic->StreamSend(Stream, SendBuffer, 1, QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("StreamSend failed, 0x%x!\n", Status);
-        free(SendBuffer->Buffer);
-        free(SendBuffer);
-        goto Error;
-    }
-Error:
-
-    if (QUIC_FAILED(Status)) {
-        MsQuic->ConnectionShutdown(Connection, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
-    }
+    
 }
 
 void QuicClient::ClientLoadConfiguration(const char* cert, const char* key) {
