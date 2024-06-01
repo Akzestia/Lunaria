@@ -72,7 +72,7 @@ void QuicServer::ServerLoadConfiguration(const char* cert, const char* key) {
 #pragma region OpenSslCert
     QUIC_CREDENTIAL_CONFIG_HELPER Config;
     memset(&Config, 0, sizeof(Config));
-    Config.CredConfig.Flags = QUIC_CREDENTIAL_FLAG_REQUIRE_CLIENT_AUTHENTICATION;
+    Config.CredConfig.Flags = QUIC_CREDENTIAL_FLAG_NO_CERTIFICATE_VALIDATION;//QUIC_CREDENTIAL_FLAG_REQUIRE_CLIENT_AUTHENTICATION
 
     printf("cert.pem exists: %d\n", fileExists(cert));
     printf("key.pem exists: %d\n", fileExists(key));

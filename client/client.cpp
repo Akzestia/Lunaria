@@ -1,4 +1,6 @@
+#include "../Entities/Message.h"
 #include "QuicClient.h"
+#include <cstdio>
 
 int main() {
 
@@ -6,8 +8,14 @@ int main() {
                                  "./certs/server.key");
   client.Connect();
 
-  while (getchar() != 'e') {
-  }
+  char ch = getchar();
+
+  Message m = Message();
+
+  client.send<Message>(m, 0x01);
+  
+  ch = getchar();
+  
   client.Disconnect();
   return 0;
 }

@@ -18,8 +18,6 @@ public:
 
     void Disconnect();
 
-    void sendMessage(const char* message);
-
     template <typename T>
     void send(T message, uint8_t endpoint) {
         HQUIC Stream = NULL;

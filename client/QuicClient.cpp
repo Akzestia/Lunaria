@@ -1,4 +1,5 @@
 #include "QuicClient.h"
+#include <cstdio>
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
@@ -134,65 +135,6 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientStreamCallback(
     _Inout_ QUIC_STREAM_EVENT *Event) {
   return reinterpret_cast<QuicClient *>(Context)->ClientStreamCallback(
       Stream, Context, Event);
-}
-
-void QuicClient::sendMessage(const char *message) {
-  HQUIC Stream = NULL;
-  QUIC_BUFFER *SendBuffer;
-
-  SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-  if (SendBuffer == NULL) {
-    printf("Failed to allocate send buffer.\n");
-    return;
-  }
-
-  // Set the buffer length and pointer
-  SendBuffer->Length = (uint32_t)strlen(message);
-  SendBuffer->Buffer = (uint8_t *)message;
-
-  // Create a new stream
-  Status = MsQuic->StreamOpen(
-      Connection,
-      QUIC_STREAM_OPEN_FLAG_NONE,             // No flags
-      QuicClient::StaticClientStreamCallback, // Callback handler
-      this,                                   // Context
-      &Stream);                               // Stream handle
-
-  if (QUIC_FAILED(Status)) {
-    printf("Failed to open stream, 0x%x\n", Status);
-    free(SendBuffer);
-    return;
-  }
-
-  // Start the stream
-  Status = MsQuic->StreamStart(Stream,
-                               QUIC_STREAM_START_FLAG_NONE); // No flags
-
-  if (QUIC_FAILED(Status)) {
-    printf("Failed to start stream, 0x%x\n", Status);
-    MsQuic->StreamClose(Stream);
-    free(SendBuffer);
-    return;
-  }
-
-  Status = MsQuic->StreamSend(
-      Stream,
-      SendBuffer,         // Send buffer
-      1,                  // Buffer count
-      QUIC_SEND_FLAG_FIN, // Flags (FIN to indicate the end of the message)
-      nullptr);           // Client context (optional)
-
-  if (QUIC_FAILED(Status)) {
-    printf("Failed to send data, 0x%x\n", Status);
-    MsQuic->StreamShutdown(Stream, QUIC_STREAM_SHUTDOWN_FLAG_ABORT,
-                           0); // Application-specific error code
-    MsQuic->StreamClose(Stream);
-    free(SendBuffer);
-    return;
-  }
-
-  // Clean up the send buffer after the send is complete
-  free(SendBuffer);
 }
 
 void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
