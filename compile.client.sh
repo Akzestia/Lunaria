@@ -1,6 +1,5 @@
 #!/bin/bash 
 
-export LD_LIBRARY_PATH=./MsQuic/bin:$LD_LIBRARY_PATH
 export SRC_PROTO_DIR=./proto
 export DST_PROTO_DIR=./proto
 
@@ -24,11 +23,11 @@ if ! g++ -g -o ./build/client \
     echo "Error: Compilation failed"
     exit 1
 fi
-#
+
 echo "Compiled Successfully"
 
 # Run the compiled client
-if ! LD_LIBRARY_PATH=./MsQuic/bin:$LD_LIBRARY_PATH ./build/client; then
+if ! ./build/client; then
     echo "Error: Client execution failed"
     exit 1
 fi
