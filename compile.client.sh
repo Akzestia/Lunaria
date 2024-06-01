@@ -13,6 +13,7 @@ if ! g++ -g -o ./build/client \
     -L./MsQuic/bin -lmsquic \
 	-L/usr/lib -labsl_log_internal_check_op \
 	-L/usr/lib -labsl_log_internal_message \
+	-L/usr/lib -labsl_cord \
     ./client/client.cpp \
     ./client/QuicClient.cpp \
     ./Entities/Message.cpp \

@@ -1,5 +1,6 @@
 #include "QuicClient.h"
 #include <cstdio>
+#include <cstdlib>
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
@@ -252,11 +253,11 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
     //
     printf("[conn][%p] Resumption ticket received (%u bytes):\n", Connection,
            Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength);
-    for (uint32_t i = 0;
-         i < Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength; i++) {
-      printf("%.2X",
-             (uint8_t)Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket[i]);
-    }
+    // for (uint32_t i = 0;
+    //      i < Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength; i++) {
+    //   printf("%.2X",
+    //          (uint8_t)Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket[i]);
+    //}
     printf("\n");
     break;
   default:
@@ -270,6 +271,56 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientConnectionCallback(
     _Inout_ QUIC_CONNECTION_EVENT *Event) {
   return reinterpret_cast<QuicClient *>(Context)->ClientConnectionCallback(
       Connection, Context, Event);
+}
+
+void QuicClient::send(const absl::Cord &message) {
+  HQUIC Stream = NULL;
+  QUIC_BUFFER *SendBuffer;
+
+  absl::Cord::ChunkIterator start = message.chunk_begin();
+  absl::Cord::ChunkIterator end = message.chunk_end();
+  std::vector<uint8_t> buffer;
+  for (auto it = start; it != end; ++it) {
+    buffer.insert(buffer.end(), it->data(), it->data() + it->size());
+  }
+
+  SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+  SendBuffer->Length = buffer.size();
+  SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+
+  std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
+
+  if (QUIC_FAILED(Status = MsQuic->StreamOpen(
+                      Connection, QUIC_STREAM_OPEN_FLAG_NONE,
+                      QuicClient::StaticClientStreamCallback, this, &Stream))) {
+    printf("StreamOpen failed, 0x%x!\n", Status);
+    goto Error;
+  }
+
+  printf("[strm][%p] Starting...\n", Stream);
+
+  if (QUIC_FAILED(
+          Status = MsQuic->StreamStart(Stream, QUIC_STREAM_START_FLAG_NONE))) {
+    printf("StreamStart failed, 0x%x!\n", Status);
+    MsQuic->StreamClose(Stream);
+    goto Error;
+  }
+
+  printf("[strm][%p] Sending data...\n", Stream);
+
+  if (QUIC_FAILED(Status = MsQuic->StreamSend(
+                      Stream, SendBuffer, 1, QUIC_SEND_FLAG_FIN, SendBuffer))) {
+    printf("StreamSend failed, 0x%x!\n", Status);
+    goto Error;
+  }
+  std::cout << "\nSucces"
+            << "\n";
+Error:
+  if (QUIC_FAILED(Status)) {
+    MsQuic->ConnectionShutdown(Connection, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE,
+                               0);
+    free(SendBuffer);
+  }
 }
 
 QuicClient::~QuicClient() {
