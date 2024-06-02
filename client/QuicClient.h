@@ -22,82 +22,8 @@ public:
 
   void Disconnect();
 
-  template <typename T> void send(T message, uint8_t endpoint) {
-    HQUIC Stream = NULL;
-    QUIC_BUFFER *SendBuffer;
-
-    std::vector<uint8_t> serializedMessage = message.Serialize();
-
-    uint8_t identifier;
-    if (std::is_same<T, Message>::value) {
-      identifier = 0x01;
-    } else if (std::is_same<T, Contact>::value) {
-      identifier = 0x02;
-    } else if (std::is_same<T, User>::value) {
-      identifier = 0x03;
-    } else {
-      identifier = 0x99;
-      return;
-    }
-
-    serializedMessage.insert(serializedMessage.begin(), identifier);
-    serializedMessage.insert(serializedMessage.begin(), endpoint);
-
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    if (SendBuffer == NULL) {
-      printf("SendBuffer allocation failed!\n");
-      Status = QUIC_STATUS_OUT_OF_MEMORY;
-      goto Error;
-    }
-
-    SendBuffer->Buffer = (uint8_t *)malloc(serializedMessage.size());
-    if (SendBuffer->Buffer == NULL) {
-      printf("SendBuffer->Buffer allocation failed!\n");
-      free(SendBuffer);
-      Status = QUIC_STATUS_OUT_OF_MEMORY;
-      goto Error;
-    }
-
-    std::copy(serializedMessage.begin(), serializedMessage.end(),
-              SendBuffer->Buffer);
-    SendBuffer->Length = serializedMessage.size();
-
-    if (QUIC_FAILED(
-            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
-                                        QuicClient::StaticClientStreamCallback,
-                                        this, &Stream))) {
-      printf("StreamOpen failed, 0x%x!\n", Status);
-      goto Error;
-    }
-
-    printf("[strm][%p] Starting...\n", Stream);
-
-    if (QUIC_FAILED(Status = MsQuic->StreamStart(
-                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
-      printf("StreamStart failed, 0x%x!\n", Status);
-      MsQuic->StreamClose(Stream);
-      goto Error;
-    }
-
-    printf("[strm][%p] Sending data...\n", Stream);
-
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-      printf("StreamSend failed, 0x%x!\n", Status);
-      free(SendBuffer->Buffer);
-      free(SendBuffer);
-      goto Error;
-    }
-  Error:
-
-    if (QUIC_FAILED(Status)) {
-      MsQuic->ConnectionShutdown(Connection, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE,
-                                 0);
-    }
-  }
-
   void send(const absl::Cord &message);
+  
   void ClientLoadConfiguration(const char *cert, const char *key);
 
   QuicClient(const char *Host, const uint16_t UdpPort, const char *cert,
