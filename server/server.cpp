@@ -3,15 +3,16 @@
 
 int main(){
 
-	QuicServer server = QuicServer("10.10.3.201", 6121, "./certs/server.cert", "./certs/server.key");
+	QuicServer *server = new QuicServer("10.10.3.201", 6121, "./certs/server.cert", "./certs/server.key");
 
-	server.Start();
+	server->Start();
 	
 	while (getchar() != 'e') {
 		
 	}
 
-	server.Close();
+	server->Close();
 
+	free(server);
 	return 0;	
 }

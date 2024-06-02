@@ -1,8 +1,4 @@
-#include "../Entities/Message.h"
-#include "../proto/test.pb.h"
 #include "QuicClient.h"
-#include <absl/strings/cord.h>
-#include <cstdio>
 
 int main() {
 
@@ -13,7 +9,6 @@ int main() {
   char ch = getchar();
 
   Message m = Message();
-
   std::cout << "Hello";
   Person p = Person();
   std::string name(50'000'000, 'A'); // 50MB string of 'A'
@@ -29,9 +24,6 @@ int main() {
 	if(x){
 		client.send(output);
 	}
-
-//   std::cout << "\n" << p.name() << "\n";
-//   client.send<Message>(m, 0x01);
 
   ch = getchar();
 

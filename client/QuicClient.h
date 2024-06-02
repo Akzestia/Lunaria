@@ -3,13 +3,14 @@
 #include "../Entities/Message.h"
 #include "../Entities/User.h"
 #include "../MsQuic/include/msquic.h"
+#include "../proto/test.pb.h"
 #include <absl/strings/cord.h>
 #include <condition_variable>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <mutex>
 #include <sys/stat.h>
-#include <cstdio>
-#include <cstdlib>
 
 class QuicClient {
 public:
@@ -23,7 +24,7 @@ public:
   void Disconnect();
 
   void send(const absl::Cord &message);
-  
+
   void ClientLoadConfiguration(const char *cert, const char *key);
 
   QuicClient(const char *Host, const uint16_t UdpPort, const char *cert,
@@ -38,14 +39,16 @@ public:
   StaticClientConnectionCallback(_In_ HQUIC Connection, _In_opt_ void *Context,
                                  _Inout_ QUIC_CONNECTION_EVENT *Event);
 
-  _IRQL_requires_max_(DISPATCH_LEVEL) ~QuicClient();
-  _Function_class_(QUIC_STREAM_CALLBACK) QUIC_STATUS QUIC_API
+  _IRQL_requires_max_(DISPATCH_LEVEL)
+      _Function_class_(QUIC_STREAM_CALLBACK) QUIC_STATUS QUIC_API
       ClientStreamCallback(_In_ HQUIC Stream, _In_opt_ void *Context,
                            _Inout_ QUIC_STREAM_EVENT *Event);
 
   static QUIC_STATUS QUIC_API
   StaticClientStreamCallback(_In_ HQUIC Stream, _In_opt_ void *Context,
                              _Inout_ QUIC_STREAM_EVENT *Event);
+
+  ~QuicClient();
 
 private:
   QUIC_CREDENTIAL_CONFIG CredConfig;

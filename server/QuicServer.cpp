@@ -172,8 +172,8 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     auto data = Event->RECEIVE.Buffers->Buffer;
     size_t dataSize = Event->RECEIVE.TotalBufferLength;
 
-    absl::string_view dataView(reinterpret_cast<const char *>(data), dataSize);
-    absl::Cord receivedCord(dataView);
+    // absl::string_view dataView(reinterpret_cast<const char *>(data), dataSize);
+    // absl::Cord receivedCord(dataView);
 
     // std::cout << "\nReceived Cord: \n" << receivedCord << "\n\n";
     std::printf("\n\nReceived Cord from [%p]", Stream);
@@ -359,10 +359,6 @@ void QuicServer::Start() {
 }
 void QuicServer::Close() {
   if (this->isRunning.load()) {
-    this->isRunning.store(false);
-
-    this->server_status.notify_all();
-
     if (this->serverThread.joinable()) {
       this->serverThread.join();
 
@@ -383,6 +379,8 @@ void QuicServer::Close() {
     } else {
       std::cout << "Server thread is not joinable." << std::endl;
     }
+    this->isRunning.store(false);
+    this->server_status.notify_all();
   }
 
   std::cout << "isRunning: " << this->isRunning.load() << std::endl;
