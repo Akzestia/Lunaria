@@ -56,8 +56,8 @@ void QuicClient::Connect() {
     printf("ConnectionOpen failed, 0x%x!\n", Status);
   }
   printf("\n[conn][%p] Connecting...\n", Connection);
-  printf("Port: %u\n", this->UdpPort);
-  printf(this->Host);
+  printf("\nPort: %u\n", this->UdpPort);
+  printf("\nHost: %s\n", this->Host);
 
   if (QUIC_FAILED(Status = MsQuic->ConnectionStart(
                       Connection, Configuration, QUIC_ADDRESS_FAMILY_UNSPEC,
@@ -90,7 +90,6 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     //
     // A previous StreamSend call has completed, and the context is being
     // returned back to the app.
-    //
     free(Event->SEND_COMPLETE.ClientContext);
     printf("[strm][%p] Data sent\n", Stream);
     break;
