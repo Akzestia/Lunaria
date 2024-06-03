@@ -10,6 +10,8 @@
 #include <atomic>
 #include <absl/strings/cord.h>
 #include "../proto/test.pb.h"
+#include "../Helpers/PeerHandler.h"
+
 class QuicServer {
 
 public:

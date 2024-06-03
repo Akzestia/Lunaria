@@ -7,13 +7,11 @@ int main() {
   client.Connect();
 
   char ch = getchar();
-
-  Message m = Message();
-  std::cout << "Hello";
   Person p = Person();
-  std::string name(50'000'000, 'A'); // 50MB string of 'A'
-  std::cout << "\n\nName Created\n\n";
-  p.set_name(name);
+  p.set_name("Azure");
+  const size_t dataSize = 20 * 1024 * 1024; // 20MB
+  std::string largeData(dataSize, 'A');
+  p.set_content(largeData);
   p.set_id(1);
   p.set_email("azure@gmail.com");
 
@@ -21,9 +19,9 @@ int main() {
 
   bool x = p.SerializePartialToCord(&output);
 
-	if(x){
-		client.send(output);
-	}
+  if (x) {
+    client.send(output);
+  }
 
   ch = getchar();
 

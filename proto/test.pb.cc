@@ -29,6 +29,9 @@ inline constexpr Person::Impl_::Impl_(
         email_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
+        content_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         id_{0},
         _cached_size_{0} {}
 
@@ -63,6 +66,7 @@ const ::uint32_t TableStruct_test_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
     PROTOBUF_FIELD_OFFSET(::Person, _impl_.name_),
     PROTOBUF_FIELD_OFFSET(::Person, _impl_.id_),
     PROTOBUF_FIELD_OFFSET(::Person, _impl_.email_),
+    PROTOBUF_FIELD_OFFSET(::Person, _impl_.content_),
 };
 
 static const ::_pbi::MigrationSchema
@@ -74,14 +78,15 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::_Person_default_instance_._instance,
 };
 const char descriptor_table_protodef_test_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-    "\n\ntest.proto\"1\n\006Person\022\014\n\004name\030\001 \001(\t\022\n\n\002"
-    "id\030\002 \001(\005\022\r\n\005email\030\003 \001(\tb\006proto3"
+    "\n\ntest.proto\"B\n\006Person\022\014\n\004name\030\001 \001(\t\022\n\n\002"
+    "id\030\002 \001(\005\022\r\n\005email\030\003 \001(\t\022\017\n\007content\030\004 \001(\014"
+    "b\006proto3"
 };
 static ::absl::once_flag descriptor_table_test_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_test_2eproto = {
     false,
     false,
-    71,
+    88,
     descriptor_table_protodef_test_2eproto,
     "test.proto",
     &descriptor_table_test_2eproto_once,
@@ -129,6 +134,7 @@ inline PROTOBUF_NDEBUG_INLINE Person::Impl_::Impl_(
     const Impl_& from)
       : name_(arena, from.name_),
         email_(arena, from.email_),
+        content_(arena, from.content_),
         _cached_size_{0} {}
 
 Person::Person(
@@ -149,6 +155,7 @@ inline PROTOBUF_NDEBUG_INLINE Person::Impl_::Impl_(
     ::google::protobuf::Arena* arena)
       : name_(arena),
         email_(arena),
+        content_(arena),
         _cached_size_{0} {}
 
 inline void Person::SharedCtor(::_pb::Arena* arena) {
@@ -164,6 +171,7 @@ inline void Person::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
   _impl_.name_.Destroy();
   _impl_.email_.Destroy();
+  _impl_.content_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -176,6 +184,7 @@ PROTOBUF_NOINLINE void Person::Clear() {
 
   _impl_.name_.ClearToEmpty();
   _impl_.email_.ClearToEmpty();
+  _impl_.content_.ClearToEmpty();
   _impl_.id_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -188,21 +197,23 @@ const char* Person::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 24, 2> Person::_table_ = {
+const ::_pbi::TcParseTable<2, 4, 0, 24, 2> Person::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_Person_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // bytes content = 4;
+    {::_pbi::TcParser::FastBS1,
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.content_)}},
     // string name = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.name_)}},
@@ -224,6 +235,9 @@ const ::_pbi::TcParseTable<2, 3, 0, 24, 2> Person::_table_ = {
     // string email = 3;
     {PROTOBUF_FIELD_OFFSET(Person, _impl_.email_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // bytes content = 4;
+    {PROTOBUF_FIELD_OFFSET(Person, _impl_.content_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
@@ -264,6 +278,12 @@ const ::_pbi::TcParseTable<2, 3, 0, 24, 2> Person::_table_ = {
     target = stream->WriteStringMaybeAliased(3, _s, target);
   }
 
+  // bytes content = 4;
+  if (!this->_internal_content().empty()) {
+    const std::string& _s = this->_internal_content();
+    target = stream->WriteBytesMaybeAliased(4, _s, target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -291,6 +311,12 @@ const ::_pbi::TcParseTable<2, 3, 0, 24, 2> Person::_table_ = {
   if (!this->_internal_email().empty()) {
     total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                     this->_internal_email());
+  }
+
+  // bytes content = 4;
+  if (!this->_internal_content().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
+                                    this->_internal_content());
   }
 
   // int32 id = 2;
@@ -324,6 +350,9 @@ void Person::MergeImpl(::google::protobuf::Message& to_msg, const ::google::prot
   if (!from._internal_email().empty()) {
     _this->_internal_set_email(from._internal_email());
   }
+  if (!from._internal_content().empty()) {
+    _this->_internal_set_content(from._internal_content());
+  }
   if (from._internal_id() != 0) {
     _this->_internal_set_id(from._internal_id());
   }
@@ -351,6 +380,7 @@ void Person::InternalSwap(Person* PROTOBUF_RESTRICT other) {
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.email_, &other->_impl_.email_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.content_, &other->_impl_.content_, arena);
         swap(_impl_.id_, other->_impl_.id_);
 }
 

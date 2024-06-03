@@ -172,23 +172,9 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     auto data = Event->RECEIVE.Buffers->Buffer;
     size_t dataSize = Event->RECEIVE.TotalBufferLength;
 
-    // absl::string_view dataView(reinterpret_cast<const char *>(data), dataSize);
-    // absl::Cord receivedCord(dataView);
-
-    // std::cout << "\nReceived Cord: \n" << receivedCord << "\n\n";
     std::printf("\n\nReceived Cord from [%p]", Stream);
 
-    // Person p;
-
-    // if (!p.ParsePartialFromCord(receivedCord)) {
-    //   std::cerr << "Error: Failed to deserialize Person from Cord."
-    //             << std::endl;
-    // } else {
-    //   // Deserialization succeeded, you can now use the Person object
-    //   std::cout << "Name: " << p.name() << std::endl;
-    //   std::cout << "ID: " << p.id() << std::endl;
-    //   std::cout << "Email: " << p.email() << std::endl;
-    // }
+    PeerHandler::HandlePeer(Stream, (*data), dataSize);
 
     MsQuic->StreamReceiveComplete(Stream, Event->RECEIVE.TotalBufferLength);
   } break;
@@ -198,9 +184,10 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
   case QUIC_STREAM_EVENT_PEER_RECEIVE_ABORTED:
     printf("[strm][%p] RECEIVE Peer aborted\n", Stream);
     break;
-  case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN:
+  case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
     printf("[strm][%p] Peer shut down\n", Stream);
-    break;
+    PeerHandler::onPeerShutdown(Stream);
+  } break;
   case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
     printf("[strm][%p] All done\n", Stream);
     if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {

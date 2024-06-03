@@ -19,7 +19,8 @@ if ! g++ -g ./server/server.cpp -o./build/server \
 	./Entities/Message.cpp \
 	./Entities/User.cpp \
 	./proto/test.pb.cc \
-	./Entities/Contact.cpp; then 
+	./Entities/Contact.cpp \
+	./Helpers/PeerHandler.cpp; then 
 	echo "Error: Compilation failed"
 	exit 1
 fi
