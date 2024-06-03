@@ -23,13 +23,11 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Person::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : name_(
+      : content_{},
+        name_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         email_(
-            &::google::protobuf::internal::fixed_address_empty_string,
-            ::_pbi::ConstantInitialized()),
-        content_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
         id_{0},
@@ -79,7 +77,7 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_test_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     "\n\ntest.proto\"B\n\006Person\022\014\n\004name\030\001 \001(\t\022\n\n\002"
-    "id\030\002 \001(\005\022\r\n\005email\030\003 \001(\t\022\017\n\007content\030\004 \001(\014"
+    "id\030\002 \001(\005\022\r\n\005email\030\003 \001(\t\022\017\n\007content\030\004 \003(\014"
     "b\006proto3"
 };
 static ::absl::once_flag descriptor_table_test_2eproto_once;
@@ -132,9 +130,9 @@ Person::Person(::google::protobuf::Arena* arena)
 inline PROTOBUF_NDEBUG_INLINE Person::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from)
-      : name_(arena, from.name_),
+      : content_{visibility, arena, from.content_},
+        name_(arena, from.name_),
         email_(arena, from.email_),
-        content_(arena, from.content_),
         _cached_size_{0} {}
 
 Person::Person(
@@ -153,9 +151,9 @@ Person::Person(
 inline PROTOBUF_NDEBUG_INLINE Person::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : name_(arena),
+      : content_{visibility, arena},
+        name_(arena),
         email_(arena),
-        content_(arena),
         _cached_size_{0} {}
 
 inline void Person::SharedCtor(::_pb::Arena* arena) {
@@ -171,7 +169,6 @@ inline void Person::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
   _impl_.name_.Destroy();
   _impl_.email_.Destroy();
-  _impl_.content_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -182,9 +179,9 @@ PROTOBUF_NOINLINE void Person::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  _impl_.content_.Clear();
   _impl_.name_.ClearToEmpty();
   _impl_.email_.ClearToEmpty();
-  _impl_.content_.ClearToEmpty();
   _impl_.id_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -211,8 +208,8 @@ const ::_pbi::TcParseTable<2, 4, 0, 24, 2> Person::_table_ = {
     &_Person_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    // bytes content = 4;
-    {::_pbi::TcParser::FastBS1,
+    // repeated bytes content = 4;
+    {::_pbi::TcParser::FastBR1,
      {34, 63, 0, PROTOBUF_FIELD_OFFSET(Person, _impl_.content_)}},
     // string name = 1;
     {::_pbi::TcParser::FastUS1,
@@ -235,9 +232,9 @@ const ::_pbi::TcParseTable<2, 4, 0, 24, 2> Person::_table_ = {
     // string email = 3;
     {PROTOBUF_FIELD_OFFSET(Person, _impl_.email_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
-    // bytes content = 4;
+    // repeated bytes content = 4;
     {PROTOBUF_FIELD_OFFSET(Person, _impl_.content_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
+    (0 | ::_fl::kFcRepeated | ::_fl::kBytes | ::_fl::kRepSString)},
   }},
   // no aux_entries
   {{
@@ -278,10 +275,10 @@ const ::_pbi::TcParseTable<2, 4, 0, 24, 2> Person::_table_ = {
     target = stream->WriteStringMaybeAliased(3, _s, target);
   }
 
-  // bytes content = 4;
-  if (!this->_internal_content().empty()) {
-    const std::string& _s = this->_internal_content();
-    target = stream->WriteBytesMaybeAliased(4, _s, target);
+  // repeated bytes content = 4;
+  for (int i = 0, n = this->_internal_content_size(); i < n; ++i) {
+    const auto& s = this->_internal_content().Get(i);
+    target = stream->WriteBytes(4, s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -301,6 +298,12 @@ const ::_pbi::TcParseTable<2, 4, 0, 24, 2> Person::_table_ = {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  // repeated bytes content = 4;
+  total_size += 1 * ::google::protobuf::internal::FromIntSize(_internal_content().size());
+  for (int i = 0, n = _internal_content().size(); i < n; ++i) {
+    total_size += ::google::protobuf::internal::WireFormatLite::BytesSize(
+        _internal_content().Get(i));
+  }
   // string name = 1;
   if (!this->_internal_name().empty()) {
     total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -311,12 +314,6 @@ const ::_pbi::TcParseTable<2, 4, 0, 24, 2> Person::_table_ = {
   if (!this->_internal_email().empty()) {
     total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
                                     this->_internal_email());
-  }
-
-  // bytes content = 4;
-  if (!this->_internal_content().empty()) {
-    total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
-                                    this->_internal_content());
   }
 
   // int32 id = 2;
@@ -344,14 +341,12 @@ void Person::MergeImpl(::google::protobuf::Message& to_msg, const ::google::prot
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  _this->_internal_mutable_content()->MergeFrom(from._internal_content());
   if (!from._internal_name().empty()) {
     _this->_internal_set_name(from._internal_name());
   }
   if (!from._internal_email().empty()) {
     _this->_internal_set_email(from._internal_email());
-  }
-  if (!from._internal_content().empty()) {
-    _this->_internal_set_content(from._internal_content());
   }
   if (from._internal_id() != 0) {
     _this->_internal_set_id(from._internal_id());
@@ -378,9 +373,9 @@ void Person::InternalSwap(Person* PROTOBUF_RESTRICT other) {
   auto* arena = GetArena();
   ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  _impl_.content_.InternalSwap(&other->_impl_.content_);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.email_, &other->_impl_.email_, arena);
-  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.content_, &other->_impl_.content_, arena);
         swap(_impl_.id_, other->_impl_.id_);
 }
 

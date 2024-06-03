@@ -201,11 +201,39 @@ class Person final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kContentFieldNumber = 4,
     kNameFieldNumber = 1,
     kEmailFieldNumber = 3,
-    kContentFieldNumber = 4,
     kIdFieldNumber = 2,
   };
+  // repeated bytes content = 4;
+  int content_size() const;
+  private:
+  int _internal_content_size() const;
+
+  public:
+  void clear_content() ;
+  const std::string& content(int index) const;
+  std::string* mutable_content(int index);
+  void set_content(int index, const std::string& value);
+  void set_content(int index, std::string&& value);
+  void set_content(int index, const char* value);
+  void set_content(int index, const void* value, std::size_t size);
+  void set_content(int index, absl::string_view value);
+  std::string* add_content();
+  void add_content(const std::string& value);
+  void add_content(std::string&& value);
+  void add_content(const char* value);
+  void add_content(const void* value, std::size_t size);
+  void add_content(absl::string_view value);
+  const ::google::protobuf::RepeatedPtrField<std::string>& content() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* mutable_content();
+
+  private:
+  const ::google::protobuf::RepeatedPtrField<std::string>& _internal_content() const;
+  ::google::protobuf::RepeatedPtrField<std::string>* _internal_mutable_content();
+
+  public:
   // string name = 1;
   void clear_name() ;
   const std::string& name() const;
@@ -236,22 +264,6 @@ class Person final :
   inline PROTOBUF_ALWAYS_INLINE void _internal_set_email(
       const std::string& value);
   std::string* _internal_mutable_email();
-
-  public:
-  // bytes content = 4;
-  void clear_content() ;
-  const std::string& content() const;
-  template <typename Arg_ = const std::string&, typename... Args_>
-  void set_content(Arg_&& arg, Args_... args);
-  std::string* mutable_content();
-  PROTOBUF_NODISCARD std::string* release_content();
-  void set_allocated_content(std::string* value);
-
-  private:
-  const std::string& _internal_content() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_content(
-      const std::string& value);
-  std::string* _internal_mutable_content();
 
   public:
   // int32 id = 2;
@@ -287,9 +299,9 @@ class Person final :
                               ::google::protobuf::Arena* arena);
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
+    ::google::protobuf::RepeatedPtrField<std::string> content_;
     ::google::protobuf::internal::ArenaStringPtr name_;
     ::google::protobuf::internal::ArenaStringPtr email_;
-    ::google::protobuf::internal::ArenaStringPtr content_;
     ::int32_t id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -443,57 +455,105 @@ inline void Person::set_allocated_email(std::string* value) {
   // @@protoc_insertion_point(field_set_allocated:Person.email)
 }
 
-// bytes content = 4;
+// repeated bytes content = 4;
+inline int Person::_internal_content_size() const {
+  return _internal_content().size();
+}
+inline int Person::content_size() const {
+  return _internal_content_size();
+}
 inline void Person::clear_content() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.content_.ClearToEmpty();
+  _impl_.content_.Clear();
 }
-inline const std::string& Person::content() const
+inline std::string* Person::add_content()
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:Person.content)
-  return _internal_content();
-}
-template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void Person::set_content(Arg_&& arg,
-                                                     Args_... args) {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.content_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:Person.content)
-}
-inline std::string* Person::mutable_content() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_content();
-  // @@protoc_insertion_point(field_mutable:Person.content)
+  std::string* _s = _internal_mutable_content()->Add();
+  // @@protoc_insertion_point(field_add_mutable:Person.content)
   return _s;
 }
-inline const std::string& Person::_internal_content() const {
+inline const std::string& Person::content(int index) const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Person.content)
+  return _internal_content().Get(index);
+}
+inline std::string* Person::mutable_content(int index)
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable:Person.content)
+  return _internal_mutable_content()->Mutable(index);
+}
+inline void Person::set_content(int index, const std::string& value) {
+  _internal_mutable_content()->Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set:Person.content)
+}
+inline void Person::set_content(int index, std::string&& value) {
+  _internal_mutable_content()->Mutable(index)->assign(std::move(value));
+  // @@protoc_insertion_point(field_set:Person.content)
+}
+inline void Person::set_content(int index, const char* value) {
+  ABSL_DCHECK(value != nullptr);
+  _internal_mutable_content()->Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:Person.content)
+}
+inline void Person::set_content(int index, const void* value,
+                              std::size_t size) {
+  _internal_mutable_content()->Mutable(index)->assign(
+      reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:Person.content)
+}
+inline void Person::set_content(int index, absl::string_view value) {
+  _internal_mutable_content()->Mutable(index)->assign(value.data(),
+                                                     value.size());
+  // @@protoc_insertion_point(field_set_string_piece:Person.content)
+}
+inline void Person::add_content(const std::string& value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _internal_mutable_content()->Add()->assign(value);
+  // @@protoc_insertion_point(field_add:Person.content)
+}
+inline void Person::add_content(std::string&& value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _internal_mutable_content()->Add(std::move(value));
+  // @@protoc_insertion_point(field_add:Person.content)
+}
+inline void Person::add_content(const char* value) {
+  ABSL_DCHECK(value != nullptr);
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _internal_mutable_content()->Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:Person.content)
+}
+inline void Person::add_content(const void* value, std::size_t size) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _internal_mutable_content()->Add()->assign(
+      reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:Person.content)
+}
+inline void Person::add_content(absl::string_view value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _internal_mutable_content()->Add()->assign(value.data(), value.size());
+  // @@protoc_insertion_point(field_add_string_piece:Person.content)
+}
+inline const ::google::protobuf::RepeatedPtrField<std::string>&
+Person::content() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:Person.content)
+  return _internal_content();
+}
+inline ::google::protobuf::RepeatedPtrField<std::string>*
+Person::mutable_content() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:Person.content)
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  return _internal_mutable_content();
+}
+inline const ::google::protobuf::RepeatedPtrField<std::string>&
+Person::_internal_content() const {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
-  return _impl_.content_.Get();
+  return _impl_.content_;
 }
-inline void Person::_internal_set_content(const std::string& value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  _impl_.content_.Set(value, GetArena());
-}
-inline std::string* Person::_internal_mutable_content() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  ;
-  return _impl_.content_.Mutable( GetArena());
-}
-inline std::string* Person::release_content() {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  // @@protoc_insertion_point(field_release:Person.content)
-  return _impl_.content_.Release();
-}
-inline void Person::set_allocated_content(std::string* value) {
-  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
-  _impl_.content_.SetAllocated(value, GetArena());
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.content_.IsDefault()) {
-          _impl_.content_.Set("", GetArena());
-        }
-  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:Person.content)
+inline ::google::protobuf::RepeatedPtrField<std::string>*
+Person::_internal_mutable_content() {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return &_impl_.content_;
 }
 
 #ifdef __GNUC__
