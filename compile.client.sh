@@ -10,6 +10,12 @@ fi
 
 if ! g++ -g -o ./build/client \
     -I./proto \
+    -I/usr/include/gtk-4.0 \
+    -L/usr/lib/gtk-4.0/4.0.0/immodules -lim-ibus \
+    -L/usr/lib/gtk-4.0/4.0.0/media -lmedia-gstreamer \
+    -L/usr/lib/gtk-4.0/4.0.0/printbackends -lprintbackend-cups \
+    -L/usr/lib/gtk-4.0/4.0.0/printbackends -lprintbackend-file \
+    -L/usr/lib -lX11 \
     -L./MsQuic/bin -lmsquic \
 	-L/usr/lib -labsl_log_internal_check_op \
 	-L/usr/lib -labsl_log_internal_message \
@@ -20,6 +26,7 @@ if ! g++ -g -o ./build/client \
     ./Entities/User.cpp \
     ./Entities/Contact.cpp \
     ./proto/test.pb.cc \
+    ./Helpers/ScreenCapture.cpp \
     -lstdc++ -lpthread -lprotobuf; then
     echo "Error: Compilation failed"
     exit 1
