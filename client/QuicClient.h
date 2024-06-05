@@ -1,7 +1,4 @@
 #pragma once
-#include "../Entities/Contact.h"
-#include "../Entities/Message.h"
-#include "../Entities/User.h"
 #include "../MsQuic/include/msquic.h"
 #include "../proto/test.pb.h"
 #include <absl/strings/cord.h>
