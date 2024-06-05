@@ -1,0 +1,21 @@
+name: Update AzureNexus Submodule
+
+on:
+  push:
+    paths:
+      - 'AzureNexus/*'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update AzureNexus submodule
+        run: |
+          git submodule update --remote AzureNexus
+          git add AzureNexus
+          git commit -m "Update AzureNexus submodule"
+          git push
