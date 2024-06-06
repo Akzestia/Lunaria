@@ -22,9 +22,6 @@ if ! g++ -g -o ./build/client \
 	-L/usr/lib -labsl_cord \
     ./client/client.cpp \
     ./client/QuicClient.cpp \
-    ./Entities/Message.cpp \
-    ./Entities/User.cpp \
-    ./Entities/Contact.cpp \
     ./proto/test.pb.cc \
     ./Helpers/ScreenCapture.cpp \
     -lstdc++ -lpthread -lprotobuf; then
