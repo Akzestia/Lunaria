@@ -1,7 +1,4 @@
 #include "QuicClient.h"
-#include "../Helpers/ScreenCapture.h"
-#include "../proto/user.pb.h"
-#include "../proto/wrapper.pb.h"
 #include <cstdio>
 #include <fstream>
 #include <vector>

@@ -1,8 +1,9 @@
 #pragma once
 #include "../MsQuic/include/msquic.h"
-#include "../proto/test.pb.h"
 #include <absl/strings/cord.h>
 #include <condition_variable>
+#include "../proto/build/user.pb.h"
+#include "../proto/build/wrapper.pb.h"
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>

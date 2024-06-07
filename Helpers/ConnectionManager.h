@@ -1,5 +1,5 @@
 #include "../MsQuic/include/msquic.h"
-#include "../proto/user.pb.h"
+#include "../proto/build/user.pb.h"
 #include <unordered_map>
 
 class ConnectionManager {

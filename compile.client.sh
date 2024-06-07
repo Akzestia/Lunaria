@@ -22,9 +22,9 @@ if ! g++ -g -o ./build/client \
 	-L/usr/lib -labsl_cord \
     ./client/client.cpp \
     ./client/QuicClient.cpp \
-    ./proto/test.pb.cc \
-	./proto/user.pb.cc \
-	./proto/wrapper.pb.cc \
+    ./proto/build/test.pb.cc \
+	./proto/build/user.pb.cc \
+	./proto/build/wrapper.pb.cc \
     ./Helpers/ConnectionManager.cpp \
     ./Helpers/ScreenCapture.cpp \
     -lstdc++ -lpthread -lprotobuf; then
