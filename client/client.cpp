@@ -1,5 +1,7 @@
 #include "QuicClient.h"
 #include "../Helpers/ScreenCapture.h"
+#include "../proto/user.pb.h"
+#include "../proto/wrapper.pb.h"
 #include <fstream>
 #include <vector>
 
@@ -21,38 +23,33 @@ std::vector<uint8_t> loadFileContent(const std::string &filePath) {
 }
 
 int main() {
-    // QuicClient client("10.10.3.201", 6121, "./certs/server.cert",
-    //                   "./certs/server.key");
-    // client.Connect();
+    QuicClient client("10.10.3.201", 6121, "./certs/server.cert",
+                      "./certs/server.key");
+    client.Connect();
 
-    // Person p;
-    // p.set_name("Azure");
-    // p.set_id(1);
-    // p.set_email("azure@gmail.com");
+    // User u;
 
-    // std::vector<std::string> filePaths = {
-    //     "/home/azure/Documents/GitHub/Linux-x64-HTTP3/images/Shinka.gif",
-    //     "/home/azure/Documents/GitHub/Linux-x64-HTTP3/images/hCxW040.jpeg",
-    //     "/home/azure/Documents/GitHub/Linux-x64-HTTP3/images/"
-    //     "sunaookami-shiroko.mp4",
-    //     "/home/azure/Documents/GitHub/Linux-x64-HTTP3/images/mitsuha.mp4"};
+    // u.set_name("Akzestia");
+    // u.set_email("akzestia@xxx.com");
+    Person p;
+    p.set_email("Akzestia");
+    p.set_name("akzestia@xxx.com");
 
-    // for (const auto &filePath : filePaths) {
-    //     std::vector<uint8_t> fileData = loadFileContent(filePath);
-    //     p.add_content(std::string(fileData.begin(), fileData.end()));
-    // }
+    Wrapper w;
 
-    // absl::Cord output;
-    // bool serialized = p.SerializePartialToCord(&output);
+    // *w.mutable_user() = u;
+    *w.mutable_person() = p;
 
-    // if (serialized) {
-    //     client.send(output);
-    // }
+    absl::Cord cord;
+    bool serialized = w.SerializePartialToCord(&cord);
 
-    // char ch = getchar();
-    // client.Disconnect();
+    if(serialized){
+        client.send(cord);
+    }
 
-    ScreenCapture::Start();
+    char ch = getchar();
+    
+    client.Disconnect();
 
     return 0;
 }

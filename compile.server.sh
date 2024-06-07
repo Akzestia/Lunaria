@@ -17,6 +17,9 @@ if ! g++ -g ./server/server.cpp -o./build/server \
 	-lstdc++ -lpthread -lprotobuf \
 	./server/QuicServer.cpp \
 	./proto/test.pb.cc \
+	./proto/user.pb.cc \
+	./proto/wrapper.pb.cc \
+	./Helpers/ConnectionManager.cpp \
 	./Helpers/PeerHandler.cpp; then 
 	echo "Error: Compilation failed"
 	exit 1

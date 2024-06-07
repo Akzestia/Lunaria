@@ -9,7 +9,8 @@
 #include <vector>
 #include <atomic>
 #include <absl/strings/cord.h>
-#include "../proto/test.pb.h"
+#include "../proto/user.pb.h"
+#include "../Helpers/ConnectionManager.h"
 #include "../Helpers/PeerHandler.h"
 
 class QuicServer {

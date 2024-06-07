@@ -307,17 +307,12 @@ void QuicServer::Start() {
       QuicAddrSetFamily(&Address, QUIC_ADDRESS_FAMILY_UNSPEC);
       QuicAddrSetPort(&Address, this->UdpPort);
 
-      std::cout << "sdsd"
-                << "\n";
-
       if (key != nullptr) {
         ServerLoadConfiguration(cert, key);
       } else {
         ServerLoadConfiguration(cert);
       }
 
-      std::cout << "uwu"
-                << "\n";
       if (QUIC_FAILED(Status = MsQuic->ListenerOpen(
                           Registration,
                           QuicServer::StaticServerListenerCallback, this,

@@ -87,41 +87,26 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
     absl::string_view dataView(reinterpret_cast<const char *>(data), dataSize);
     absl::Cord receivedCord(dataView);
 
-    Person *p = new Person();
-
-    if (!p->ParsePartialFromCord(receivedCord)) {
-        std::cerr << "Error: Failed to deserialize Person from Cord."
-                  << std::endl;
-        delete p;
-        delete[] data;
+    Wrapper wrapper;
+    if (!wrapper.ParsePartialFromCord(receivedCord)) {
+        std::cerr << "Error: Failed to parse the Cord into a Wrapper" << std::endl;
         return false;
-    } else {
-        std::cout << "ID: " << p->id() << std::endl;
-        std::cout << "Email: " << p->email() << std::endl;
-        std::cout << "\nMessage size:  " << dataSize / 1024 / 1024 << "mb"
-                  << std::endl;
-
-        int unique_id = 0;
-        std::cout << "Size = " << p->content_size() << "\n";
-        for (const auto &bytesField : p->content()) {
-            std::vector<uint8_t> bytesVector(bytesField.begin(),
-                                             bytesField.end());
-
-            std::string outputFilePath = "./output/file_" +
-                                         std::to_string(unique_id++) +
-                                         getFileExtension(bytesVector);
-            std::ofstream outputFile(outputFilePath, std::ios::binary);
-            if (!outputFile) {
-                std::cerr << "Error: Failed to open file for writing: "
-                          << outputFilePath << std::endl;
-            } else {
-                outputFile.write(bytesField.data(), bytesField.size());
-                outputFile.close();
-                std::cout << "File saved to: " << outputFilePath << std::endl;
-            }
-        }
-        delete p;
-        delete[] data;
-        return true;
     }
+
+    switch (wrapper.payload_case()) {
+        case Wrapper::kUser: {
+            const User& user = wrapper.user();
+            std::cout << "Received User: " << user.name() << ", " << user.email() << std::endl;
+            break;
+        }
+        case Wrapper::kPerson: {
+            const Person& person = wrapper.person();
+            std::cout << "Received Person: " << person.name() << ", " << person.email() << std::endl;
+            break;
+        }
+        default:
+            std::cerr << "Error: Unknown payload type" << std::endl;
+            return false;
+    }
+    return true;
 }

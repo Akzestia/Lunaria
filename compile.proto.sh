@@ -13,5 +13,9 @@ if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/user.proto
     exit 1
 fi
 
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/wrapper.proto; then
+    echo "Error: Proto failed \`wrapper\`";
+    exit 1
+fi
 
 echo "Proto files were successfully compiled";

@@ -1,6 +1,8 @@
 #include "ConnectionManager.h"
 
 std::unordered_map<HQUIC, User> *ConnectionManager::getUsers() { return users; }
+std::unordered_map<HQUIC, User> *ConnectionManager::users = new std::unordered_map<HQUIC, User>();
+
 HQUIC ConnectionManager::getConenction(User user) {
     for (auto &pair : (*users))
         if (pair.second.email() == user.email())
