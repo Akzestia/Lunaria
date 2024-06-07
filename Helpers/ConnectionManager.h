@@ -4,10 +4,11 @@
 
 class ConnectionManager {
   public:
-    std::unordered_map<HQUIC, User> getUsers();
-    bool addUser(HQUIC, User);
-    bool updateUser(User);
-    bool removeUser(User);
+    static std::unordered_map<HQUIC, User>* getUsers();
+    static bool addUser(HQUIC, User);
+    static bool updateUser(User);
+    static bool removeUser(User);
+    static HQUIC getConenction(User);
   private:
-    std::unordered_map<HQUIC, User> users;
+    static std::unordered_map<HQUIC, User>* users;
 };
