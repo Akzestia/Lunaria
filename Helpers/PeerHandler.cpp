@@ -38,10 +38,8 @@ void PeerHandler::HandlePeer(HQUIC Stream, const uint8_t &data,
 
 std::string getFileExtension(const std::vector<uint8_t> &fileData) {
     if (fileData.empty()) {
-        return ""; // Empty file data
+        return "";
     }
-
-    // Find the first non-zero byte
     size_t index = 0;
     while (index < fileData.size() && fileData[index] == 0x00) {
         ++index;
@@ -107,4 +105,9 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
             return false;
     }
     return true;
+}
+
+PeerHandler::~PeerHandler(){
+    if(peers) delete peers;
+    if(peerDataSizes) delete peerDataSizes;
 }

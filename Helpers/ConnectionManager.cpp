@@ -46,3 +46,7 @@ bool ConnectionManager::updateUser(User user) {
     printf("\nuser was successfully updated\n");
     return true;
 }
+
+ConnectionManager::~ConnectionManager(){
+    if(users) delete users;
+}

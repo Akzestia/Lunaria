@@ -380,7 +380,6 @@ void QuicServer::Close() {
         if (this->serverThread.joinable()) {
             this->serverThread.join();
 
-            // Check if the thread has indeed terminated
             if (!this->serverThread.joinable()) {
                 std::cout << "Server thread has terminated successfully."
                           << std::endl;
@@ -393,8 +392,6 @@ void QuicServer::Close() {
                           << std::endl;
             } else {
                 std::cout << "Failed to terminate server thread." << std::endl;
-                // You might consider additional handling here, such as
-                // forcefully terminating the thread
             }
         } else {
             std::cout << "Server thread is not joinable." << std::endl;
@@ -427,34 +424,33 @@ QuicServer::QuicServer(const char *Host, const uint16_t UdpPort,
 }
 
 QuicServer::~QuicServer() {
-    printf("DELETED");
-    if (this->Host != nullptr) {
-        delete[] this->Host;
-        this->Host = nullptr;
+    if (Host) {
+        delete[] Host;
+        Host = nullptr;
     }
 
-    if (this->cert != nullptr) {
-        delete[] this->cert;
-        this->cert = nullptr;
+    if (cert) {
+        delete[] cert;
+        cert = nullptr;
     }
 
-    if (this->key != nullptr) {
-        delete[] this->key;
-        this->key = nullptr;
+    if (key) {
+        delete[] key;
+        key = nullptr;
     }
 
-    if (this->MsQuic != nullptr) {
-        if (this->Configuration != nullptr) {
-            this->MsQuic->ConfigurationClose(this->Configuration);
-            this->Configuration = nullptr;
+    if (MsQuic) {
+        if (Configuration) {
+            MsQuic->ConfigurationClose(Configuration);
+            Configuration = nullptr;
         }
 
-        if (this->Registration != nullptr) {
-            this->MsQuic->RegistrationClose(this->Registration);
-            this->Registration = nullptr;
+        if (Registration) {
+            MsQuic->RegistrationClose(Registration);
+            Registration = nullptr;
         }
 
-        MsQuicClose(this->MsQuic);
-        this->MsQuic = nullptr;
+        MsQuicClose(MsQuic);
+        MsQuic = nullptr;
     }
 }

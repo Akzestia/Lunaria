@@ -39,8 +39,6 @@ public:
 
 	QuicServer(const char* Host, const uint16_t UdpPort, const char* cert, const char* key = nullptr);
 
-	std::unordered_map<HQUIC, std::vector<uint8_t>> inStreams;
-
 	_IRQL_requires_max_(PASSIVE_LEVEL) _Function_class_(QUIC_LISTENER_CALLBACK)
 	QUIC_STATUS QUIC_API ServerListenerCallback(
 		_In_ HQUIC Listener,

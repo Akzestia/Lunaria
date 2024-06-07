@@ -9,6 +9,7 @@ class ConnectionManager {
     static bool updateUser(User);
     static bool removeUser(User);
     static HQUIC getConenction(User);
+    ~ConnectionManager();
   private:
     static std::unordered_map<HQUIC, User>* users;
 };

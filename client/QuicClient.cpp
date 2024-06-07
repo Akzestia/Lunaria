@@ -88,35 +88,19 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     UNREFERENCED_PARAMETER(Context);
     switch (Event->Type) {
     case QUIC_STREAM_EVENT_SEND_COMPLETE:
-        //
-        // A previous StreamSend call has completed, and the context is being
-        // returned back to the app.
         free(Event->SEND_COMPLETE.ClientContext);
         printf("[strm][%p] Data sent\n", Stream);
         break;
     case QUIC_STREAM_EVENT_RECEIVE:
-        //
-        // Data was received from the peer on the stream.
-        //
         printf("[strm][%p] Data received\n", Stream);
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_ABORTED:
-        //
-        // The peer gracefully shut down its send direction of the stream.
-        //
         printf("[strm][%p] Peer aborted\n", Stream);
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN:
-        //
-        // The peer aborted its send direction of the stream.
-        //
         printf("[strm][%p] Peer shut down\n", Stream);
         break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
-        //
-        // Both directions of the stream have been shut down and MsQuic is done
-        // with the stream. It can now be safely cleaned up.
-        //
         printf("[strm][%p] All done\n", Stream);
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->StreamClose(Stream);
@@ -207,17 +191,9 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
     UNREFERENCED_PARAMETER(Context);
     switch (Event->Type) {
     case QUIC_CONNECTION_EVENT_CONNECTED:
-        //
-        // The handshake has completed for the connection.
-        //
         printf("[conn][%p] Connected\n", Connection);
         break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_TRANSPORT:
-        //
-        // The connection has been shut down by the transport. Generally, this
-        // is the expected way for the connection to shut down with this
-        // protocol, since we let idle timeout kill the connection.
-        //
         if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status ==
             QUIC_STATUS_CONNECTION_IDLE) {
             printf("[conn][%p] Successfully shut down on idle.\n", Connection);
@@ -227,36 +203,19 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
         }
         break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_PEER:
-        //
-        // The connection was explicitly shut down by the peer.
-        //
         printf("[conn][%p] Shut down by peer, 0x%llu\n", Connection,
                (unsigned long long)Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
         break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_COMPLETE:
-        //
-        // The connection has completed the shutdown process and is ready to be
-        // safely cleaned up.
-        //
         printf("[conn][%p] All done\n", Connection);
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->ConnectionClose(Connection);
         }
         break;
     case QUIC_CONNECTION_EVENT_RESUMPTION_TICKET_RECEIVED:
-        //
-        // A resumption ticket (also called New Session Ticket or NST) was
-        // received from the server.
-        //
         printf("[conn][%p] Resumption ticket received (%u bytes):\n",
                Connection,
                Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength);
-        // for (uint32_t i = 0;
-        //      i < Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength;
-        //      i++) {
-        //   printf("%.2X",
-        //          (uint8_t)Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket[i]);
-        //}
         printf("\n");
         break;
     default:
@@ -325,7 +284,22 @@ Error:
 }
 
 QuicClient::~QuicClient() {
-    this->MsQuic->ConfigurationClose(this->Configuration);
-    this->MsQuic->RegistrationClose(this->Registration);
-    MsQuicClose(this->MsQuic);
+    if (Host) {
+        delete[] Host;
+        Host = nullptr;
+    }
+    if (MsQuic) {
+        if (Configuration) {
+            MsQuic->ConfigurationClose(Configuration);
+            Configuration = nullptr;
+        }
+
+        if (Registration) {
+            MsQuic->RegistrationClose(Registration);
+            Registration = nullptr;
+        }
+
+        MsQuicClose(MsQuic);
+        MsQuic = nullptr;
+    }
 }
