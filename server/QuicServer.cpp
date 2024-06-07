@@ -1,12 +1,13 @@
 #include "QuicServer.h"
+#include <cstdio>
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
 #endif
 
 bool fileExists(const char *file) {
-  struct stat buffer;
-  return (stat(file, &buffer) == 0);
+    struct stat buffer;
+    return (stat(file, &buffer) == 0);
 }
 
 std::condition_variable QuicServer::cv;
@@ -16,199 +17,236 @@ std::mutex QuicServer::server_status_m;
 bool QuicServer::disconnected = false;
 
 typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
-  QUIC_CREDENTIAL_CONFIG CredConfig;
-  union {
-    QUIC_CERTIFICATE_HASH CertHash;
-    QUIC_CERTIFICATE_HASH_STORE CertHashStore;
-    QUIC_CERTIFICATE_FILE CertFile;
-    QUIC_CERTIFICATE_FILE_PROTECTED CertFileProtected;
-  };
+    QUIC_CREDENTIAL_CONFIG CredConfig;
+    union {
+        QUIC_CERTIFICATE_HASH CertHash;
+        QUIC_CERTIFICATE_HASH_STORE CertHashStore;
+        QUIC_CERTIFICATE_FILE CertFile;
+        QUIC_CERTIFICATE_FILE_PROTECTED CertFileProtected;
+    };
 } QUIC_CREDENTIAL_CONFIG_HELPER;
 
 uint8_t QuicServer::DecodeHexChar(_In_ char c) {
-  if (c >= '0' && c <= '9')
-    return c - '0';
-  if (c >= 'A' && c <= 'F')
-    return 10 + c - 'A';
-  if (c >= 'a' && c <= 'f')
-    return 10 + c - 'a';
-  return 0;
+    if (c >= '0' && c <= '9')
+        return c - '0';
+    if (c >= 'A' && c <= 'F')
+        return 10 + c - 'A';
+    if (c >= 'a' && c <= 'f')
+        return 10 + c - 'a';
+    return 0;
 }
 
 uint32_t QuicServer::DecodeHexBuffer(_In_z_ const char *HexBuffer,
                                      _In_ uint32_t OutBufferLen,
                                      _Out_writes_to_(OutBufferLen, return)
                                          uint8_t *OutBuffer) {
-  uint32_t HexBufferLen = (uint32_t)strlen(HexBuffer) / 2;
-  if (HexBufferLen > OutBufferLen) {
-    return 0;
-  }
+    uint32_t HexBufferLen = (uint32_t)strlen(HexBuffer) / 2;
+    if (HexBufferLen > OutBufferLen) {
+        return 0;
+    }
 
-  for (uint32_t i = 0; i < HexBufferLen; i++) {
-    OutBuffer[i] = (DecodeHexChar(HexBuffer[i * 2]) << 4) |
-                   DecodeHexChar(HexBuffer[i * 2 + 1]);
-  }
+    for (uint32_t i = 0; i < HexBufferLen; i++) {
+        OutBuffer[i] = (DecodeHexChar(HexBuffer[i * 2]) << 4) |
+                       DecodeHexChar(HexBuffer[i * 2 + 1]);
+    }
 
-  return HexBufferLen;
+    return HexBufferLen;
 }
 
 void QuicServer::ServerLoadConfiguration(const char *cert, const char *key) {
-  QUIC_SETTINGS Settings = {0};
+    QUIC_SETTINGS Settings = {0};
 
-  printf("OPENSSL");
+    printf("OPENSSL");
 
-  Settings.IdleTimeoutMs = 0;
-  Settings.IsSet.IdleTimeoutMs = TRUE;
+    Settings.IdleTimeoutMs = 0;
+    Settings.IsSet.IdleTimeoutMs = TRUE;
 
-  Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT;
-  Settings.IsSet.ServerResumptionLevel = TRUE;
+    Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT;
+    Settings.IsSet.ServerResumptionLevel = TRUE;
 
-  Settings.PeerBidiStreamCount = 100;
-  Settings.IsSet.PeerBidiStreamCount = TRUE;
+    Settings.PeerBidiStreamCount = 100;
+    Settings.IsSet.PeerBidiStreamCount = TRUE;
 
-  Settings.PeerUnidiStreamCount = 1;
-  Settings.IsSet.PeerUnidiStreamCount = TRUE;
+    Settings.PeerUnidiStreamCount = 1;
+    Settings.IsSet.PeerUnidiStreamCount = TRUE;
 
 #pragma region OpenSslCert
-  QUIC_CREDENTIAL_CONFIG_HELPER Config;
-  memset(&Config, 0, sizeof(Config));
-  Config.CredConfig.Flags =
-      QUIC_CREDENTIAL_FLAG_NO_CERTIFICATE_VALIDATION; // QUIC_CREDENTIAL_FLAG_REQUIRE_CLIENT_AUTHENTICATION
+    QUIC_CREDENTIAL_CONFIG_HELPER Config;
+    memset(&Config, 0, sizeof(Config));
+    Config.CredConfig.Flags =
+        QUIC_CREDENTIAL_FLAG_NO_CERTIFICATE_VALIDATION; // QUIC_CREDENTIAL_FLAG_REQUIRE_CLIENT_AUTHENTICATION
 
-  printf("cert.pem exists: %d\n", fileExists(cert));
-  printf("key.pem exists: %d\n", fileExists(key));
+    printf("cert.pem exists: %d\n", fileExists(cert));
+    printf("key.pem exists: %d\n", fileExists(key));
 
-  const char *Cert = cert;
-  const char *KeyFile = key;
+    const char *Cert = cert;
+    const char *KeyFile = key;
 
-  Config.CertFile.CertificateFile = (char *)Cert;
-  Config.CertFile.PrivateKeyFile = (char *)KeyFile;
-  Config.CredConfig.Type = QUIC_CREDENTIAL_TYPE_CERTIFICATE_FILE;
-  Config.CredConfig.CertificateFile = &Config.CertFile;
+    Config.CertFile.CertificateFile = (char *)Cert;
+    Config.CertFile.PrivateKeyFile = (char *)KeyFile;
+    Config.CredConfig.Type = QUIC_CREDENTIAL_TYPE_CERTIFICATE_FILE;
+    Config.CredConfig.CertificateFile = &Config.CertFile;
 #pragma endregion
 
-  QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
-  if (QUIC_FAILED(Status = MsQuic->ConfigurationOpen(
-                      Registration, &Alpn, 1, &Settings, sizeof(Settings), this,
-                      &Configuration))) {
-    printf("ConfigurationOpen failed, 0x%x!\n", Status);
-  }
+    QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
+    if (QUIC_FAILED(Status = MsQuic->ConfigurationOpen(
+                        Registration, &Alpn, 1, &Settings, sizeof(Settings),
+                        this, &Configuration))) {
+        printf("ConfigurationOpen failed, 0x%x!\n", Status);
+    }
 
-  if (QUIC_FAILED(Status = MsQuic->ConfigurationLoadCredential(
-                      Configuration, &Config.CredConfig))) {
-    printf("ConfigurationLoadCredential failed, 0x%x!\n", Status);
-  }
+    if (QUIC_FAILED(Status = MsQuic->ConfigurationLoadCredential(
+                        Configuration, &Config.CredConfig))) {
+        printf("ConfigurationLoadCredential failed, 0x%x!\n", Status);
+    }
 }
 
 void QuicServer::ServerLoadConfiguration(const char *hash) {
 
-  QUIC_SETTINGS Settings = {0};
+    QUIC_SETTINGS Settings = {0};
 
-  Settings.IdleTimeoutMs = 0;
-  Settings.IsSet.IdleTimeoutMs = TRUE;
+    Settings.IdleTimeoutMs = 0;
+    Settings.IsSet.IdleTimeoutMs = TRUE;
 
-  Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT;
-  Settings.IsSet.ServerResumptionLevel = TRUE;
+    Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT;
+    Settings.IsSet.ServerResumptionLevel = TRUE;
 
-  Settings.PeerBidiStreamCount = 100;
-  Settings.IsSet.PeerBidiStreamCount = TRUE;
+    Settings.PeerBidiStreamCount = 100;
+    Settings.IsSet.PeerBidiStreamCount = TRUE;
 
 #pragma region HashCert
-  QUIC_CREDENTIAL_CONFIG_HELPER Config;
-  memset(&Config, 0, sizeof(Config));
-  Config.CredConfig.Flags = QUIC_CREDENTIAL_FLAG_REQUIRE_CLIENT_AUTHENTICATION;
+    QUIC_CREDENTIAL_CONFIG_HELPER Config;
+    memset(&Config, 0, sizeof(Config));
+    Config.CredConfig.Flags =
+        QUIC_CREDENTIAL_FLAG_REQUIRE_CLIENT_AUTHENTICATION;
 
-  uint32_t CertHashLen = DecodeHexBuffer(hash, sizeof(Config.CertHash.ShaHash),
-                                         Config.CertHash.ShaHash);
-  if (CertHashLen != sizeof(Config.CertHash.ShaHash)) {
-    printf("Invalid certificate hash!\n");
-    return;
-  }
-  Config.CredConfig.Type = QUIC_CREDENTIAL_TYPE_CERTIFICATE_HASH;
-  Config.CredConfig.CertificateHash = &Config.CertHash;
+    uint32_t CertHashLen = DecodeHexBuffer(
+        hash, sizeof(Config.CertHash.ShaHash), Config.CertHash.ShaHash);
+    if (CertHashLen != sizeof(Config.CertHash.ShaHash)) {
+        printf("Invalid certificate hash!\n");
+        return;
+    }
+    Config.CredConfig.Type = QUIC_CREDENTIAL_TYPE_CERTIFICATE_HASH;
+    Config.CredConfig.CertificateHash = &Config.CertHash;
 #pragma endregion
 
-  QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
-  if (QUIC_FAILED(Status = MsQuic->ConfigurationOpen(
-                      Registration, &Alpn, 1, &Settings, sizeof(Settings), this,
-                      &Configuration))) {
-    printf("ConfigurationOpen failed, 0x%x!\n", Status);
-  }
+    QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
+    if (QUIC_FAILED(Status = MsQuic->ConfigurationOpen(
+                        Registration, &Alpn, 1, &Settings, sizeof(Settings),
+                        this, &Configuration))) {
+        printf("ConfigurationOpen failed, 0x%x!\n", Status);
+    }
 
-  if (QUIC_FAILED(Status = MsQuic->ConfigurationLoadCredential(
-                      Configuration, &Config.CredConfig))) {
-    printf("ConfigurationLoadCredential failed, 0x%x!\n", Status);
-  }
+    if (QUIC_FAILED(Status = MsQuic->ConfigurationLoadCredential(
+                        Configuration, &Config.CredConfig))) {
+        printf("ConfigurationLoadCredential failed, 0x%x!\n", Status);
+    }
 }
 
 QUIC_STATUS QUIC_API QuicServer::StaticServerConnectionCallback(
     _In_ HQUIC Connection, _In_opt_ void *Context,
     _Inout_ QUIC_CONNECTION_EVENT *Event) {
-  return reinterpret_cast<QuicServer *>(Context)->ServerConnectionCallback(
-      Connection, Context, Event);
+    return reinterpret_cast<QuicServer *>(Context)->ServerConnectionCallback(
+        Connection, Context, Event);
 }
 
 _IRQL_requires_max_(DISPATCH_LEVEL)
     _Function_class_(QUIC_STREAM_CALLBACK) QUIC_STATUS QUIC_API
     QuicServer::ClientStreamCallback(_In_ HQUIC Stream, _In_opt_ void *Context,
                                      _Inout_ QUIC_STREAM_EVENT *Event) {
-  UNREFERENCED_PARAMETER(Context);
-  switch (Event->Type) {
-  case QUIC_STREAM_EVENT_START_COMPLETE:
-    if (QUIC_SUCCEEDED(Event->START_COMPLETE.Status)) {
-      printf("Stream started successfully.\n");
-      Event->START_COMPLETE.PeerAccepted = TRUE;
-    } else {
-      printf("Stream start failed, 0x%x!\n", Event->START_COMPLETE.Status);
+    UNREFERENCED_PARAMETER(Context);
+    switch (Event->Type) {
+    case QUIC_STREAM_EVENT_START_COMPLETE:
+        if (QUIC_SUCCEEDED(Event->START_COMPLETE.Status)) {
+            printf("Stream started successfully.\n");
+            Event->START_COMPLETE.PeerAccepted = TRUE;
+        } else {
+            printf("Stream start failed, 0x%x!\n",
+                   Event->START_COMPLETE.Status);
+        }
+        break;
+    case QUIC_STREAM_EVENT_SEND_COMPLETE:
+        free(Event->SEND_COMPLETE.ClientContext);
+        printf("[strm][%p] Data sent\n", Stream);
+        break;
+    case QUIC_STREAM_EVENT_RECEIVE: {
+        QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
+
+        auto data = Event->RECEIVE.Buffers->Buffer;
+        size_t dataSize = Event->RECEIVE.TotalBufferLength;
+
+        std::printf("\n\nReceived Cord from [%p]", Stream);
+
+        PeerHandler::HandlePeer(Stream, (*data), dataSize);
+
+        MsQuic->StreamReceiveComplete(Stream, Event->RECEIVE.TotalBufferLength);
+    } break;
+    case QUIC_STREAM_EVENT_PEER_SEND_ABORTED:
+        printf("[strm][%p] SEND Peer aborted\n", Stream);
+        break;
+    case QUIC_STREAM_EVENT_PEER_RECEIVE_ABORTED:
+        printf("[strm][%p] RECEIVE Peer aborted\n", Stream);
+        break;
+    case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
+        printf("[strm][%p] Peer shut down\n", Stream);
+        PeerHandler::onPeerShutdown(Stream);
+        QuicServer::xsend(Stream, Context);
+    } break;
+    case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
+        printf("[strm][%p] All done\n", Stream);
+        if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
+            MsQuic->StreamClose(Stream);
+        }
+        break;
+    case QUIC_STREAM_EVENT_SEND_SHUTDOWN_COMPLETE:
+        printf("[strm][%p] Send shutdown complete\n", Stream);
+        break;
+    default:
+        printf("Stream Event: %d\n", Event->Type);
+        break;
     }
-    break;
-  case QUIC_STREAM_EVENT_SEND_COMPLETE:
-    free(Event->SEND_COMPLETE.ClientContext);
-    printf("[strm][%p] Data sent\n", Stream);
-    break;
-  case QUIC_STREAM_EVENT_RECEIVE: {
-    QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
+    return QUIC_STATUS_SUCCESS;
+}
 
-    auto data = Event->RECEIVE.Buffers->Buffer;
-    size_t dataSize = Event->RECEIVE.TotalBufferLength;
+void QuicServer::xsend(HQUIC Stream, void *Context) {
+    return reinterpret_cast<QuicServer *>(Context)->send(Stream);
+}
 
-    std::printf("\n\nReceived Cord from [%p]", Stream);
+void QuicServer::send(HQUIC Stream) {
 
-    PeerHandler::HandlePeer(Stream, (*data), dataSize);
+    User u;
 
-    MsQuic->StreamReceiveComplete(Stream, Event->RECEIVE.TotalBufferLength);
-  } break;
-  case QUIC_STREAM_EVENT_PEER_SEND_ABORTED:
-    printf("[strm][%p] SEND Peer aborted\n", Stream);
-    break;
-  case QUIC_STREAM_EVENT_PEER_RECEIVE_ABORTED:
-    printf("[strm][%p] RECEIVE Peer aborted\n", Stream);
-    break;
-  case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
-    printf("[strm][%p] Peer shut down\n", Stream);
-    PeerHandler::onPeerShutdown(Stream);
-  } break;
-  case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
-    printf("[strm][%p] All done\n", Stream);
-    if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
-      MsQuic->StreamClose(Stream);
+    u.set_name("Akzestia");
+    u.set_email("akzestia@xxx.com");
+
+    absl::Cord message;
+    u.SerializePartialToCord(&message);
+    QUIC_BUFFER *SendBuffer;
+    absl::Cord::ChunkIterator start = message.chunk_begin();
+    absl::Cord::ChunkIterator end = message.chunk_end();
+    std::vector<uint8_t> buffer;
+    for (auto it = start; it != end; ++it) {
+        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
     }
-    break;
-  case QUIC_STREAM_EVENT_SEND_SHUTDOWN_COMPLETE:
-    printf("[strm][%p] Send shutdown complete\n", Stream);
-    break;
-  default:
-    printf("Stream Event: %d\n", Event->Type);
-    break;
-  }
-  return QUIC_STATUS_SUCCESS;
+
+    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    SendBuffer->Length = buffer.size();
+    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+
+    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
+    if (QUIC_FAILED(Status =
+                        MsQuic->StreamSend(Stream, SendBuffer, 1,
+                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
+        printf("StreamSend failed, 0x%x!\n", Status);
+        MsQuic->StreamShutdown(Stream, QUIC_STREAM_SHUTDOWN_FLAG_ABORT, 0);
+    }
 }
 
 QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
     _Inout_ QUIC_STREAM_EVENT *Event) {
-  return reinterpret_cast<QuicServer *>(Context)->ClientStreamCallback(
-      Stream, Context, Event);
+    return reinterpret_cast<QuicServer *>(Context)->ClientStreamCallback(
+        Stream, Context, Event);
 }
 
 _IRQL_requires_max_(DISPATCH_LEVEL)
@@ -216,55 +254,50 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     QuicServer::ServerConnectionCallback(_In_ HQUIC Connection,
                                          _In_opt_ void *Context,
                                          _Inout_ QUIC_CONNECTION_EVENT *Event) {
-  UNREFERENCED_PARAMETER(Context);
-  switch (Event->Type) {
-  case QUIC_CONNECTION_EVENT_CONNECTED:
-    printf("[conn][%p] Connected\n", Connection);
-    MsQuic->ConnectionSendResumptionTicket(
-        Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
-    break;
-  case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_TRANSPORT:
-    if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status ==
-        QUIC_STATUS_CONNECTION_IDLE) {
-      printf("[conn][%p] Successfully shut down on idle.\n", Connection);
-    } else {
-      printf("[conn][%p] Shut down by transport, 0x%x\n", Connection,
-             Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status);
-    }
-    break;
-  case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_PEER:
-    printf("[conn][%p] Shut down by peer, 0x%llu\n", Connection,
-           (unsigned long long)Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
-    break;
-  case QUIC_CONNECTION_EVENT_SHUTDOWN_COMPLETE:
-    printf("[conn][%p] All done\n", Connection);
-    MsQuic->ConnectionClose(Connection);
-    break;
-  case QUIC_CONNECTION_EVENT_PEER_STREAM_STARTED: {
-    printf("[strm][%p] Peer started\n", Event->PEER_STREAM_STARTED.Stream);
+    UNREFERENCED_PARAMETER(Context);
+    switch (Event->Type) {
+    case QUIC_CONNECTION_EVENT_CONNECTED:
+        printf("[conn][%p] Connected\n", Connection);
+        MsQuic->ConnectionSendResumptionTicket(
+            Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
+        break;
+    case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_TRANSPORT:
+        if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status ==
+            QUIC_STATUS_CONNECTION_IDLE) {
+            printf("[conn][%p] Successfully shut down on idle.\n", Connection);
+        } else {
+            printf("[conn][%p] Shut down by transport, 0x%x\n", Connection,
+                   Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status);
+        }
+        break;
+    case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_PEER:
+        printf("[conn][%p] Shut down by peer, 0x%llu\n", Connection,
+               (unsigned long long)Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
+        break;
+    case QUIC_CONNECTION_EVENT_SHUTDOWN_COMPLETE:
+        printf("[conn][%p] All done\n", Connection);
+        MsQuic->ConnectionClose(Connection);
+        break;
+    case QUIC_CONNECTION_EVENT_PEER_STREAM_STARTED: {
+        printf("[strm][%p] Peer started\n", Event->PEER_STREAM_STARTED.Stream);
+        HQUIC Stream = Event->PEER_STREAM_STARTED.Stream;
 
-    if (this->inStreams.find(Event->PEER_STREAM_STARTED.Stream) ==
-        this->inStreams.end()) {
-      this->inStreams[Event->PEER_STREAM_STARTED.Stream] =
-          std::vector<uint8_t>();
+        MsQuic->SetCallbackHandler(
+            Stream, (void *)QuicServer::StaticClientStreamCallback, this);
+        break;
     }
-    HQUIC Stream = Event->PEER_STREAM_STARTED.Stream;
-    MsQuic->SetCallbackHandler(
-        Stream, (void *)QuicServer::StaticClientStreamCallback, this);
-    break;
-  }
-  case QUIC_CONNECTION_EVENT_RESUMED:
-    printf("[conn][%p] Connection resumed!\n", Connection);
-    break;
-  case QUIC_CONNECTION_EVENT_IDEAL_PROCESSOR_CHANGED: {
+    case QUIC_CONNECTION_EVENT_RESUMED:
+        printf("[conn][%p] Connection resumed!\n", Connection);
+        break;
+    case QUIC_CONNECTION_EVENT_IDEAL_PROCESSOR_CHANGED: {
 
-    break;
-  }
-  default:
-    printf("\nDEFAULT: QUIC_EVENT of type %d occurred\n", Event->Type);
-    break;
-  }
-  return QUIC_STATUS_SUCCESS;
+        break;
+    }
+    default:
+        printf("\nDEFAULT: QUIC_EVENT of type %d occurred\n", Event->Type);
+        break;
+    }
+    return QUIC_STATUS_SUCCESS;
 }
 
 _IRQL_requires_max_(PASSIVE_LEVEL)
@@ -272,151 +305,156 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
     QuicServer::ServerListenerCallback(_In_ HQUIC Listener,
                                        _In_opt_ void *Context,
                                        _Inout_ QUIC_LISTENER_EVENT *Event) {
-  UNREFERENCED_PARAMETER(Listener);
-  UNREFERENCED_PARAMETER(Context);
-  QUIC_STATUS Status = QUIC_STATUS_NOT_SUPPORTED;
-  switch (Event->Type) {
-  case QUIC_LISTENER_EVENT_NEW_CONNECTION:
-    MsQuic->SetCallbackHandler(
-        Event->NEW_CONNECTION.Connection,
-        (void *)QuicServer::StaticServerConnectionCallback, this);
-    Status = MsQuic->ConnectionSetConfiguration(
-        Event->NEW_CONNECTION.Connection, Configuration);
-    break;
-  default:
-    break;
-  }
-  return Status;
+    UNREFERENCED_PARAMETER(Listener);
+    UNREFERENCED_PARAMETER(Context);
+    QUIC_STATUS Status = QUIC_STATUS_NOT_SUPPORTED;
+    switch (Event->Type) {
+    case QUIC_LISTENER_EVENT_NEW_CONNECTION:
+        MsQuic->SetCallbackHandler(
+            Event->NEW_CONNECTION.Connection,
+            (void *)QuicServer::StaticServerConnectionCallback, this);
+        Status = MsQuic->ConnectionSetConfiguration(
+            Event->NEW_CONNECTION.Connection, Configuration);
+        break;
+    case QUIC_LISTENER_EVENT_STOP_COMPLETE: {
+
+    } break;
+    default:
+        break;
+    }
+    return Status;
 }
 
 QUIC_STATUS QUIC_API QuicServer::StaticServerListenerCallback(
     _In_ HQUIC Listener, _In_opt_ void *Context,
     _Inout_ QUIC_LISTENER_EVENT *Event) {
-  return reinterpret_cast<QuicServer *>(Context)->ServerListenerCallback(
-      Listener, Context, Event);
+    return reinterpret_cast<QuicServer *>(Context)->ServerListenerCallback(
+        Listener, Context, Event);
 }
 
 void QuicServer::Start() {
-  std::cout << "Start"
-            << "\n";
-  if (!this->isRunning.load()) {
-    this->isRunning.store(true);
+    std::cout << "Start"
+              << "\n";
+    if (!this->isRunning.load()) {
+        this->isRunning.store(true);
 
-    this->serverThread = std::thread([this]() {
-      QUIC_ADDR Address = {0};
-      QuicAddrSetFamily(&Address, QUIC_ADDRESS_FAMILY_UNSPEC);
-      QuicAddrSetPort(&Address, this->UdpPort);
+        this->serverThread = std::thread([this]() {
+            QUIC_ADDR Address = {0};
+            QuicAddrSetFamily(&Address, QUIC_ADDRESS_FAMILY_UNSPEC);
+            QuicAddrSetPort(&Address, this->UdpPort);
 
-      if (key != nullptr) {
-        ServerLoadConfiguration(cert, key);
-      } else {
-        ServerLoadConfiguration(cert);
-      }
+            if (key != nullptr) {
+                ServerLoadConfiguration(cert, key);
+            } else {
+                ServerLoadConfiguration(cert);
+            }
 
-      if (QUIC_FAILED(Status = MsQuic->ListenerOpen(
-                          Registration,
-                          QuicServer::StaticServerListenerCallback, this,
-                          &Listener))) {
-        printf("ListenerOpen failed, 0x%x!\n", Status);
-        if (Listener != NULL) {
-          MsQuic->ListenerClose(Listener);
-        }
-      }
+            if (QUIC_FAILED(Status = MsQuic->ListenerOpen(
+                                Registration,
+                                QuicServer::StaticServerListenerCallback, this,
+                                &Listener))) {
+                printf("ListenerOpen failed, 0x%x!\n", Status);
+                if (Listener != NULL) {
+                    MsQuic->ListenerClose(Listener);
+                }
+            }
 
-      if (QUIC_FAILED(
-              Status = MsQuic->ListenerStart(Listener, &Alpn, 1, &Address))) {
-        printf("ListenerStart failed, 0x%x!\n", Status);
-        if (Listener != NULL) {
-          MsQuic->ListenerClose(Listener);
-        }
-      }
+            if (QUIC_FAILED(Status = MsQuic->ListenerStart(Listener, &Alpn, 1,
+                                                           &Address))) {
+                printf("ListenerStart failed, 0x%x!\n", Status);
+                if (Listener != NULL) {
+                    MsQuic->ListenerClose(Listener);
+                }
+            }
 
-      std::cout << "Server is running..." << std::endl;
-      std::unique_lock<std::mutex> lk(server_status_m);
-      server_status.wait(lk);
+            std::cout << "Server is running..." << std::endl;
+            std::unique_lock<std::mutex> lk(server_status_m);
+            server_status.wait(lk);
 
-      printf("Ebnded");
-    });
-  }
+            printf("Ebnded");
+        });
+    }
 }
 void QuicServer::Close() {
-  if (this->isRunning.load()) {
-    if (this->serverThread.joinable()) {
-      this->serverThread.join();
+    if (this->isRunning.load()) {
+        if (this->serverThread.joinable()) {
+            this->serverThread.join();
 
-      // Check if the thread has indeed terminated
-      if (!this->serverThread.joinable()) {
-        std::cout << "Server thread has terminated successfully." << std::endl;
-        if (Listener != NULL) {
-          std::cout << "Server thread has terminated successfullyX."
-                    << std::endl;
-          MsQuic->ListenerClose(Listener);
+            // Check if the thread has indeed terminated
+            if (!this->serverThread.joinable()) {
+                std::cout << "Server thread has terminated successfully."
+                          << std::endl;
+                if (Listener != NULL) {
+                    std::cout << "Server thread has terminated successfullyX."
+                              << std::endl;
+                    MsQuic->ListenerClose(Listener);
+                }
+                std::cout << "Server thread has terminated successfully."
+                          << std::endl;
+            } else {
+                std::cout << "Failed to terminate server thread." << std::endl;
+                // You might consider additional handling here, such as
+                // forcefully terminating the thread
+            }
+        } else {
+            std::cout << "Server thread is not joinable." << std::endl;
         }
-        std::cout << "Server thread has terminated successfully." << std::endl;
-      } else {
-        std::cout << "Failed to terminate server thread." << std::endl;
-        // You might consider additional handling here, such as forcefully
-        // terminating the thread
-      }
-    } else {
-      std::cout << "Server thread is not joinable." << std::endl;
+        this->isRunning.store(false);
+        this->server_status.notify_all();
     }
-    this->isRunning.store(false);
-    this->server_status.notify_all();
-  }
 
-  std::cout << "isRunning: " << this->isRunning.load() << std::endl;
+    std::cout << "isRunning: " << this->isRunning.load() << std::endl;
 }
 
 bool QuicServer::getIsRunning() { return this->isRunning.load(); }
 QuicServer::QuicServer(const char *Host, const uint16_t UdpPort,
                        const char *cert, const char *key) {
-  this->Host = (char *)Host;
-  this->UdpPort = UdpPort;
-  this->cert = (char *)cert;
-  this->key = (char *)key;
+    this->Host = (char *)Host;
+    this->UdpPort = UdpPort;
+    this->cert = (char *)cert;
+    this->key = (char *)key;
 
-  if (QUIC_FAILED(Status = MsQuicOpen2(&MsQuic))) {
-    printf("MsQuicOpen2 failed, 0x%x!\n", Status);
-    exit(-1);
-  }
+    if (QUIC_FAILED(Status = MsQuicOpen2(&MsQuic))) {
+        printf("MsQuicOpen2 failed, 0x%x!\n", Status);
+        exit(-1);
+    }
 
-  if (QUIC_FAILED(Status =
-                      MsQuic->RegistrationOpen(&RegConfig, &Registration))) {
-    printf("RegistrationOpen failed, 0x%x!\n", Status);
-    exit(-1);
-  }
+    if (QUIC_FAILED(Status =
+                        MsQuic->RegistrationOpen(&RegConfig, &Registration))) {
+        printf("RegistrationOpen failed, 0x%x!\n", Status);
+        exit(-1);
+    }
 }
 
 QuicServer::~QuicServer() {
-  printf("DELETED");
-  if (this->Host != nullptr) {
-    delete[] this->Host;
-    this->Host = nullptr;
-  }
-
-  if (this->cert != nullptr) {
-    delete[] this->cert;
-    this->cert = nullptr;
-  }
-
-  if (this->key != nullptr) {
-    delete[] this->key;
-    this->key = nullptr;
-  }
-
-  if (this->MsQuic != nullptr) {
-    if (this->Configuration != nullptr) {
-      this->MsQuic->ConfigurationClose(this->Configuration);
-      this->Configuration = nullptr;
+    printf("DELETED");
+    if (this->Host != nullptr) {
+        delete[] this->Host;
+        this->Host = nullptr;
     }
 
-    if (this->Registration != nullptr) {
-      this->MsQuic->RegistrationClose(this->Registration);
-      this->Registration = nullptr;
+    if (this->cert != nullptr) {
+        delete[] this->cert;
+        this->cert = nullptr;
     }
 
-    MsQuicClose(this->MsQuic);
-    this->MsQuic = nullptr;
-  }
+    if (this->key != nullptr) {
+        delete[] this->key;
+        this->key = nullptr;
+    }
+
+    if (this->MsQuic != nullptr) {
+        if (this->Configuration != nullptr) {
+            this->MsQuic->ConfigurationClose(this->Configuration);
+            this->Configuration = nullptr;
+        }
+
+        if (this->Registration != nullptr) {
+            this->MsQuic->RegistrationClose(this->Registration);
+            this->Registration = nullptr;
+        }
+
+        MsQuicClose(this->MsQuic);
+        this->MsQuic = nullptr;
+    }
 }

@@ -33,6 +33,10 @@ public:
 
 	void ServerLoadConfiguration(const char* cert, const char* key);
 
+	static void xsend(HQUIC, void*);
+
+	void send(HQUIC);
+
 	QuicServer(const char* Host, const uint16_t UdpPort, const char* cert, const char* key = nullptr);
 
 	std::unordered_map<HQUIC, std::vector<uint8_t>> inStreams;

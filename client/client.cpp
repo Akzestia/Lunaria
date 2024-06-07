@@ -2,6 +2,7 @@
 #include "../Helpers/ScreenCapture.h"
 #include "../proto/user.pb.h"
 #include "../proto/wrapper.pb.h"
+#include <cstdio>
 #include <fstream>
 #include <vector>
 
@@ -26,7 +27,7 @@ int main() {
     QuicClient client("10.10.3.201", 6121, "./certs/server.cert",
                       "./certs/server.key");
     client.Connect();
-
+    char cc = getchar();
     // User u;
 
     // u.set_name("Akzestia");
@@ -51,5 +52,11 @@ int main() {
     
     client.Disconnect();
 
+    char cx = getchar();
+    client.Connect();
+
+    char cu = getchar();
+    
+    client.Disconnect();
     return 0;
 }

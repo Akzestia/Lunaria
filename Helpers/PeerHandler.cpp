@@ -1,8 +1,6 @@
 #include "PeerHandler.h"
 #include <cstdint>
 #include <cstdio>
-#include <fstream>
-
 std::unordered_map<HQUIC, uint8_t *> *PeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
 std::unordered_map<HQUIC, size_t> *PeerHandler::peerDataSizes =
