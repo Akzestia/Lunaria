@@ -57,9 +57,7 @@ int main() {
     
     // client.Disconnect();
 
-    DbManager DbManager;
-
-    DbManager.test();
+    DbManager::test();
 
     return 0;
 }

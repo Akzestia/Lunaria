@@ -3,11 +3,16 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/ini_parser.hpp>
 #include <iostream>
+#include "../proto/build/user.pb.h"
+
 
 class DbManager{
-
 public:
-    void test();
-    static std::string getConnectionString();
+    static void test();
+    static void getUser(std::string, uint8_t);
+    static void getMessages(const User&);
+    static void getContacts(const User&);
+    static void getGraphs(const User&);
 private:
+    static std::string getConnectionString();
 };
