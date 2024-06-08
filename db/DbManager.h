@@ -5,7 +5,6 @@
 #include <iostream>
 #include "../proto/build/user.pb.h"
 
-
 class DbManager{
 public:
     static void test();
