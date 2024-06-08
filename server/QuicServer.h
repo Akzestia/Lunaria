@@ -16,7 +16,7 @@
 class QuicServer {
 
 public:
-	const QUIC_API_TABLE* MsQuic;
+	const QUIC_API_TABLE* MsQuic = nullptr;
 	static std::condition_variable cv;
 	static std::condition_variable server_status;
 	static std::mutex cv_m;
@@ -86,9 +86,9 @@ private :
 	HQUIC Configuration;
 	HQUIC Listener = NULL;
 	QUIC_STATUS Status;
-	char* Host;
-	char* cert;
-	char* key;
+	char* Host = nullptr;
+	char* cert  = nullptr;
+	char* key = nullptr;
 	const QUIC_REGISTRATION_CONFIG RegConfig = { "Server", QUIC_EXECUTION_PROFILE_TYPE_REAL_TIME };
 	const QUIC_BUFFER Alpn = { sizeof("nexus") - 1, (uint8_t*)"nexus" };//wq-vvv-01
 	std::atomic<bool> isRunning = false;

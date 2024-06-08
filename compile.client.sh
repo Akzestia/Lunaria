@@ -8,6 +8,7 @@ if ! g++ -g -o ./build/client \
     -L/usr/lib/gtk-4.0/4.0.0/printbackends -lprintbackend-cups \
     -L/usr/lib/gtk-4.0/4.0.0/printbackends -lprintbackend-file \
     -L/usr/lib -lX11 \
+    -L/usr/lib -lpqxx \
     -L./MsQuic/bin -lmsquic \
 	-L/usr/lib -labsl_log_internal_check_op \
 	-L/usr/lib -labsl_log_internal_message \
@@ -19,6 +20,7 @@ if ! g++ -g -o ./build/client \
 	./proto/build/wrapper.pb.cc \
     ./Helpers/ConnectionManager.cpp \
     ./Helpers/ScreenCapture.cpp \
+    ./db/DbManager.cpp \
     -lstdc++ -lpthread -lprotobuf; then
     echo "Error: Compilation failed"
     exit 1

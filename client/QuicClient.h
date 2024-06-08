@@ -12,7 +12,7 @@
 
 class QuicClient {
   public:
-    const QUIC_API_TABLE *MsQuic;
+    const QUIC_API_TABLE *MsQuic = nullptr;
     static std::condition_variable cv;
     static std::mutex cv_m;
     static bool disconnected;
@@ -55,7 +55,7 @@ class QuicClient {
     HQUIC Registration;
     HQUIC Configuration;
     QUIC_STATUS Status;
-    char *Host;
+    char *Host = nullptr;
     const QUIC_REGISTRATION_CONFIG RegConfig = {
         "Client", QUIC_EXECUTION_PROFILE_TYPE_REAL_TIME};
     const QUIC_BUFFER Alpn = {sizeof("nexus") - 1, (uint8_t *)"nexus"};

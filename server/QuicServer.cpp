@@ -56,7 +56,7 @@ uint32_t QuicServer::DecodeHexBuffer(_In_z_ const char *HexBuffer,
 void QuicServer::ServerLoadConfiguration(const char *cert, const char *key) {
     QUIC_SETTINGS Settings = {0};
 
-    printf("OPENSSL");
+    printf("OPENSSL\n");
 
     Settings.IdleTimeoutMs = 0;
     Settings.IsSet.IdleTimeoutMs = TRUE;

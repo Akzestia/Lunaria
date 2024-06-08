@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <fstream>
 #include <vector>
+#include "../db/DbManager.h"
 
 std::vector<uint8_t> loadFileContent(const std::string &filePath) {
     std::ifstream file(filePath, std::ios::binary | std::ios::ate);
@@ -21,39 +22,44 @@ std::vector<uint8_t> loadFileContent(const std::string &filePath) {
 }
 
 int main() {
-    QuicClient client("10.10.3.201", 6121, "./certs/server.cert",
-                      "./certs/server.key");
-    client.Connect();
-    char cc = getchar();
-    // User u;
+    // QuicClient client("10.10.3.201", 6121, "./certs/server.cert",
+    //                   "./certs/server.key");
+    // client.Connect();
+    // char cc = getchar();
+    // // User u;
 
-    // u.set_name("Akzestia");
-    // u.set_email("akzestia@xxx.com");
-    Person p;
-    p.set_email("Akzestia");
-    p.set_name("akzestia@xxx.com");
+    // // u.set_name("Akzestia");
+    // // u.set_email("akzestia@xxx.com");
+    // Person p;
+    // p.set_email("Akzestia");
+    // p.set_name("akzestia@xxx.com");
 
-    Wrapper w;
+    // Wrapper w;
 
-    // *w.mutable_user() = u;
-    *w.mutable_person() = p;
+    // // *w.mutable_user() = u;
+    // *w.mutable_person() = p;
 
-    absl::Cord cord;
-    bool serialized = w.SerializePartialToCord(&cord);
+    // absl::Cord cord;
+    // bool serialized = w.SerializePartialToCord(&cord);
 
-    if(serialized){
-        client.send(cord);
-    }
+    // if(serialized){
+    //     client.send(cord);
+    // }
 
-    char ch = getchar();
+    // char ch = getchar();
     
-    client.Disconnect();
+    // client.Disconnect();
 
-    char cx = getchar();
-    client.Connect();
+    // char cx = getchar();
+    // client.Connect();
 
-    char cu = getchar();
+    // char cu = getchar();
     
-    client.Disconnect();
+    // client.Disconnect();
+
+    DbManager DbManager;
+
+    DbManager.test();
+
     return 0;
 }
