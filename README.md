@@ -11,4 +11,5 @@
 4 -> Create windows client
 5 -> Client GUI applications for windows/linux
 6 -> DbManager thread safety
+7 -> Github pages
 ```
