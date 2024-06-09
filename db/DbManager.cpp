@@ -22,7 +22,9 @@ void DbManager::test() {
 
         for (; row_it != row_end; ++row_it) {
             const pqxx::result::const_iterator row = *row_it;
+            std::cout << row[0].c_str() << std::endl;
             std::cout << row[1].c_str() << std::endl;
+            std::cout << row[2].c_str() << std::endl;
         }
 
         connection.close();
