@@ -1,4 +1,4 @@
-<h1 align="center"><img src="./github-pages/ArchLogo.png" width="500" alt="MsQuic logo"/></h1>
+<h1 align="center"><img src="./github-pages/ArchFireLogo.png" width="500" alt="MsQuic logo"/></h1>
 #TODO 
 
 ```
