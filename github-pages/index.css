@@ -94,12 +94,14 @@ footer {
 .side-menu ul {
   list-style-type: none;
   padding-left: 3.9rem;
+  min-width: 13.8rem;
   height: auto;
   margin-top: 0.8rem;
   max-height: calc(100vh - 3rem);
   background-color: transparent;
   overflow-y: scroll;
   overflow-x: hidden;
+  position: fixed;
 }
 
 .side-menu li {
@@ -110,7 +112,7 @@ footer {
   text-decoration: none;
   color: #878c9a;
   font-size: 1.3rem;
-  font-weight: bold;
+  font-weight: thin;
   height: 4rem;
 }
 
