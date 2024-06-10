@@ -1,3 +1,158 @@
-html{
-    background-color: #131f24;
+:root {
+  --text-color-light: black;
+  --text-color-dark: white;
+  --bg-color-light: white;
+  --bg-color-dark: #18181b;
+  --border-light: #131f24;
+  --border-dark: white;
+  --text-color-animation-light: aqua; /*TODO*/
+  --text-color-animation-dark: white; /*TODO*/
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  background-color: var(--bg-color-dark);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+header {
+  height: 3.6rem;
+  width: 100%;
+  background-color: transparent;
+  display: flexbox;
+  flex-wrap: wrap;
+  flex-direction: row;
+  color: var(--text-color-dark);
+  font-size: 1.8rem;
+  font-weight: 700;
+  /* border-bottom: 1px solid;
+    border-color: var(--border-dark); */
+}
+
+.App-Name {
+  user-select: none;
+  width: 8rem;
+  margin: 1.3rem 0 0 1.32rem;
+  border: none;
+  transition: border 0.8s ease-in;
+}
+.App-Name::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 0.89rem;
+  top: 3.2rem;
+  width: 0rem; /*10*/
+  height: 0.1rem;
+  background-color: aqua;
+  transition: width 0.167s ease-in;
+}
+
+/* .App-Name:hover::after{
+    color: aqua;
+    width: 8rem;
+} */
+
+footer {
+  height: 4.48rem;
+  width: calc(100% - 3.4rem);
+  align-self: center;
+  position: absolute;
+  bottom: 0;
+  background-color: transparent;
+  border-top: white 1px solid;
+  left: 1.7rem;
+  right: 1.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.side-menu {
+  min-width: 17.8rem;
+  height: 100vh;
+  position: fixed;
+  border: none;
+  color: var(--text-color-dark);
+  font-size: 1.8rem;
+  font-weight: 400;
+  border-right: rgb(63 63 70) 1px solid;
+}
+
+.side-menu img {
+  border-radius: 50%;
+  position: relative;
+  top: 0.5rem;
+}
+
+.side-menu ul {
+  list-style-type: none;
+  padding-left: 3.9rem;
+  height: auto;
+  margin-top: 0.8rem;
+  max-height: calc(100vh - 3rem);
+  background-color: transparent;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.side-menu li {
+  user-select: none;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  text-decoration: none;
+  color: #878c9a;
+  font-size: 1.3rem;
+  font-weight: bold;
+  height: 4rem;
+}
+
+.side-menu p:hover {
+  cursor: pointer;
+}
+
+.pg-title {
+  margin: 0.7rem 0 0 -1.8rem;
+  align-items: normal;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+  height: 5rem;
+}
+
+.footer-github-div {
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.footer-github-div a {
+  text-decoration: none;
+  margin-left: 0.6rem;
+  color: var(--text-color-light);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 0.4rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
