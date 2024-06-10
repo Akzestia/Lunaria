@@ -18,4 +18,6 @@
 5 -> Client GUI applications for windows/linux
 6 -> DbManager thread safety
 7 -> Github pages
+8 -> Localization Jp | Ua | Eng
+9 -> Fix zwlr_screencopy_frame_v1_copy in Wayland
 ```
