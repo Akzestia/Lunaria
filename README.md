@@ -2,7 +2,7 @@
   <img src="https://media1.tenor.com/m/-Vi7l_4kFjgAAAAC/anime.gif" alt="Example" width="300" height="300">
 </p>
 
-<p>Welcome to Linux-x64-HTTP3</p>
+<p align="center">Welcome to Linux-x64-HTTP3</p>
 
 ## Todo
 
