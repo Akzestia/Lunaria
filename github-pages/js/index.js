@@ -29,7 +29,6 @@ function render(title) {
 }
 
 function styleText(text) {
-  // Replace angle brackets with HTML entities
   text = text.replace(/</g, '&lt;');
   text = text.replace(/>/g, '&gt;');
 
@@ -38,7 +37,6 @@ function styleText(text) {
   const classNames = /\b([A-Z][a-zA-Z0-9]*)\b/g;
   const functionNames = /\b([a-z_][a-zA-Z0-9_]*(?=\())/g;
   const brackets = /[\(\)\[\]\{\}]/g;
-  const operators = /[=+\-*/%&|^~]|<(?!=)/g; // Modified to include angle brackets as well
   const numbers = /\b(\d+(\.\d+)?(e[+-]?\d+)?)\b/gi;
   const strings = /"(.*?)"|'(.*?)'/g;
   const comments = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)/g;
