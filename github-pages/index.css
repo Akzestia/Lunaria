@@ -188,12 +188,28 @@ footer {
   .side-menu {
     overflow: hidden;
     min-width: 0;
+    height: 0;
     width: 0rem;
   }
   .side-menu ul {
     min-width: 0;
     width: 0;
+    height: 0;
     overflow: hidden;
+  }
+  .root{
+    width: calc(100% - 19.8rem);
+  }
+
+  .root > h1{
+    align-self: center;
+    margin-left: -1rem !important;
+  }
+  .side-outline{
+    min-width: 0;
+    width: 0;
+    overflow: 0;
+    height: 0;
   }
 }
 
