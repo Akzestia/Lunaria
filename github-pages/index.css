@@ -114,6 +114,7 @@ footer {
   align-items: center;
 }
 
+
 .side-menu {
   min-width: 17.8rem;
   height: 100vh;
@@ -180,6 +181,12 @@ footer {
 .side-menu li > p:hover{
     color: aqua;
     cursor: pointer;
+}
+
+@media (max-width: 1000px) {
+  .side-menu {
+    width: 0rem;
+  }
 }
 
 .pg-title {

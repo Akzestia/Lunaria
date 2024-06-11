@@ -5,12 +5,15 @@
   border-radius: 0.2rem;
   background-color: #27272a;
   width: 96%;
+  min-width: 30rem;
   align-self: center;
   height: auto;
   padding: 0.7em 0 0.7em 0;
   align-items: center;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 0 0 0;
 }
 
 .root > h1 {
@@ -34,7 +37,8 @@
   margin: 0 0 0 1.2rem;
   font-weight: 300;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-  Liberation Mono, Courier New, monospace;;
+  Liberation Mono, Courier New, monospace;
+  white-space: pre-wrap;
 }
 [data-style="blue"] {
   color: #61afef; /* Theme blue color */
