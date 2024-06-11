@@ -1,0 +1,73 @@
+.container {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    Liberation Mono, Courier New, monospace;
+  font-size: 1em;
+  border-radius: 0.2rem;
+  background-color: #27272a;
+  width: 96%;
+  align-self: center;
+  height: auto;
+  padding: 0.7em 0 0.7em 0;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.root > h1 {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.root > h1::before{
+
+}
+
+.container > p {
+  margin: 0 0 0 1.2rem;
+}
+
+.container > span {
+  margin: 0 0 0 1.2rem;
+}
+
+.container > pre {
+  margin: 0 0 0 1.2rem;
+  font-weight: 300;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  Liberation Mono, Courier New, monospace;;
+}
+[data-style="blue"] {
+  color: #61afef; /* Theme blue color */
+}
+
+[data-style="red"] {
+  color: #e06c75; /* Theme red color */
+}
+
+[data-style="purple"] {
+  color: #c678dd; /* Theme purple color */
+}
+
+[data-style="green"] {
+  color: #98c379; /* Theme green color */
+}
+
+[data-style="yellow"] {
+  color: #e5c07b; /* Theme yellow color */
+}
+
+[data-style="grey"] {
+  color: #6c757d; /* Theme grey color */
+}
+
+[data-style="orange"] {
+  color: #d19a66; /* Theme orange color */
+}
+
+[data-style="cyan"] {
+  color: #56b6c2; /* Theme cyan color */
+}
+
+[data-style="pink"] {
+  color: #e866b6; /* Theme pink color */
+}

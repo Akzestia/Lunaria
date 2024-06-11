@@ -19,6 +19,12 @@ html {
     Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 header {
   height: 3.6rem;
   width: 100%;
@@ -29,8 +35,6 @@ header {
   color: var(--text-color-dark);
   font-size: 1.8rem;
   font-weight: 700;
-  /* border-bottom: 1px solid;
-    border-color: var(--border-dark); */
 }
 
 .App-Name {
@@ -52,11 +56,47 @@ header {
   transition: width 0.167s ease-in;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 0.4rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 /* .App-Name:hover::after{
     color: aqua;
     width: 8rem;
 } */
 
+.root {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: calc(100% - 37.6rem);
+  margin-left: -1.8rem;
+  height: auto;
+  padding: 1rem 1rem 1.5rem 1rem;
+  color: var(--text-color-dark);
+}
+
+.root::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.root::-webkit-scrollbar-thumb {
+  background: transparent;
+}
 footer {
   height: 4.48rem;
   width: calc(100% - 3.4rem);
@@ -82,7 +122,25 @@ footer {
   color: var(--text-color-dark);
   font-size: 1.8rem;
   font-weight: 400;
+  left: 0;
   border-right: rgb(63 63 70) 1px solid;
+}
+.side-outline {
+  min-width: 19.8rem;
+  height: 100vh;
+  right: 0;
+  position: fixed;
+  border: none;
+  font-size: 1.8rem;
+  font-weight: 400;
+  color: var(--text-color-dark);
+  border: none;
+}
+
+.side-outline-label {
+  font-size: 1.15rem;
+  margin-top: 1.2rem;
+  font-weight: 600;
 }
 
 .side-menu img {
@@ -115,9 +173,13 @@ footer {
   font-weight: thin;
   height: 4rem;
 }
+.side-menu li > p{
+    transition: color .08s linear;
+}
 
-.side-menu p:hover {
-  cursor: pointer;
+.side-menu li > p:hover{
+    color: aqua;
+    cursor: pointer;
 }
 
 .pg-title {
@@ -140,21 +202,4 @@ footer {
   text-decoration: none;
   margin-left: 0.6rem;
   color: var(--text-color-light);
-}
-
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 0.4rem;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }
