@@ -1,5 +1,7 @@
 import { QuicClient, Wayland, QuicServer } from "./texts.js";
 
+render("Akzestia");
+
 function render(title) {
   const rootElement = document.getElementById("root");
   switch (title) {
