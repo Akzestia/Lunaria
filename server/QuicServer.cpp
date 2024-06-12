@@ -59,7 +59,8 @@ void QuicServer::ServerLoadConfiguration(const char *cert, const char *key) {
     Settings.IdleTimeoutMs = 0;
     Settings.IsSet.IdleTimeoutMs = TRUE;
 
-    Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT;//QUIC_SERVER_RESUME_AND_ZERORTT
+    Settings.ServerResumptionLevel =
+        QUIC_SERVER_RESUME_AND_ZERORTT; // QUIC_SERVER_RESUME_AND_ZERORTT
     Settings.IsSet.ServerResumptionLevel = TRUE;
 
     Settings.PeerBidiStreamCount = 100;
@@ -238,9 +239,6 @@ void QuicServer::send(HQUIC Stream) {
     }
 }
 
-
-
-
 QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
     _Inout_ QUIC_STREAM_EVENT *Event) {
@@ -255,11 +253,14 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
                                          _Inout_ QUIC_CONNECTION_EVENT *Event) {
     UNREFERENCED_PARAMETER(Context);
     switch (Event->Type) {
-    case QUIC_CONNECTION_EVENT_CONNECTED:
+    case QUIC_CONNECTION_EVENT_CONNECTED: {
         printf("[conn][%p] Connected\n", Connection);
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
-        break;
+
+        User u;
+        ConnectionManager::addUser(Connection, u);
+    } break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_TRANSPORT:
         if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status ==
             QUIC_STATUS_CONNECTION_IDLE) {
@@ -269,10 +270,12 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
                    Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status);
         }
         break;
-    case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_PEER:
+    case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_PEER: {
         printf("[conn][%p] Shut down by peer, 0x%llu\n", Connection,
                (unsigned long long)Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
-        break;
+
+        ConnectionManager::removeUser(Connection);
+    } break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_COMPLETE:
         printf("[conn][%p] All done\n", Connection);
         MsQuic->ConnectionClose(Connection);

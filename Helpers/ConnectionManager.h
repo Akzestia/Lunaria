@@ -9,6 +9,7 @@ class ConnectionManager {
     static bool addUser(HQUIC, User);
     static bool updateUser(User);
     static bool removeUser(User);
+    static bool removeUser(HQUIC);
     static HQUIC getConenction(User);
     ~ConnectionManager();
   private:

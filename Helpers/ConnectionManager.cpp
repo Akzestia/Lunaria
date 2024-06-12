@@ -35,6 +35,19 @@ bool ConnectionManager::removeUser(User user) {
     printf("\nuser was successfully removed\n");
     return true;
 }
+bool ConnectionManager::removeUser(HQUIC connection) {
+    if (!connection) {
+        printf("\nuser wasn't found");
+        return false;
+    }
+    size_t erased = (*users).erase(connection);
+    if (erased <= 0) {
+        printf("\nuser wasn't removed");
+        return false;
+    }
+    printf("\nuser was successfully removed\n");
+    return true;
+}
 bool ConnectionManager::updateUser(User user) {
     HQUIC connection = ConnectionManager::getConenction(user);
     if (!connection) {
