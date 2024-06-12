@@ -211,9 +211,7 @@ void QuicServer::xsend(HQUIC Stream, void *Context) {
 }
 
 void QuicServer::send(HQUIC Stream) {
-
     User u;
-
     u.set_name("Akzestia");
     u.set_email("akzestia@xxx.com");
 
@@ -240,6 +238,9 @@ void QuicServer::send(HQUIC Stream) {
     }
 }
 
+
+
+
 QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
     _Inout_ QUIC_STREAM_EVENT *Event) {
@@ -256,7 +257,6 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     switch (Event->Type) {
     case QUIC_CONNECTION_EVENT_CONNECTED:
         printf("[conn][%p] Connected\n", Connection);
-
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
         break;

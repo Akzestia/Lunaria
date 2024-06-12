@@ -1,9 +1,9 @@
 #pragma once
 #include "../MsQuic/include/msquic.h"
-#include <absl/strings/cord.h>
-#include <condition_variable>
 #include "../proto/build/user.pb.h"
 #include "../proto/build/wrapper.pb.h"
+#include <absl/strings/cord.h>
+#include <condition_variable>
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
@@ -12,21 +12,24 @@
 
 class QuicClient {
   public:
-    const QUIC_API_TABLE *MsQuic = nullptr;
-    static std::condition_variable cv;
-    static std::mutex cv_m;
-    static bool disconnected;
-
     void Connect();
 
     void Disconnect();
 
     void send(const absl::Cord &message);
 
-    void ClientLoadConfiguration(const char *cert, const char *key);
-
     QuicClient(const char *Host, const uint16_t UdpPort, const char *cert,
                const char *key);
+
+    ~QuicClient();
+
+  private:
+    const QUIC_API_TABLE *MsQuic = nullptr;
+    static std::condition_variable cv;
+    static std::mutex cv_m;
+    static bool disconnected;
+
+    void ClientLoadConfiguration(const char *cert, const char *key);
 
     _IRQL_requires_max_(PASSIVE_LEVEL)
         _Function_class_(QUIC_CONNECTION_CALLBACK) QUIC_STATUS QUIC_API
@@ -46,15 +49,12 @@ class QuicClient {
     StaticClientStreamCallback(_In_ HQUIC Stream, _In_opt_ void *Context,
                                _Inout_ QUIC_STREAM_EVENT *Event);
 
-    ~QuicClient();
-
-  private:
     QUIC_CREDENTIAL_CONFIG CredConfig;
     uint16_t UdpPort;
     HQUIC Connection;
     HQUIC Registration;
     HQUIC Configuration;
-    uint8_t* ResumptionTicket = nullptr;
+    uint8_t *ResumptionTicket = nullptr;
     uint16_t ResumptionTicketLength;
     QUIC_STATUS Status;
     const char *Host;
