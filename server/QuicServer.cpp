@@ -55,19 +55,17 @@ uint32_t QuicServer::DecodeHexBuffer(_In_z_ const char *HexBuffer,
 
 void QuicServer::ServerLoadConfiguration(const char *cert, const char *key) {
     QUIC_SETTINGS Settings = {0};
-
-    printf("OPENSSL\n");
-
+    // printf("OPENSSL\n");
     Settings.IdleTimeoutMs = 0;
     Settings.IsSet.IdleTimeoutMs = TRUE;
 
-    Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT;
+    Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT;//QUIC_SERVER_RESUME_AND_ZERORTT
     Settings.IsSet.ServerResumptionLevel = TRUE;
 
     Settings.PeerBidiStreamCount = 100;
     Settings.IsSet.PeerBidiStreamCount = TRUE;
 
-    Settings.PeerUnidiStreamCount = 1;
+    Settings.PeerUnidiStreamCount = 100;
     Settings.IsSet.PeerUnidiStreamCount = TRUE;
 
 #pragma region OpenSslCert
@@ -76,8 +74,8 @@ void QuicServer::ServerLoadConfiguration(const char *cert, const char *key) {
     Config.CredConfig.Flags =
         QUIC_CREDENTIAL_FLAG_NO_CERTIFICATE_VALIDATION; // QUIC_CREDENTIAL_FLAG_REQUIRE_CLIENT_AUTHENTICATION
 
-    printf("cert.pem exists: %d\n", fileExists(cert));
-    printf("key.pem exists: %d\n", fileExists(key));
+    // printf("cert.pem exists: %d\n", fileExists(cert));
+    // printf("key.pem exists: %d\n", fileExists(key));
 
     const char *Cert = cert;
     const char *KeyFile = key;
@@ -258,6 +256,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     switch (Event->Type) {
     case QUIC_CONNECTION_EVENT_CONNECTED:
         printf("[conn][%p] Connected\n", Connection);
+
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
         break;

@@ -1,4 +1,5 @@
 #include "QuicClient.h"
+#include <cstdint>
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
 #endif
@@ -60,13 +61,23 @@ void QuicClient::Connect() {
     printf("\nPort: %u\n", this->UdpPort);
     printf("\nHost: %s\n", this->Host);
 
+    if (ResumptionTicket) {
+        if (QUIC_FAILED(Status = MsQuic->SetParam(
+                            Connection, QUIC_PARAM_CONN_RESUMPTION_TICKET,
+                            ResumptionTicketLength, ResumptionTicket))) {
+            printf(
+                "SetParam(QUIC_PARAM_CONN_RESUMPTION_TICKET) failed, 0x%x!\n",
+                Status);
+            goto Error;
+        }
+    }
+
     if (QUIC_FAILED(Status = MsQuic->ConnectionStart(
                         Connection, Configuration, QUIC_ADDRESS_FAMILY_UNSPEC,
                         this->Host, this->UdpPort))) {
         printf("ConnectionStart failed, 0x%x!\n", Status);
         goto Error;
     }
-
 Error:
     if (QUIC_FAILED(Status) && Connection != NULL) {
         MsQuic->ConnectionClose(Connection);
@@ -76,7 +87,8 @@ Error:
 void QuicClient::Disconnect() {
     if (Connection != NULL) {
         MsQuic->ConnectionShutdown(Connection,
-                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE,
+                                   0); // QUIC_CONNECTION_SHUTDOWN_FLAG_NONE
         MsQuic->ConnectionClose(Connection);
     }
 }
@@ -165,7 +177,7 @@ void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
 QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
                        const char *cert, const char *key) {
 
-    this->Host = (char *)Host;
+    this->Host = Host;
     this->UdpPort = UdpPort;
 
     if (QUIC_FAILED(Status = MsQuicOpen2(&MsQuic))) {
@@ -216,7 +228,29 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
         printf("[conn][%p] Resumption ticket received (%u bytes):\n",
                Connection,
                Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength);
-        printf("\n");
+
+        // Free previous ticket if any
+        if (ResumptionTicket) {
+            free(ResumptionTicket);
+            ResumptionTicket = nullptr;
+            ResumptionTicketLength = 0;
+        }
+
+        // Allocate memory for the new ticket
+        ResumptionTicketLength =
+            Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength;
+        ResumptionTicket = (uint8_t *)malloc(ResumptionTicketLength);
+        if (ResumptionTicket == nullptr) {
+            printf("Failed to allocate memory for ResumptionTicket\n");
+            break;
+        }
+
+        // Copy the ticket data
+        memcpy(ResumptionTicket,
+               Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket,
+               ResumptionTicketLength);
+
+        printf("Resumption ticket stored.\n");
         break;
     default:
         break;
@@ -284,9 +318,9 @@ Error:
 }
 
 QuicClient::~QuicClient() {
-    if (Host) {
-        delete[] Host;
-        Host = nullptr;
+    if (ResumptionTicket != nullptr) {
+        free(ResumptionTicket);
+        ResumptionTicket = nullptr;
     }
     if (MsQuic) {
         if (Configuration) {
@@ -298,7 +332,6 @@ QuicClient::~QuicClient() {
             MsQuic->RegistrationClose(Registration);
             Registration = nullptr;
         }
-
         MsQuicClose(MsQuic);
         MsQuic = nullptr;
     }

@@ -54,8 +54,10 @@ class QuicClient {
     HQUIC Connection;
     HQUIC Registration;
     HQUIC Configuration;
+    uint8_t* ResumptionTicket = nullptr;
+    uint16_t ResumptionTicketLength;
     QUIC_STATUS Status;
-    char *Host = nullptr;
+    const char *Host;
     const QUIC_REGISTRATION_CONFIG RegConfig = {
         "Client", QUIC_EXECUTION_PROFILE_TYPE_REAL_TIME};
     const QUIC_BUFFER Alpn = {sizeof("nexus") - 1, (uint8_t *)"nexus"};
