@@ -36,7 +36,9 @@ class QuicServer {
     static bool disconnected;
 
     static void xsend(HQUIC, void *);
-    void send(HQUIC);
+    
+	void send(HQUIC);
+
     void ServerLoadConfiguration(const char *hash);
 
     void ServerLoadConfiguration(const char *cert, const char *key);

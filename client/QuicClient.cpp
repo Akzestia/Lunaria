@@ -89,7 +89,6 @@ void QuicClient::Disconnect() {
         MsQuic->ConnectionShutdown(Connection,
                                    QUIC_CONNECTION_SHUTDOWN_FLAG_NONE,
                                    0); // QUIC_CONNECTION_SHUTDOWN_FLAG_NONE
-        MsQuic->ConnectionClose(Connection);
     }
 }
 

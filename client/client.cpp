@@ -25,7 +25,6 @@ int main() {
     QuicClient client("10.10.3.201", 6121, "./certs/server.cert",
                       "./certs/server.key");
     client.Connect();
-    char cc = getchar();
     // User u;
 
     // u.set_name("Akzestia");
@@ -51,11 +50,11 @@ int main() {
     client.Disconnect();
 
     char cx = getchar();
-    client.Connect();
+    // client.Connect();
 
-    char cu = getchar();
+    // char cu = getchar();
     
-    client.Disconnect();
+    // client.Disconnect();
 
     // DbManager::test();
 
