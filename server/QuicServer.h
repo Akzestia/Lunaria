@@ -13,7 +13,7 @@
 #include <unordered_map>
 #include <vector>
 
-class QuicServer {
+class QuicServer : public ConnectionManager {
 
   public:
     void Start();
@@ -28,6 +28,10 @@ class QuicServer {
     ~QuicServer();
 
   private:
+
+	using ConnectionManager::addUser;
+	using ConnectionManager::removeUser;
+
     const QUIC_API_TABLE *MsQuic = nullptr;
     static std::condition_variable cv;
     static std::condition_variable server_status;

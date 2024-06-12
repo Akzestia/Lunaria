@@ -257,9 +257,8 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         printf("[conn][%p] Connected\n", Connection);
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
-
         User u;
-        ConnectionManager::addUser(Connection, u);
+        addUser(Connection, u);
     } break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_TRANSPORT:
         if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status ==
@@ -273,8 +272,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_PEER: {
         printf("[conn][%p] Shut down by peer, 0x%llu\n", Connection,
                (unsigned long long)Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
-
-        ConnectionManager::removeUser(Connection);
+        removeUser(Connection);
     } break;
     case QUIC_CONNECTION_EVENT_SHUTDOWN_COMPLETE:
         printf("[conn][%p] All done\n", Connection);
