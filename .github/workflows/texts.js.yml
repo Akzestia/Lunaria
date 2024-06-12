@@ -1,1 +1,45 @@
 #Todo: update texts.js based on *.h, *.cpp, *.prooto etc files
+
+name: Update texts.js
+
+on:
+  push:
+    paths:
+      - '**/*.h'
+      - '**/*.cpp'
+      - '**/*.proto'
+
+jobs:
+  update-js:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.7.3' # Specify your Node.js version
+
+      - name: List modified files
+        id: list_files
+        run: |
+          echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
+
+      - name: Process modified files
+        if: ${{ steps.list_files.outputs.files != '' }}
+        run: |
+          echo "Modified files: ${{ steps.list_files.outputs.files }}"
+          ./update.texts.js.sh
+
+      - name: Commit and push changes
+        if: ${{ steps.list_files.outputs.files != '' }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Update texts.js based on modified header and source files"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
