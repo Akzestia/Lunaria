@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./github-pages/images/tenor-nibutani.gif" alt="Example" width="300" height="300">
+  <img src="./github-pages/images/tenor-nibutani.gif" alt="Example" width="200" height="200">
 </p>
 
 <p align="center">Welcome to Linux-x64-HTTP3</p>
