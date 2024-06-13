@@ -1,5 +1,6 @@
 #pragma once
 #include "../Helpers/ConnectionManager.h"
+#include "../db/DbManager.h"
 #include "../Helpers/PeerHandler.h"
 #include "../MsQuic/include/msquic.h"
 #include "../proto/build/user.pb.h"
@@ -13,8 +14,7 @@
 #include <unordered_map>
 #include <vector>
 
-class QuicServer : public ConnectionManager {
-	//Git action test
+class QuicServer : protected ConnectionManager, protected DbManager {
   public:
     void Start();
 
@@ -28,9 +28,13 @@ class QuicServer : public ConnectionManager {
     ~QuicServer();
 
   private:
-
 	using ConnectionManager::addUser;
 	using ConnectionManager::removeUser;
+    using DbManager::getUser;
+    using DbManager::getContacts;
+    using DbManager::getGraphs;
+    using DbManager::getMessages;
+    using DbManager::test;
 
     const QUIC_API_TABLE *MsQuic = nullptr;
     static std::condition_variable cv;
