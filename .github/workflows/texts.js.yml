@@ -33,7 +33,7 @@ jobs:
 
       - name: Process modified files
         run: |
-          ./update.texts.js.sh
+          sudo ./update.texts.js.sh
 
       - name: Commit and push changes
         if: ${{ steps.list_files.outputs.files != '' }}
