@@ -29,6 +29,7 @@ jobs:
           current_commit=${{ github.sha }}
           files=$(git diff --name-only $previous_commit $current_commit)
           echo "Modified files: $files"
+          echo "files=$files" >> $GITHUB_ENV
 
       - name: Process modified files
         run: |
