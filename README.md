@@ -7,7 +7,7 @@
 ## Todo
 
 ```
-0 -> WAYLAND SUPPORT ^_^ | Completed
+     0 -> WAYLAND SUPPORT ^_^ | Completed
 ```
 
 ```
