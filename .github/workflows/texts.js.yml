@@ -13,21 +13,14 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Use v4 of actions/checkout
+        with:
+          fetch-depth: 2  # Fetch all history to enable comparisons
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2  # Use v2 of actions/setup-node
         with:
-          node-version: '21.7.3' # Specify your Node.js version
-
-      - name: Get previous commit
-        id: prev_commit
-        run: |
-          if [ $(git rev-list --count HEAD) -eq 1 ]; then
-            echo "PREVIOUS_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
-          else
-            echo "PREVIOUS_COMMIT=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
-          fi
+          node-version: '21.7.3'  # Specify your desired Node.js version here
 
       - name: List modified files
         id: list_files
@@ -35,23 +28,21 @@ jobs:
           previous_commit=$(git rev-parse HEAD^)
           current_commit=${{ github.sha }}
           files=$(git diff --name-only $previous_commit $current_commit)
-          echo "files=$files" >> $GITHUB_ENV
           echo "Modified files: $files"
-        
+          echo "files=$files" >> $GITHUB_ENV
+
       - name: Process modified files
-        if: ${{ env.files != '' }}
+        if: ${{ steps.list_files.outputs.files != '' }}
         run: |
-          echo "Modified files: ${{ env.files }}"
-          ./update_texts_js.sh
-        env:
-          FILES: ${{ env.files }}
+          echo "Modified files: ${{ steps.list_files.outputs.files }}"
+          ./update.texts.js.sh
 
       - name: Commit and push changes
-        if: ${{ env.files != '' }}
+        if: ${{ steps.list_files.outputs.files != '' }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./github-pages/js/test.js
+          git add .
           git commit -m "Update texts.js based on modified header and source files"
           git push
         env:
