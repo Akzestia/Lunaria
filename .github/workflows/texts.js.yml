@@ -18,11 +18,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14' # Specify your Node.js version
+          node-version: '21.7.3' # Specify your Node.js version
 
       - name: Get previous commit
         id: prev_commit
-        run: echo "PREVIOUS_COMMIT=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
+        run: |
+          if [ $(git rev-list --count HEAD) -eq 1 ]; then
+            echo "PREVIOUS_COMMIT=$(git rev-parse HEAD)" >> $GITHUB_ENV
+          else
+            echo "PREVIOUS_COMMIT=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
+          fi
 
       - name: List modified files
         id: list_files
@@ -34,12 +39,15 @@ jobs:
           echo "Modified files: $files"
         
       - name: Process modified files
-        run: ./update_texts_js.sh
+        if: ${{ env.files != '' }}
+        run: |
+          echo "Modified files: ${{ env.files }}"
+          ./update_texts_js.sh
         env:
           FILES: ${{ env.files }}
 
       - name: Commit and push changes
-        if: env.FILES != ''
+        if: ${{ env.files != '' }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
