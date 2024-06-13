@@ -176,7 +176,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
 
         std::printf("\n\nReceived Cord from [%p]", Stream);
 
-        PeerHandler::HandlePeer(Stream, (*data), dataSize);
+        HandlePeer(Stream, (*data), dataSize);
 
         MsQuic->StreamReceiveComplete(Stream, Event->RECEIVE.TotalBufferLength);
     } break;
@@ -188,7 +188,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
         printf("[strm][%p] Peer shut down\n", Stream);
-        PeerHandler::onPeerShutdown(Stream);
+        onPeerShutdown(Stream);
         QuicServer::xsend(Stream, Context);
     } break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:

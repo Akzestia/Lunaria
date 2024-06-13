@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <vector>
 
-class QuicServer : protected ConnectionManager, protected DbManager {
+class QuicServer : protected ConnectionManager, protected DbManager, protected PeerHandler {
   public:
     void Start();
 
@@ -35,6 +35,10 @@ class QuicServer : protected ConnectionManager, protected DbManager {
     using DbManager::getGraphs;
     using DbManager::getMessages;
     using DbManager::test;
+    using PeerHandler::HandlePeer;
+    using PeerHandler::onPeerShutdown;
+    using PeerHandler::GetPeers;
+    using PeerHandler::SetPeer;
 
     const QUIC_API_TABLE *MsQuic = nullptr;
     static std::condition_variable cv;
