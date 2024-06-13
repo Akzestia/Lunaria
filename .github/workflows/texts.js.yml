@@ -29,12 +29,9 @@ jobs:
           current_commit=${{ github.sha }}
           files=$(git diff --name-only $previous_commit $current_commit)
           echo "Modified files: $files"
-          echo "files=$files" >> $GITHUB_ENV
 
       - name: Process modified files
-        if: ${{ steps.list_files.outputs.files != '' }}
         run: |
-          echo "Modified files: ${{ steps.list_files.outputs.files }}"
           ./update.texts.js.sh
 
       - name: Commit and push changes

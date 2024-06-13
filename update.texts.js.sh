@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Get the list of modified header, cpp, and proto files from environment variable
-modified_headers=$(echo $FILES | tr ' ' '\n' | grep '\.h$')
-modified_cpp=$(echo $FILES | tr ' ' '\n' | grep '\.cpp$')
-modified_proto=$(echo $FILES | tr ' ' '\n' | grep '\.proto$')
+modified_headers=$(git diff --name-only $GITHUB_SHA HEAD -- '*.h')
+modified_cpp=$(git diff --name-only $GITHUB_SHA HEAD -- '*.cpp')
+modified_proto=$(git diff --name-only $GITHUB_SHA HEAD -- '*.proto')
 
 echo "Modified headers:"
 echo "$modified_headers"
