@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 2  # Fetch all history to enable comparisons
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4  # Use v2 of actions/setup-node
+        uses: actions/setup-node@v4  # Use v4 of actions/setup-node
         with:
           node-version: '21.7.3'  # Specify your desired Node.js version here
 
