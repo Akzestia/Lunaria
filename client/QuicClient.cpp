@@ -12,7 +12,7 @@ bool fileExists(const char *file) {
     struct stat buffer;
     return (stat(file, &buffer) == 0);
 }
-
+//Test
 typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
     QUIC_CREDENTIAL_CONFIG CredConfig;
     union {
