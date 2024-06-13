@@ -11,13 +11,13 @@
 #include <sys/stat.h>
 
 class QuicClient {
-  //QuicClient git action test #5
+  //QuicClient git action test #6
   public:
     void Connect();
 
     void Disconnect();
 
-    void testGitAction();
+    void testGitAction6();
 
     void send(const absl::Cord &message);
 
