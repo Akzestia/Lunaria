@@ -2,9 +2,9 @@
 #include "../proto/build/user.pb.h"
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
+#include <condition_variable>
 #include <iostream>
 #include <pqxx/pqxx>
-
 class DbManager {
   public:
     static void test();
