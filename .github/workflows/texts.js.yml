@@ -1,5 +1,3 @@
-#Todo: update texts.js based on *.h, *.cpp, *.prooto etc files
-
 name: Update texts.js
 
 on:
@@ -20,21 +18,21 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '21.7.3' # Specify your Node.js version
+          node-version: '14' # Specify your Node.js version
 
       - name: List modified files
         id: list_files
         run: |
-          echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
+          files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          echo "files=$files" >> $GITHUB_ENV
 
       - name: Process modified files
-        if: ${{ steps.list_files.outputs.files != '' }}
         run: |
-          echo "Modified files: ${{ steps.list_files.outputs.files }}"
-          ./update.texts.js.sh
+          echo "Modified files: $files"
+          ./update_texts_js.sh
 
       - name: Commit and push changes
-        if: ${{ steps.list_files.outputs.files != '' }}
+        if: steps.list_files.outputs.files != ''
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
