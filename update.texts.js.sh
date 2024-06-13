@@ -22,7 +22,6 @@ fi
 # Check if texts.js exists, if not create one
 if [ ! -f github-pages/js/test.js ]; then
     echo "Creating test.js"
-    echo -n > ./github-pages/js/test.js
     touch github-pages/js/test.js
     echo "Creating test.js ended"
 fi
