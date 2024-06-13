@@ -16,7 +16,7 @@ echo "$modified_proto"
 
 # Check if texts.js exists, if not create one
 if [ ! -f ./github-pages/js/test.js ]; then
-    echo "Creatign test.js"
+    echo "Creating test.js"
     touch ./github-pages/js/test.js
 fi
 
