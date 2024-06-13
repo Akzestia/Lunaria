@@ -14,10 +14,15 @@ echo "$modified_cpp"
 echo "Modified proto files:"
 echo "$modified_proto"
 
+# Check if the directory exists
+if [ ! -d github-pages/js ]; then
+    echo "Directory github-pages/js does not exist."
+fi
+
 # Check if texts.js exists, if not create one
-if [ ! -f ./github-pages/js/test.js ]; then
+if [ ! -f github-pages/js/test.js ]; then
     echo "Creating test.js"
-    touch ./github-pages/js/test.js
+    touch github-pages/js/test.js
 fi
 
 process_file() {
@@ -40,7 +45,7 @@ process_file() {
 
     if [ "$inside_class" = true ]; then
         echo "Adding const $class_name to test.js"
-        echo "const $class_name = \`$class_content\`;" >> ./github-pages/js/test.js
+        echo "const $class_name = \`$class_content\`;" >> github-pages/js/test.js
     fi
 }
 
