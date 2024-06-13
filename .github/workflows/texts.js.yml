@@ -33,10 +33,9 @@ jobs:
 
       - name: Process modified files
         run: |
-          sudo ./update.texts.js.sh
+          ./update.texts.js.sh
 
       - name: Commit and push changes
-        if: ${{ steps.list_files.outputs.files != '' }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
