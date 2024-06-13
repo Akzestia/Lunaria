@@ -32,7 +32,7 @@ jobs:
       - name: List modified files
         id: list_files
         run: |
-          previous_commit=${{ env.PREVIOUS_COMMIT }}
+          previous_commit=$(git rev-parse HEAD^)
           current_commit=${{ github.sha }}
           files=$(git diff --name-only $previous_commit $current_commit)
           echo "files=$files" >> $GITHUB_ENV
