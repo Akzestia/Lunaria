@@ -20,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4  # Use v4 of actions/setup-node
         with:
-          node-version: '21.7.3'  # Specify your desired Node.js version here
+          node-version: '14'  # Specify your desired Node.js version here | Switched back to v14
 
       - name: List modified files
         id: list_files
