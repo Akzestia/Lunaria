@@ -20,23 +20,30 @@ jobs:
         with:
           node-version: '14' # Specify your Node.js version
 
+      - name: Get previous commit
+        id: prev_commit
+        run: echo "PREVIOUS_COMMIT=$(git rev-parse HEAD^1)" >> $GITHUB_ENV
+
       - name: List modified files
         id: list_files
         run: |
-          files=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          previous_commit=${{ env.PREVIOUS_COMMIT }}
+          current_commit=${{ github.sha }}
+          files=$(git diff --name-only $previous_commit $current_commit)
           echo "files=$files" >> $GITHUB_ENV
-
-      - name: Process modified files
-        run: |
           echo "Modified files: $files"
-          ./update_texts_js.sh
+        
+      - name: Process modified files
+        run: ./update_texts_js.sh
+        env:
+          FILES: ${{ env.files }}
 
       - name: Commit and push changes
-        if: steps.list_files.outputs.files != ''
+        if: env.FILES != ''
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
+          git add ./github-pages/js/test.js
           git commit -m "Update texts.js based on modified header and source files"
           git push
         env:
