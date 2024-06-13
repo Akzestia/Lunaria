@@ -22,4 +22,5 @@
      9 -> Fix zwlr_screencopy_frame_v1_copy in Wayland
     10 -> Update code blocks on github pages
     11 -> Git actions optimization
+    12 -> Fix texts.js.yml modified files processing
 ```
