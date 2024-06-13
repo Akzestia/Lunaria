@@ -2,7 +2,7 @@
   <img src="./github-pages/images/tenor-nibutani.gif" alt="Example" width="200" height="200">
 </p>
 
-<p align="center">Welcome to Linux-x64-HTTP3</p>
+<h3 align="center">Welcome to Linux-x64-HTTP3</h3>
 
 ## Todo
 
