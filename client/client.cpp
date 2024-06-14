@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <fstream>
 #include <vector>
-#include "../db/DbManager.h"
+//#include "../db/DbManager.h"
 
 std::vector<uint8_t> loadFileContent(const std::string &filePath) {
     std::ifstream file(filePath, std::ios::binary | std::ios::ate);
@@ -46,14 +46,14 @@ int main() {
     }
 
     char ch = getchar();
-    
+
     client.Disconnect();
 
     char cx = getchar();
     // client.Connect();
 
     // char cu = getchar();
-    
+
     // client.Disconnect();
 
     // DbManager::test();

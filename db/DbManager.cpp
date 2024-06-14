@@ -11,6 +11,7 @@ void DbManager::test() {
                       << connection.dbname() << std::endl;
         } else {
             std::cerr << "Can't open database" << std::endl;
+            return;
         }
 
         pqxx::nontransaction nontransaction(connection);
@@ -52,4 +53,8 @@ std::string DbManager::getConnectionString() {
         throw std::runtime_error(
             "One or more configuration variables are not set.");
     }
+}
+
+DbManager::~DbManager(){
+    
 }
