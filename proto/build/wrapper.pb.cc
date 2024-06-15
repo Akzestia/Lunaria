@@ -57,6 +57,7 @@ const ::uint32_t TableStruct_wrapper_2eproto::offsets[] PROTOBUF_SECTION_VARIABL
     ~0u,  // no sizeof(Split)
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
     PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.payload_),
 };
 
@@ -69,12 +70,15 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::_Wrapper_default_instance_._instance,
 };
 const char descriptor_table_protodef_wrapper_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-    "\n\rwrapper.proto\032\nuser.proto\032\ntest.proto\""
-    "F\n\007Wrapper\022\025\n\004user\030\001 \001(\0132\005.UserH\000\022\031\n\006per"
-    "son\030\002 \001(\0132\007.PersonH\000B\t\n\007payloadb\006proto3"
+    "\n\rwrapper.proto\032\nuser.proto\032\ntest.proto\032"
+    "\rmessage.proto\"c\n\007Wrapper\022\025\n\004user\030\001 \001(\0132"
+    "\005.UserH\000\022\031\n\006person\030\002 \001(\0132\007.PersonH\000\022\033\n\007m"
+    "essage\030\003 \001(\0132\010.MessageH\000B\t\n\007payloadb\006pro"
+    "to3"
 };
-static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[2] =
+static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[3] =
     {
+        &::descriptor_table_message_2eproto,
         &::descriptor_table_test_2eproto,
         &::descriptor_table_user_2eproto,
 };
@@ -82,12 +86,12 @@ static ::absl::once_flag descriptor_table_wrapper_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_wrapper_2eproto = {
     false,
     false,
-    119,
+    163,
     descriptor_table_protodef_wrapper_2eproto,
     "wrapper.proto",
     &descriptor_table_wrapper_2eproto_once,
     descriptor_table_wrapper_2eproto_deps,
-    2,
+    3,
     1,
     schemas,
     file_default_instances,
@@ -122,6 +126,7 @@ class Wrapper::_Internal {
     PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_._oneof_case_);
   static const ::User& user(const Wrapper* msg);
   static const ::Person& person(const Wrapper* msg);
+  static const ::Message& message(const Wrapper* msg);
 };
 
 const ::User& Wrapper::_Internal::user(const Wrapper* msg) {
@@ -129,6 +134,9 @@ const ::User& Wrapper::_Internal::user(const Wrapper* msg) {
 }
 const ::Person& Wrapper::_Internal::person(const Wrapper* msg) {
   return *msg->_impl_.payload_.person_;
+}
+const ::Message& Wrapper::_Internal::message(const Wrapper* msg) {
+  return *msg->_impl_.payload_.message_;
 }
 void Wrapper::set_allocated_user(::User* user) {
   ::google::protobuf::Arena* message_arena = GetArena();
@@ -174,6 +182,28 @@ void Wrapper::clear_person() {
     clear_has_payload();
   }
 }
+void Wrapper::set_allocated_message(::Message* message) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (message) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(message)->GetArena();
+    if (message_arena != submessage_arena) {
+      message = ::google::protobuf::internal::GetOwnedMessage(message_arena, message, submessage_arena);
+    }
+    set_has_message();
+    _impl_.payload_.message_ = message;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Wrapper.message)
+}
+void Wrapper::clear_message() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  if (payload_case() == kMessage) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.message_;
+    }
+    clear_has_payload();
+  }
+}
 Wrapper::Wrapper(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -203,6 +233,9 @@ Wrapper::Wrapper(
         break;
       case kPerson:
         _impl_.payload_.person_ = CreateMaybeMessage<::Person>(arena, *from._impl_.payload_.person_);
+        break;
+      case kMessage:
+        _impl_.payload_.message_ = CreateMaybeMessage<::Message>(arena, *from._impl_.payload_.message_);
         break;
   }
 
@@ -247,6 +280,12 @@ void Wrapper::clear_payload() {
       }
       break;
     }
+    case kMessage: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.message_;
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -274,16 +313,16 @@ const char* Wrapper::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 2, 2, 0, 2> Wrapper::_table_ = {
+const ::_pbi::TcParseTable<0, 3, 3, 0, 2> Wrapper::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    2, 0,  // max_field_number, fast_idx_mask
+    3, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
-    2,  // num_aux_entries
+    3,  // num_field_entries
+    3,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_Wrapper_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
@@ -298,9 +337,13 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> Wrapper::_table_ = {
     // .Person person = 2;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.person_), _Internal::kOneofCaseOffset + 0, 1,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .Message message = 3;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.message_), _Internal::kOneofCaseOffset + 0, 2,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::TcParser::GetTable<::User>()},
     {::_pbi::TcParser::GetTable<::Person>()},
+    {::_pbi::TcParser::GetTable<::Message>()},
   }}, {{
   }},
 };
@@ -323,6 +366,12 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> Wrapper::_table_ = {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
           2, _Internal::person(this),
           _Internal::person(this).GetCachedSize(), target, stream);
+      break;
+    }
+    case kMessage: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          3, _Internal::message(this),
+          _Internal::message(this).GetCachedSize(), target, stream);
       break;
     }
     default:
@@ -358,6 +407,12 @@ const ::_pbi::TcParseTable<0, 2, 2, 0, 2> Wrapper::_table_ = {
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.person_);
       break;
     }
+    // .Message message = 3;
+    case kMessage: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.message_);
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -390,6 +445,11 @@ void Wrapper::MergeImpl(::google::protobuf::Message& to_msg, const ::google::pro
     case kPerson: {
       _this->_internal_mutable_person()->::Person::MergeFrom(
           from._internal_person());
+      break;
+    }
+    case kMessage: {
+      _this->_internal_mutable_message()->::Message::MergeFrom(
+          from._internal_message());
       break;
     }
     case PAYLOAD_NOT_SET: {

@@ -2,10 +2,12 @@ syntax = "proto3";
 
 import "user.proto";
 import "test.proto";
+import "message.proto";
 
 message Wrapper {
     oneof payload {
         User user = 1;
         Person person = 2;
+        Message message = 3;
     }
 }

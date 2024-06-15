@@ -34,7 +34,6 @@ int main() {
     p.set_name("akzestia@xxx.com");
 
     Wrapper w;
-
     // *w.mutable_user() = u;
     *w.mutable_person() = p;
 

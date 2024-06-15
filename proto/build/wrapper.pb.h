@@ -36,6 +36,7 @@
 #include "google/protobuf/unknown_field_set.h"
 #include "user.pb.h"
 #include "test.pb.h"
+#include "message.pb.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
@@ -128,6 +129,7 @@ class Wrapper final :
   enum PayloadCase {
     kUser = 1,
     kPerson = 2,
+    kMessage = 3,
     PAYLOAD_NOT_SET = 0,
   };
 
@@ -211,6 +213,7 @@ class Wrapper final :
   enum : int {
     kUserFieldNumber = 1,
     kPersonFieldNumber = 2,
+    kMessageFieldNumber = 3,
   };
   // .User user = 1;
   bool has_user() const;
@@ -250,6 +253,25 @@ class Wrapper final :
   ::Person* _internal_mutable_person();
 
   public:
+  // .Message message = 3;
+  bool has_message() const;
+  private:
+  bool _internal_has_message() const;
+
+  public:
+  void clear_message() ;
+  const ::Message& message() const;
+  PROTOBUF_NODISCARD ::Message* release_message();
+  ::Message* mutable_message();
+  void set_allocated_message(::Message* value);
+  void unsafe_arena_set_allocated_message(::Message* value);
+  ::Message* unsafe_arena_release_message();
+
+  private:
+  const ::Message& _internal_message() const;
+  ::Message* _internal_mutable_message();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:Wrapper)
@@ -257,13 +279,14 @@ class Wrapper final :
   class _Internal;
   void set_has_user();
   void set_has_person();
+  void set_has_message();
 
   inline bool has_payload() const;
   inline void clear_has_payload();
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 2, 2,
+      0, 3, 3,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -285,6 +308,7 @@ class Wrapper final :
         ::google::protobuf::internal::ConstantInitialized _constinit_;
       ::User* user_;
       ::Person* person_;
+      ::Message* message_;
     } payload_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -442,6 +466,73 @@ inline ::Person* Wrapper::_internal_mutable_person() {
 inline ::Person* Wrapper::mutable_person() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::Person* _msg = _internal_mutable_person();
   // @@protoc_insertion_point(field_mutable:Wrapper.person)
+  return _msg;
+}
+
+// .Message message = 3;
+inline bool Wrapper::has_message() const {
+  return payload_case() == kMessage;
+}
+inline bool Wrapper::_internal_has_message() const {
+  return payload_case() == kMessage;
+}
+inline void Wrapper::set_has_message() {
+  _impl_._oneof_case_[0] = kMessage;
+}
+inline ::Message* Wrapper::release_message() {
+  // @@protoc_insertion_point(field_release:Wrapper.message)
+  if (payload_case() == kMessage) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.message_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.message_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Message& Wrapper::_internal_message() const {
+  return payload_case() == kMessage ? *_impl_.payload_.message_ : reinterpret_cast<::Message&>(::_Message_default_instance_);
+}
+inline const ::Message& Wrapper::message() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.message)
+  return _internal_message();
+}
+inline ::Message* Wrapper::unsafe_arena_release_message() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.message)
+  if (payload_case() == kMessage) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.message_;
+    _impl_.payload_.message_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_message(::Message* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_message();
+    _impl_.payload_.message_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.message)
+}
+inline ::Message* Wrapper::_internal_mutable_message() {
+  if (payload_case() != kMessage) {
+    clear_payload();
+    set_has_message();
+    _impl_.payload_.message_ = CreateMaybeMessage<::Message>(GetArena());
+  }
+  return _impl_.payload_.message_;
+}
+inline ::Message* Wrapper::mutable_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Message* _msg = _internal_mutable_message();
+  // @@protoc_insertion_point(field_mutable:Wrapper.message)
   return _msg;
 }
 
