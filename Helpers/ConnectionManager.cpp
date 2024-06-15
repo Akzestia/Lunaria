@@ -4,9 +4,13 @@ std::unordered_map<HQUIC, User> *ConnectionManager::getUsers() { return users; }
 std::unordered_map<HQUIC, User> *ConnectionManager::users = new std::unordered_map<HQUIC, User>();
 
 HQUIC ConnectionManager::getConenction(User user) {
-    for (auto &pair : (*users))
-        if (pair.second.email() == user.email())
-            return pair.first;
+
+    auto start = (*users).begin();
+    auto end = (*users).end();
+
+    for (; start != end; start++)
+        if (start->second.email() == user.email())
+            return start->first;
     return nullptr;
 }
 bool ConnectionManager::addUser(HQUIC connection, User user) {
