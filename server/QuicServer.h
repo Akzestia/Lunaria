@@ -1,8 +1,8 @@
 #pragma once
 #include "../Helpers/ConnectionManager.h"
-#include "../db/DbManager.h"
 #include "../Helpers/PeerHandler.h"
 #include "../MsQuic/include/msquic.h"
+#include "../db/DbManager.h"
 #include "../proto/build/user.pb.h"
 #include <absl/strings/cord.h>
 #include <atomic>
@@ -14,7 +14,9 @@
 #include <unordered_map>
 #include <vector>
 
-class QuicServer : protected ConnectionManager, protected DbManager, protected PeerHandler {
+class QuicServer : protected ConnectionManager,
+                   protected DbManager,
+                   protected PeerHandler {
   public:
     void Start();
 
@@ -28,16 +30,16 @@ class QuicServer : protected ConnectionManager, protected DbManager, protected P
     ~QuicServer();
 
   private:
-	using ConnectionManager::addUser;
-	using ConnectionManager::removeUser;
-    using DbManager::getUser;
+    using ConnectionManager::addUser;
+    using ConnectionManager::removeUser;
     using DbManager::getContacts;
     using DbManager::getGraphs;
     using DbManager::getMessages;
+    using DbManager::getUser;
     using DbManager::test;
+    using PeerHandler::GetPeers;
     using PeerHandler::HandlePeer;
     using PeerHandler::onPeerShutdown;
-    using PeerHandler::GetPeers;
     using PeerHandler::SetPeer;
 
     const QUIC_API_TABLE *MsQuic = nullptr;
@@ -47,9 +49,13 @@ class QuicServer : protected ConnectionManager, protected DbManager, protected P
     static std::mutex server_status_m;
     static bool disconnected;
 
-    static void xsend(HQUIC, void *);
-    
-	void send(HQUIC);
+    static bool getUserCreds(HQUIC, void*);
+
+    bool getUserCreds(HQUIC);
+
+    static void send(HQUIC, void *);
+
+    void send(HQUIC);
 
     void ServerLoadConfiguration(const char *hash);
 

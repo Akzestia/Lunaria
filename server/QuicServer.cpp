@@ -1,4 +1,5 @@
 #include "QuicServer.h"
+#include <absl/strings/cord.h>
 #include <cstdio>
 
 #ifndef UNREFERENCED_PARAMETER
@@ -189,7 +190,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
         printf("[strm][%p] Peer shut down\n", Stream);
         onPeerShutdown(Stream);
-        QuicServer::xsend(Stream, Context);
+        QuicServer::send(Stream, Context);
     } break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
         printf("[strm][%p] All done\n", Stream);
@@ -207,7 +208,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     return QUIC_STATUS_SUCCESS;
 }
 
-void QuicServer::xsend(HQUIC Stream, void *Context) {
+void QuicServer::send(HQUIC Stream, void *Context) {
     return reinterpret_cast<QuicServer *>(Context)->send(Stream);
 }
 
@@ -239,6 +240,16 @@ void QuicServer::send(HQUIC Stream) {
     }
 }
 
+bool QuicServer::getUserCreds(HQUIC connection, void *Context) {
+    return reinterpret_cast<QuicServer *>(Context)->getUserCreds(connection);
+}
+
+bool QuicServer::getUserCreds(HQUIC connection) {
+    printf("\nHi form non static\n");
+
+    return true;
+}
+
 QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
     _Inout_ QUIC_STREAM_EVENT *Event) {
@@ -255,6 +266,8 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     switch (Event->Type) {
     case QUIC_CONNECTION_EVENT_CONNECTED: {
         printf("[conn][%p] Connected\n", Connection);
+        QuicServer::getUserCreds(Connection, Context);
+        
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
         User u;

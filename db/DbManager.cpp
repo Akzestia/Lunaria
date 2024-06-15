@@ -56,5 +56,5 @@ std::string DbManager::getConnectionString() {
 }
 
 DbManager::~DbManager(){
-    
+
 }
