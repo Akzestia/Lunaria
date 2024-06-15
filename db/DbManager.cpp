@@ -47,11 +47,9 @@ std::string DbManager::getConnectionString() {
         std::string connection_string = "host=" + db_host + " user=" + db_user +
                                         " dbname=" + db_name +
                                         " password=" + db_password;
-
         return connection_string;
     } catch (const boost::property_tree::ptree_error &e) {
-        throw std::runtime_error(
-            "One or more configuration variables are not set.");
+        throw std::runtime_error("One or more configuration variables are not set.");
     }
 }
 
