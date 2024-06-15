@@ -248,8 +248,7 @@ bool QuicServer::getUserCreds(HQUIC connection) {
     printf("\nHi form non static\n");
 
     return true;
-}
-
+} 
 QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
     _Inout_ QUIC_STREAM_EVENT *Event) {
@@ -267,7 +266,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     case QUIC_CONNECTION_EVENT_CONNECTED: {
         printf("[conn][%p] Connected\n", Connection);
         QuicServer::getUserCreds(Connection, Context);
-        
+
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
         User u;
