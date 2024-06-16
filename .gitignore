@@ -8,5 +8,6 @@ db/config.ini
 --ozone-platform-hint=wayland
 Windows
 github-pages/pages/Akzestia.html
+docker
 
 !github-pages/images/

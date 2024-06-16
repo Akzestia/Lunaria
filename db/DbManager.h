@@ -5,6 +5,7 @@
 #include <condition_variable>
 #include <iostream>
 #include <pqxx/pqxx>
+
 class DbManager {
   public:
     static void test();
