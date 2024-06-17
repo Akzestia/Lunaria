@@ -37,7 +37,34 @@ void DbManager::test() {
 
 bool DbManager::getMessages(const User& u){
     try{
+         const std::string connection_str = DbManager::getConnectionString();
 
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        pqxx::nontransaction nontransaction(connection);
+
+        //Todo
+        pqxx::result result = nontransaction.exec("SELECT * FROM messages;");
+
+        pqxx::result::const_iterator row_it = result.begin();
+        pqxx::result::const_iterator row_end = result.end();
+
+        for (; row_it != row_end; ++row_it) {
+            const pqxx::result::const_iterator row = *row_it;
+            std::cout << row[0].c_str() << std::endl;
+            std::cout << row[1].c_str() << std::endl;
+            std::cout << row[2].c_str() << std::endl;
+        }
+
+        connection.close();
         return true;
     }
     catch (const std::exception &e) {
@@ -48,8 +75,35 @@ bool DbManager::getMessages(const User& u){
 
 
 bool DbManager::getContacts(const User& u){
-    try{
+       try{
+         const std::string connection_str = DbManager::getConnectionString();
 
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        pqxx::nontransaction nontransaction(connection);
+
+        //Todo
+        pqxx::result result = nontransaction.exec("SELECT * FROM contacts;");
+
+        pqxx::result::const_iterator row_it = result.begin();
+        pqxx::result::const_iterator row_end = result.end();
+
+        for (; row_it != row_end; ++row_it) {
+            const pqxx::result::const_iterator row = *row_it;
+            std::cout << row[0].c_str() << std::endl;
+            std::cout << row[1].c_str() << std::endl;
+            std::cout << row[2].c_str() << std::endl;
+        }
+
+        connection.close();
         return true;
     }
     catch (const std::exception &e) {
@@ -60,8 +114,35 @@ bool DbManager::getContacts(const User& u){
 
 
 bool DbManager::getGraphs(const User& u){
-    try{
+        try{
+         const std::string connection_str = DbManager::getConnectionString();
 
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        pqxx::nontransaction nontransaction(connection);
+
+        //Todo
+        pqxx::result result = nontransaction.exec("SELECT * FROM graphs;");
+
+        pqxx::result::const_iterator row_it = result.begin();
+        pqxx::result::const_iterator row_end = result.end();
+
+        for (; row_it != row_end; ++row_it) {
+            const pqxx::result::const_iterator row = *row_it;
+            std::cout << row[0].c_str() << std::endl;
+            std::cout << row[1].c_str() << std::endl;
+            std::cout << row[2].c_str() << std::endl;
+        }
+
+        connection.close();
         return true;
     }
     catch (const std::exception &e) {
