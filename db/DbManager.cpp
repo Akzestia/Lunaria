@@ -35,7 +35,7 @@ void DbManager::test() {
     }
 }
 
-bool DbManager::getMessages(const User& u){
+bool DbManager::getMessages(const User& u, uint8_t* output){
     try{
          const std::string connection_str = DbManager::getConnectionString();
 
@@ -74,7 +74,7 @@ bool DbManager::getMessages(const User& u){
 }
 
 
-bool DbManager::getContacts(const User& u){
+bool DbManager::getContacts(const User& u, uint8_t* output){
        try{
          const std::string connection_str = DbManager::getConnectionString();
 
@@ -113,7 +113,7 @@ bool DbManager::getContacts(const User& u){
 }
 
 
-bool DbManager::getGraphs(const User& u){
+bool DbManager::getGraphs(const User& u, uint8_t* output){
         try{
          const std::string connection_str = DbManager::getConnectionString();
 
