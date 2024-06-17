@@ -11,16 +11,15 @@
 ```
 
 ```
-     1 -> Replace json with protobuf | Completed
-     2 -> Fix client send function | Completed
-     3 -> GUI implementation with Qt or platform specific native GUI API 
-     4 -> Create windows client
-     5 -> Client GUI applications for windows/linux
-     6 -> DbManager thread safety
-     7 -> Github pages
-     8 -> Localization Jp | Ua | Eng
-     9 -> Fix zwlr_screencopy_frame_v1_copy in Wayland
-    10 -> Update code blocks on github pages
-    11 -> Git actions optimization
-    12 -> Fix texts.js.yml modified files processing
+     1 -> GUI implementation with Qt or platform specific native GUI API 
+     2 -> Create windows client
+     3 -> Client GUI applications for windows/linux
+     4 -> DbManager thread safety
+     5 -> Github pages
+     6 -> Localization Jp | Ua | Eng
+     7 -> Fix zwlr_screencopy_frame_v1_copy in Wayland
+     8 -> Update code blocks on github pages
+     9 -> Git actions optimization
+    10 -> Fix texts.js.yml modified files processing
+    11 -> Implement Client Authentication
 ```
