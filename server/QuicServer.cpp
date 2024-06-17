@@ -238,6 +238,7 @@ void QuicServer::send(HQUIC Stream) {
         printf("StreamSend failed, 0x%x!\n", Status);
         MsQuic->StreamShutdown(Stream, QUIC_STREAM_SHUTDOWN_FLAG_ABORT, 0);
     }
+    
 }
 
 bool QuicServer::getUserCreds(HQUIC connection, void *Context) {
@@ -264,6 +265,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     UNREFERENCED_PARAMETER(Context);
     switch (Event->Type) {
     case QUIC_CONNECTION_EVENT_CONNECTED: {
+
         printf("[conn][%p] Connected\n", Connection);
         QuicServer::getUserCreds(Connection, Context);
 

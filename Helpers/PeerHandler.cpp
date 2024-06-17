@@ -88,6 +88,8 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
         return false;
     }
 
+    std::cout << "\nRoute: " << wrapper.route() << "\n";
+
     switch (wrapper.payload_case()) {
         case Wrapper::kUser: {
             const User& user = wrapper.user();
@@ -96,7 +98,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
         }
         case Wrapper::kPerson: {
             const Person& person = wrapper.person();
-            std::cout << "Received Person: " << person.connection() << ", " << person.email() << std::endl;
+            std::cout << "Received Person: " << reinterpret_cast<HQUIC>(person.connection()) << ", " << person.email() << std::endl;
             break;
         }
         default:

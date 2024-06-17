@@ -10,4 +10,5 @@ message Wrapper {
         Person person = 2;
         Message message = 3;
     }
+    uint32 route = 4;
 }

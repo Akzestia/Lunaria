@@ -23,7 +23,8 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Wrapper::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : payload_{},
+      : route_{0u},
+        payload_{},
         _cached_size_{0},
         _oneof_case_{} {}
 
@@ -58,6 +59,7 @@ const ::uint32_t TableStruct_wrapper_2eproto::offsets[] PROTOBUF_SECTION_VARIABL
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
+    PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.route_),
     PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.payload_),
 };
 
@@ -71,10 +73,10 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_wrapper_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     "\n\rwrapper.proto\032\nuser.proto\032\ntest.proto\032"
-    "\rmessage.proto\"c\n\007Wrapper\022\025\n\004user\030\001 \001(\0132"
+    "\rmessage.proto\"r\n\007Wrapper\022\025\n\004user\030\001 \001(\0132"
     "\005.UserH\000\022\031\n\006person\030\002 \001(\0132\007.PersonH\000\022\033\n\007m"
-    "essage\030\003 \001(\0132\010.MessageH\000B\t\n\007payloadb\006pro"
-    "to3"
+    "essage\030\003 \001(\0132\010.MessageH\000\022\r\n\005route\030\004 \001(\rB"
+    "\t\n\007payloadb\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[3] =
     {
@@ -86,7 +88,7 @@ static ::absl::once_flag descriptor_table_wrapper_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_wrapper_2eproto = {
     false,
     false,
-    163,
+    178,
     descriptor_table_protodef_wrapper_2eproto,
     "wrapper.proto",
     &descriptor_table_wrapper_2eproto_once,
@@ -225,6 +227,7 @@ Wrapper::Wrapper(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
+  _impl_.route_ = from._impl_.route_;
   switch (payload_case()) {
     case PAYLOAD_NOT_SET:
       break;
@@ -250,6 +253,7 @@ inline PROTOBUF_NDEBUG_INLINE Wrapper::Impl_::Impl_(
 
 inline void Wrapper::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.route_ = {};
 }
 Wrapper::~Wrapper() {
   // @@protoc_insertion_point(destructor:Wrapper)
@@ -301,6 +305,7 @@ PROTOBUF_NOINLINE void Wrapper::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  _impl_.route_ = 0u;
   clear_payload();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -313,21 +318,23 @@ const char* Wrapper::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 3, 3, 0, 2> Wrapper::_table_ = {
+const ::_pbi::TcParseTable<0, 4, 3, 0, 2> Wrapper::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    3, 0,  // max_field_number, fast_idx_mask
+    4, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    4,  // num_field_entries
     3,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_Wrapper_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // uint32 route = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Wrapper, _impl_.route_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -340,6 +347,9 @@ const ::_pbi::TcParseTable<0, 3, 3, 0, 2> Wrapper::_table_ = {
     // .Message message = 3;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.message_), _Internal::kOneofCaseOffset + 0, 2,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // uint32 route = 4;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
   }}, {{
     {::_pbi::TcParser::GetTable<::User>()},
     {::_pbi::TcParser::GetTable<::Person>()},
@@ -377,6 +387,13 @@ const ::_pbi::TcParseTable<0, 3, 3, 0, 2> Wrapper::_table_ = {
     default:
       break;
   }
+  // uint32 route = 4;
+  if (this->_internal_route() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
+        4, this->_internal_route(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -393,6 +410,12 @@ const ::_pbi::TcParseTable<0, 3, 3, 0, 2> Wrapper::_table_ = {
   ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // uint32 route = 4;
+  if (this->_internal_route() != 0) {
+    total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
+        this->_internal_route());
+  }
 
   switch (payload_case()) {
     // .User user = 1;
@@ -436,6 +459,9 @@ void Wrapper::MergeImpl(::google::protobuf::Message& to_msg, const ::google::pro
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (from._internal_route() != 0) {
+    _this->_internal_set_route(from._internal_route());
+  }
   switch (from.payload_case()) {
     case kUser: {
       _this->_internal_mutable_user()->::User::MergeFrom(
@@ -476,6 +502,7 @@ PROTOBUF_NOINLINE bool Wrapper::IsInitialized() const {
 void Wrapper::InternalSwap(Wrapper* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+        swap(_impl_.route_, other->_impl_.route_);
   swap(_impl_.payload_, other->_impl_.payload_);
   swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }

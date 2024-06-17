@@ -44,6 +44,7 @@ int main() {
     Wrapper w;
     // *w.mutable_user() = u;
     *w.mutable_person() = p;
+    w.set_route(0x01);
 
     absl::Cord cord;
     bool serialized = w.SerializePartialToCord(&cord);

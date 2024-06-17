@@ -211,10 +211,21 @@ class Wrapper final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kRouteFieldNumber = 4,
     kUserFieldNumber = 1,
     kPersonFieldNumber = 2,
     kMessageFieldNumber = 3,
   };
+  // uint32 route = 4;
+  void clear_route() ;
+  ::uint32_t route() const;
+  void set_route(::uint32_t value);
+
+  private:
+  ::uint32_t _internal_route() const;
+  void _internal_set_route(::uint32_t value);
+
+  public:
   // .User user = 1;
   bool has_user() const;
   private:
@@ -286,7 +297,7 @@ class Wrapper final :
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 3, 3,
+      0, 4, 3,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -303,6 +314,7 @@ class Wrapper final :
                               ::google::protobuf::Arena* arena);
         inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                               ::google::protobuf::Arena* arena, const Impl_& from);
+    ::uint32_t route_;
     union PayloadUnion {
       constexpr PayloadUnion() : _constinit_{} {}
         ::google::protobuf::internal::ConstantInitialized _constinit_;
@@ -534,6 +546,29 @@ inline ::Message* Wrapper::mutable_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::Message* _msg = _internal_mutable_message();
   // @@protoc_insertion_point(field_mutable:Wrapper.message)
   return _msg;
+}
+
+// uint32 route = 4;
+inline void Wrapper::clear_route() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.route_ = 0u;
+}
+inline ::uint32_t Wrapper::route() const {
+  // @@protoc_insertion_point(field_get:Wrapper.route)
+  return _internal_route();
+}
+inline void Wrapper::set_route(::uint32_t value) {
+  _internal_set_route(value);
+  // @@protoc_insertion_point(field_set:Wrapper.route)
+}
+inline ::uint32_t Wrapper::_internal_route() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.route_;
+}
+inline void Wrapper::_internal_set_route(::uint32_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.route_ = value;
 }
 
 inline bool Wrapper::has_payload() const {
