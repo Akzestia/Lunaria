@@ -1,4 +1,5 @@
 #include "DbManager.h"
+#include <sys/types.h>
 
 void DbManager::test() {
     try {
@@ -31,6 +32,41 @@ void DbManager::test() {
         connection.close();
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
+    }
+}
+
+bool DbManager::getMessages(const User& u){
+    try{
+
+        return true;
+    }
+    catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+}
+
+
+bool DbManager::getContacts(const User& u){
+    try{
+
+        return true;
+    }
+    catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+}
+
+
+bool DbManager::getGraphs(const User& u){
+    try{
+
+        return true;
+    }
+    catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
     }
 }
 

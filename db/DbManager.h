@@ -11,9 +11,9 @@ class DbManager {
     static void test();
   protected:
     static void getUser(std::string, uint8_t);
-    static void getMessages(const User &);
-    static void getContacts(const User &);
-    static void getGraphs(const User &);
+    static bool getMessages(const User &);
+    static bool getContacts(const User &);
+    static bool getGraphs(const User &);
     virtual ~DbManager();
   private:
     static std::string getConnectionString();
