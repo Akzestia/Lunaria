@@ -204,6 +204,7 @@ class Person final :
     kContentFieldNumber = 4,
     kNameFieldNumber = 1,
     kEmailFieldNumber = 3,
+    kConnectionFieldNumber = 5,
     kIdFieldNumber = 2,
   };
   // repeated bytes content = 4;
@@ -266,6 +267,16 @@ class Person final :
   std::string* _internal_mutable_email();
 
   public:
+  // uint64 connection = 5;
+  void clear_connection() ;
+  ::uint64_t connection() const;
+  void set_connection(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_connection() const;
+  void _internal_set_connection(::uint64_t value);
+
+  public:
   // int32 id = 2;
   void clear_id() ;
   ::int32_t id() const;
@@ -282,7 +293,7 @@ class Person final :
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 4, 0,
+      3, 5, 0,
       24, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -302,6 +313,7 @@ class Person final :
     ::google::protobuf::RepeatedPtrField<std::string> content_;
     ::google::protobuf::internal::ArenaStringPtr name_;
     ::google::protobuf::internal::ArenaStringPtr email_;
+    ::uint64_t connection_;
     ::int32_t id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -554,6 +566,29 @@ inline ::google::protobuf::RepeatedPtrField<std::string>*
 Person::_internal_mutable_content() {
   PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
   return &_impl_.content_;
+}
+
+// uint64 connection = 5;
+inline void Person::clear_connection() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.connection_ = ::uint64_t{0u};
+}
+inline ::uint64_t Person::connection() const {
+  // @@protoc_insertion_point(field_get:Person.connection)
+  return _internal_connection();
+}
+inline void Person::set_connection(::uint64_t value) {
+  _internal_set_connection(value);
+  // @@protoc_insertion_point(field_set:Person.connection)
+}
+inline ::uint64_t Person::_internal_connection() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.connection_;
+}
+inline void Person::_internal_set_connection(::uint64_t value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.connection_ = value;
 }
 
 #ifdef __GNUC__

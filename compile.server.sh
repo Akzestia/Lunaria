@@ -20,6 +20,7 @@ if ! g++ -g ./server/server.cpp -o./build/server \
     ./server/QuicServer.cpp \
     ./proto/build/test.pb.cc \
     ./proto/build/user.pb.cc \
+    ./proto/build/message.pb.cc \
     ./proto/build/wrapper.pb.cc \
     ./Helpers/ConnectionManager.cpp \
     ./db/DbManager.cpp \

@@ -16,6 +16,8 @@ class QuicClient {
 
     void Disconnect();
 
+    HQUIC getConnection();
+
     void send(const absl::Cord &message);
 
     QuicClient(const char *Host, const uint16_t UdpPort, const char *cert,

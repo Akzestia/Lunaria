@@ -250,6 +250,7 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
                ResumptionTicketLength);
 
         printf("Resumption ticket stored.\n");
+        
         break;
     default:
         break;
@@ -314,6 +315,10 @@ Error:
                                    QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
         free(SendBuffer);
     }
+}
+
+HQUIC QuicClient::getConnection(){
+    return Connection;
 }
 
 QuicClient::~QuicClient() {

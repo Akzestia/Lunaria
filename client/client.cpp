@@ -1,4 +1,5 @@
 #include "QuicClient.h"
+#include <cstdint>
 #include <cstdio>
 #include <fstream>
 #include <vector>
@@ -29,7 +30,14 @@ int main() {
 
     // u.set_name("Akzestia");
     // u.set_email("akzestia@xxx.com");
+
+    HQUIC connection = client.getConnection();
+
     Person p;
+
+    uint64_t xuxu = reinterpret_cast<uint64_t>(connection);
+    
+    p.set_connection(xuxu);
     p.set_email("Akzestia");
     p.set_name("akzestia@xxx.com");
 

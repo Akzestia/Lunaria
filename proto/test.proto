@@ -5,4 +5,5 @@ message Person {
   int32 id = 2;
   string email = 3;
   repeated bytes content = 4;
+  uint64 connection = 5;
 }

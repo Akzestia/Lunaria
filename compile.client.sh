@@ -34,6 +34,7 @@ if ! g++ -g -o ./build/client \
     ./client/QuicClient.cpp \
     ./proto/build/test.pb.cc \
     ./proto/build/user.pb.cc \
+    ./proto/build/message.pb.cc \
     ./proto/build/wrapper.pb.cc \
     ./Helpers/ConnectionManager.cpp \
     ./Helpers/ScreenCapture.cpp \
