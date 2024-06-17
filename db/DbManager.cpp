@@ -1,4 +1,5 @@
 #include "DbManager.h"
+#include <cstring>
 #include <sys/types.h>
 
 void DbManager::test() {
@@ -35,10 +36,12 @@ void DbManager::test() {
     }
 }
 
-bool DbManager::getMessages(const User& u, uint8_t* output){
+bool DbManager::getMessages(const User& u, std::vector<uint8_t>* output){
     try{
-         const std::string connection_str = DbManager::getConnectionString();
+        const std::string connection_str = DbManager::getConnectionString();
 
+        const char* buffer = "test";
+        memcpy(&output, buffer, 4);
         pqxx::connection connection(connection_str);
 
         if (connection.is_open()) {
@@ -74,7 +77,7 @@ bool DbManager::getMessages(const User& u, uint8_t* output){
 }
 
 
-bool DbManager::getContacts(const User& u, uint8_t* output){
+bool DbManager::getContacts(const User& u, std::vector<uint8_t>* output){
        try{
          const std::string connection_str = DbManager::getConnectionString();
 
@@ -113,7 +116,7 @@ bool DbManager::getContacts(const User& u, uint8_t* output){
 }
 
 
-bool DbManager::getGraphs(const User& u, uint8_t* output){
+bool DbManager::getGraphs(const User& u, std::vector<uint8_t>* output){
         try{
          const std::string connection_str = DbManager::getConnectionString();
 
