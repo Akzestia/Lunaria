@@ -89,11 +89,12 @@ class QuicServer : protected ConnectionManager,
                                _Inout_ QUIC_STREAM_EVENT *Event);
 
     QUIC_CREDENTIAL_CONFIG CredConfig;
+    QUIC_ADDR Address = {0};
     uint16_t UdpPort;
-    HQUIC Connection;
-    HQUIC Registration;
-    HQUIC Configuration;
-    HQUIC Listener = NULL;
+    HQUIC Connection = nullptr;
+    HQUIC Registration = nullptr;
+    HQUIC Configuration = nullptr;
+    HQUIC Listener = nullptr;
     QUIC_STATUS Status;
     char *Host = nullptr;
     char *cert = nullptr;

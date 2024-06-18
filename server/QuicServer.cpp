@@ -238,7 +238,6 @@ void QuicServer::send(HQUIC Stream) {
         printf("StreamSend failed, 0x%x!\n", Status);
         MsQuic->StreamShutdown(Stream, QUIC_STREAM_SHUTDOWN_FLAG_ABORT, 0);
     }
-    
 }
 
 bool QuicServer::getUserCreds(HQUIC connection, void *Context) {
@@ -249,7 +248,7 @@ bool QuicServer::getUserCreds(HQUIC connection) {
     printf("\nHi form non static\n");
 
     return true;
-} 
+}
 QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
     _Inout_ QUIC_STREAM_EVENT *Event) {
@@ -352,16 +351,6 @@ void QuicServer::Start() {
         this->isRunning.store(true);
 
         this->serverThread = std::thread([this]() {
-            QUIC_ADDR Address = {0};
-            QuicAddrSetFamily(&Address, QUIC_ADDRESS_FAMILY_UNSPEC);
-            QuicAddrSetPort(&Address, this->UdpPort);
-
-            if (key != nullptr) {
-                ServerLoadConfiguration(cert, key);
-            } else {
-                ServerLoadConfiguration(cert);
-            }
-
             if (QUIC_FAILED(Status = MsQuic->ListenerOpen(
                                 Registration,
                                 QuicServer::StaticServerListenerCallback, this,
@@ -381,10 +370,16 @@ void QuicServer::Start() {
             }
 
             std::cout << "Server is running..." << std::endl;
-            std::unique_lock<std::mutex> lk(server_status_m);
-            server_status.wait(lk);
 
-            printf("Ebnded");
+            while(isRunning.load()){
+                printf("\nPress 'q' to exit\n");
+                char exit = getchar();
+                if(exit == 'q')
+                    isRunning.store(false);
+            }
+
+            if(Listener != nullptr)
+                MsQuic->ListenerClose(Listener);
         });
     }
 }
@@ -396,13 +391,9 @@ void QuicServer::Close() {
             if (!this->serverThread.joinable()) {
                 std::cout << "Server thread has terminated successfully."
                           << std::endl;
-                if (Listener != NULL) {
-                    std::cout << "Server thread has terminated successfullyX."
-                              << std::endl;
+                if (Listener != nullptr) {
                     MsQuic->ListenerClose(Listener);
                 }
-                std::cout << "Server thread has terminated successfully."
-                          << std::endl;
             } else {
                 std::cout << "Failed to terminate server thread." << std::endl;
             }
@@ -433,6 +424,15 @@ QuicServer::QuicServer(const char *Host, const uint16_t UdpPort,
                         MsQuic->RegistrationOpen(&RegConfig, &Registration))) {
         printf("RegistrationOpen failed, 0x%x!\n", Status);
         exit(-1);
+    }
+
+    QuicAddrSetFamily(&Address, QUIC_ADDRESS_FAMILY_UNSPEC);
+    QuicAddrSetPort(&Address, this->UdpPort);
+
+    if (key != nullptr) {
+        ServerLoadConfiguration(cert, key);
+    } else {
+        ServerLoadConfiguration(cert);
     }
 }
 
