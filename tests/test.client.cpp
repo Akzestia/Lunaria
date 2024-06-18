@@ -12,9 +12,8 @@ int main() {
 
     absl::Cord* output;
 
-    if(p.SerializePartialToCord (&(*output))){
+    if(p.SerializePartialToCord (&(*output)))
         client->send((*output));
-    }
     else
         return -1;
 
