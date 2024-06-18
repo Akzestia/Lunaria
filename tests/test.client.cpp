@@ -22,7 +22,5 @@ int main() {
     free(output);
     free(client);
     return 0;
-
-    //test git action x2
 }
 
