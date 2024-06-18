@@ -10,7 +10,7 @@ on:
 jobs:
   update-js:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4  # Use v4 of actions/checkout
@@ -31,16 +31,25 @@ jobs:
           echo "Modified files: $files"
           echo "files=$files" >> $GITHUB_ENV
 
-      - name: Process modified files
+      - name: Filter modified files for .cpp and .h extensions
+        id: filter_files
+        run: |
+          filtered_files=$(echo "${{ env.files }}" | tr ' ' '\n' | grep -E '\.cpp$|\.h$')
+          echo "Filtered files: $filtered_files"
+          echo "filtered_files=$filtered_files" >> $GITHUB_ENV
+
+      - name: Process filtered files
+        if: env.filtered_files != ''
         run: |
           ./update.texts.js.sh
 
       - name: Commit and push changes
+        if: env.filtered_files != ''
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "Update texts.js based on modified header and source files"
+          git diff-index --quiet HEAD || git commit -m "Update texts.js based on modified header and source files"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

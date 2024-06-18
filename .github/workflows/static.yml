@@ -1,55 +1,49 @@
-name: Update texts.js
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
 
 on:
+  # Runs on pushes targeting the default branch
   push:
+    branches: ["main"]
     paths:
-      - '**/*.h'
-      - '**/*.cpp'
-      - '**/*.proto'
+      - 'index.html'
+      - 'github-pages/**'
+    paths-ignore:
+      - 'github-pages/js/test.js'
+      - 'github-pages/js/texts.js'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  update-js:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4  # Use v4 of actions/checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          fetch-depth: 2  # Fetch all history to enable comparisons
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4  # Use v4 of actions/setup-node
-        with:
-          node-version: '14'  # Specify your desired Node.js version here | Switched back to v14
-
-      - name: List modified files
-        id: list_files
-        run: |
-          previous_commit=$(git rev-parse HEAD^)
-          current_commit=${{ github.sha }}
-          files=$(git diff --name-only $previous_commit $current_commit)
-          echo "Modified files: $files"
-          echo "files=$files" >> $GITHUB_ENV
-
-      - name: Filter modified files for .cpp and .h extensions
-        id: filter_files
-        run: |
-          filtered_files=$(echo "${{ env.files }}" | tr ' ' '\n' | grep -E '\.cpp$|\.h$')
-          echo "Filtered files: $filtered_files"
-          echo "filtered_files=$filtered_files" >> $GITHUB_ENV
-
-      - name: Process filtered files
-        if: env.filtered_files != ''
-        run: |
-          ./update.texts.js.sh
-
-      - name: Commit and push changes
-        if: env.filtered_files != ''
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "Update texts.js based on modified header and source files"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
