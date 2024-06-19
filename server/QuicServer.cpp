@@ -246,65 +246,9 @@ bool QuicServer::getUserCreds(HQUIC connection, void *Context) {
 
 bool QuicServer::getUserCreds(HQUIC connection) {
     printf("\nHi form non static\n");
-
-    HQUIC Stream = NULL;
-    QUIC_BUFFER *SendBuffer;
-
-    Message m;
-
-    m.set_id(20);
-
-    absl::Cord message;
-
-    m.SerializePartialToCord(&message);
-
-    absl::Cord::ChunkIterator start = message.chunk_begin();
-    absl::Cord::ChunkIterator end = message.chunk_end();
-    std::vector<uint8_t> buffer;
-    for (auto it = start; it != end; ++it) {
-        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
-    }
-
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer.size();
-    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
-
-    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
-
-    if (QUIC_FAILED(
-            Status = MsQuic->StreamOpen(connection, QUIC_STREAM_OPEN_FLAG_NONE,
-                                        QuicServer::StaticClientStreamCallback,
-                                        this, &Stream))) {
-        printf("StreamOpen failed, 0x%x!\n", Status);
-        goto Error;
-    }
-
-    printf("[strm][%p] Starting...\n", Stream);
-
-    if (QUIC_FAILED(Status = MsQuic->StreamStart(
-                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
-        printf("StreamStart failed, 0x%x!\n", Status);
-        MsQuic->StreamClose(Stream);
-        goto Error;
-    }
-
-    printf("[strm][%p] Sending data...\n", Stream);
-
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("StreamSend failed, 0x%x!\n", Status);
-        goto Error;
-    }
     return true;
-Error:
-    if (QUIC_FAILED(Status)) {
-        MsQuic->ConnectionShutdown(Connection,
-                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
-        free(SendBuffer);
-    }
-    return false;
 }
+
 QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
     _Inout_ QUIC_STREAM_EVENT *Event) {
