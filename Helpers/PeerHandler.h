@@ -20,5 +20,5 @@ class PeerHandler {
     static std::unordered_map<HQUIC, uint8_t *> *GetPeers();
     static void SetPeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static bool onPeerShutdown(HQUIC Stream);
-    ~PeerHandler();
+    virtual ~PeerHandler();
 };

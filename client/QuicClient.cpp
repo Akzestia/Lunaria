@@ -323,7 +323,7 @@ HQUIC QuicClient::getConnection(){
 
 QuicClient::~QuicClient() {
     if (ResumptionTicket != nullptr) {
-        free(ResumptionTicket);
+        delete [] ResumptionTicket;
         ResumptionTicket = nullptr;
     }
     if (MsQuic) {

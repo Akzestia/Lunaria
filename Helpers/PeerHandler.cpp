@@ -109,6 +109,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
 }
 
 PeerHandler::~PeerHandler(){
+    std::cout << "\nPeers ~\n";
     if(peers) delete peers;
     if(peerDataSizes) delete peerDataSizes;
 }

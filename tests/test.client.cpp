@@ -5,21 +5,32 @@ int main() {
 
     client->Connect();
 
-    Person p;
+    Person* p = new Person();
+    p->set_name("Akzestia");
 
-    p.set_name("Akzestia");
+    Wrapper* w = new Wrapper();
 
-    absl::Cord output;
+    *w->mutable_person() = (*p);
 
-    if(p.SerializePartialToCord (&output))
-        client->send(output);
-    else
+    absl::Cord* output = new absl::Cord();
+
+    if (w->SerializePartialToCord(output)) {
+        std::cout << *output << "\n"; 
+        client->send(*output);
+    } else {
+        delete output;
+        delete client;
+        delete p;
+        delete w;
         return -1;
+    }
 
     getchar();
     client->Disconnect();
-    // free(output);
-    free(client);
+    delete output;
+    delete client;
+    delete p;
+    delete w;
     return 0;
 }
 
