@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../MsQuic/include/msquic.h"
 #include "../proto/build/test.pb.h"
 #include "../proto/build/user.pb.h"
