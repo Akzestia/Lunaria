@@ -1,6 +1,6 @@
 #pragma once
-#include "../Helpers/ConnectionManager.h"
-#include "../Helpers/PeerHandler.h"
+#include "../Helpers/ConnectionManager/ConnectionManager.h"
+#include "../Helpers/PeerHandler/PeerHandler.h"
 #include "../MsQuic/include/msquic.h"
 #include "../db/DbManager.h"
 #include "../proto/build/user.pb.h"

@@ -1,6 +1,6 @@
 #pragma once
-#include "../MsQuic/include/msquic.h"
-#include "../proto/build/user.pb.h"
+#include "../../MsQuic/include/msquic.h"
+#include "../../proto/build/user.pb.h"
 #include <condition_variable>
 #include <unordered_map>
 #include <mutex>
