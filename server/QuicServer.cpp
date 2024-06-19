@@ -370,38 +370,23 @@ void QuicServer::Start() {
             }
 
             std::cout << "Server is running..." << std::endl;
-
-            while(isRunning.load()){
-                printf("\nPress 'q' to exit\n");
-                char exit = getchar();
-                if(exit == 'q')
-                    isRunning.store(false);
-            }
-
-            if(Listener != nullptr)
-                MsQuic->ListenerClose(Listener);
         });
     }
 }
 void QuicServer::Close() {
     if (this->isRunning.load()) {
+        this->isRunning.store(false);
+        
+        this->server_status.notify_all();
+
         if (this->serverThread.joinable()) {
             this->serverThread.join();
-
-            if (!this->serverThread.joinable()) {
-                std::cout << "Server thread has terminated successfully."
-                          << std::endl;
-                if (Listener != nullptr) {
-                    MsQuic->ListenerClose(Listener);
-                }
-            } else {
-                std::cout << "Failed to terminate server thread." << std::endl;
-            }
+            std::cout << "Server thread has terminated successfully." << std::endl;
         } else {
-            std::cout << "Server thread is not joinable." << std::endl;
+            std::cout << "Server thread is not joinable or already joined." << std::endl;
         }
-        this->isRunning.store(false);
-        this->server_status.notify_all();
+    } else {
+        std::cout << "Server is not running." << std::endl;
     }
 
     std::cout << "isRunning: " << this->isRunning.load() << std::endl;
@@ -438,32 +423,39 @@ QuicServer::QuicServer(const char *Host, const uint16_t UdpPort, const char* Alp
 }
 
 QuicServer::~QuicServer() {
-    if (Host) {
-        delete[] Host;
-        Host = nullptr;
+    std::cout << "Destructor called for QuicServer" << std::endl;
+
+    auto begin = ConnectionManager::getUsers()->begin();
+    auto end = ConnectionManager::getUsers()->end();
+
+    std::cout << "Closing existing connections: " << ConnectionManager::getUsers()->size() << std::endl;
+
+    for(;begin != end; begin++){
+        printf("\n[conn][%p] Closing\n", begin->first);
+        MsQuic->ConnectionShutdown(begin->first, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        MsQuic->ConnectionClose(begin->first);
     }
 
-    if (cert) {
-        delete[] cert;
-        cert = nullptr;
+    if (Listener != nullptr) {
+        std::cout << "Closing listener..." << std::endl;
+        MsQuic->ListenerClose(Listener);
+        Listener = nullptr;
     }
 
-    if (key) {
-        delete[] key;
-        key = nullptr;
-    }
-
-    if (MsQuic) {
-        if (Configuration) {
+    if (MsQuic != nullptr) {
+        if (Configuration != nullptr) {
+            std::cout << "Closing configuration..." << std::endl;
             MsQuic->ConfigurationClose(Configuration);
             Configuration = nullptr;
         }
 
-        if (Registration) {
+        if (Registration != nullptr) {
+            std::cout << "Closing registration..." << std::endl;
             MsQuic->RegistrationClose(Registration);
             Registration = nullptr;
         }
 
+        std::cout << "Closing MsQuic..." << std::endl;
         MsQuicClose(MsQuic);
         MsQuic = nullptr;
     }
