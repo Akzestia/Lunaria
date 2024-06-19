@@ -36,8 +36,8 @@ if ! g++ -g -o ./build/client \
     ./proto/build/user.pb.cc \
     ./proto/build/message.pb.cc \
     ./proto/build/wrapper.pb.cc \
-    ./Helpers/ConnectionManager.cpp \
-    ./Helpers/ScreenCapture.cpp \
+    ./Helpers/ConnectionManager/ConnectionManager.cpp \
+    ./Helpers/ScreenCapture/ScreenCapture.cpp \
     ./db/DbManager.cpp \
     -lstdc++ -lpthread -lprotobuf; then
     echo "Error: Compilation failed"

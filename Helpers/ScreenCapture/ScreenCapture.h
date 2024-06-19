@@ -6,7 +6,6 @@
 #include <iostream>
 #include <chrono>
 
-#pragma once
 class ScreenCapture {
     static bool isCapture;
 public:

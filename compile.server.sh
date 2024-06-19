@@ -22,9 +22,9 @@ if ! g++ -g ./server/server.cpp -o./build/server \
     ./proto/build/user.pb.cc \
     ./proto/build/message.pb.cc \
     ./proto/build/wrapper.pb.cc \
-    ./Helpers/ConnectionManager.cpp \
+    ./Helpers/ConnectionManager/ConnectionManager.cpp \
     ./db/DbManager.cpp \
-    ./Helpers/PeerHandler.cpp; then
+    ./Helpers/PeerHandler/PeerHandler.cpp; then
     echo "Error: Compilation failed"
     exit 1
 fi
