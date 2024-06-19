@@ -173,8 +173,8 @@ void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
     }
 }
 
-QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
-                       const char *cert, const char *key) {
+QuicClient::QuicClient(const char *Host, const uint16_t UdpPort, const char* Alpn,
+                       const char *cert, const char *key) : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn}{
 
     this->Host = Host;
     this->UdpPort = UdpPort;

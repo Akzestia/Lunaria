@@ -17,7 +17,7 @@ fi
 export LD_LIBRARY_PATH=/usr/lib/gtk-4.0/4.0.0/immodules:/usr/lib/gtk-4.0/4.0.0/media:/usr/lib/gtk-4.0/4.0.0/printbackends:$LD_LIBRARY_PATH
 
 # Compile the client
-if ! g++ -g -o ./build/client \
+if ! g++ -g ./test.client.cpp -o ./build/client \
     -I../proto \
     -I/usr/include/gtk-4.0 \
     -L/usr/lib/gtk-4.0/4.0.0/immodules -lim-ibus \
@@ -30,7 +30,6 @@ if ! g++ -g -o ./build/client \
     -L/usr/lib -labsl_log_internal_check_op \
     -L/usr/lib -labsl_log_internal_message \
     -L/usr/lib -labsl_cord \
-    ../client/client.cpp \
     ../client/QuicClient.cpp \
     ../proto/build/test.pb.cc \
     ../proto/build/user.pb.cc \

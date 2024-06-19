@@ -24,7 +24,7 @@ class QuicServer : protected ConnectionManager,
 
     bool getIsRunning();
 
-    QuicServer(const char *Host, const uint16_t UdpPort, const char *cert,
+    QuicServer(const char *Host, const uint16_t UdpPort, const char* Alpn, const char *cert,
                const char *key = nullptr);
 
     ~QuicServer();
@@ -101,8 +101,7 @@ class QuicServer : protected ConnectionManager,
     char *key = nullptr;
     const QUIC_REGISTRATION_CONFIG RegConfig = {
         "Server", QUIC_EXECUTION_PROFILE_TYPE_REAL_TIME};
-    const QUIC_BUFFER Alpn = {sizeof("nexus") - 1,
-                              (uint8_t *)"nexus"}; // wq-vvv-01
+    const QUIC_BUFFER Alpn; // wq-vvv-01 
     std::atomic<bool> isRunning = false;
     std::thread serverThread;
 

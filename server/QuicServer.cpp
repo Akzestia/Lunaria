@@ -408,8 +408,9 @@ void QuicServer::Close() {
 }
 
 bool QuicServer::getIsRunning() { return this->isRunning.load(); }
-QuicServer::QuicServer(const char *Host, const uint16_t UdpPort,
-                       const char *cert, const char *key) {
+
+QuicServer::QuicServer(const char *Host, const uint16_t UdpPort, const char* Alpn,
+                       const char *cert, const char *key) : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn} {
     this->Host = (char *)Host;
     this->UdpPort = UdpPort;
     this->cert = (char *)cert;
@@ -429,7 +430,7 @@ QuicServer::QuicServer(const char *Host, const uint16_t UdpPort,
     QuicAddrSetFamily(&Address, QUIC_ADDRESS_FAMILY_UNSPEC);
     QuicAddrSetPort(&Address, this->UdpPort);
 
-    if (key != nullptr) {
+    if (this->key != nullptr) {
         ServerLoadConfiguration(cert, key);
     } else {
         ServerLoadConfiguration(cert);

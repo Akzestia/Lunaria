@@ -20,8 +20,8 @@ class QuicClient {
 
     void send(const absl::Cord &message);
 
-    QuicClient(const char *Host, const uint16_t UdpPort, const char *cert,
-               const char *key);
+    QuicClient(const char *Host, const uint16_t UdpPort, const char* Alpn, const char *cert,
+               const char *key = nullptr);
 
     ~QuicClient();
 
@@ -62,7 +62,7 @@ class QuicClient {
     const char *Host;
     const QUIC_REGISTRATION_CONFIG RegConfig = {
         "Client", QUIC_EXECUTION_PROFILE_TYPE_REAL_TIME};
-    const QUIC_BUFFER Alpn = {sizeof("nexus") - 1, (uint8_t *)"nexus"};
+    const QUIC_BUFFER Alpn;
 
     uint32_t DecodeHexBuffer(_In_z_ const char *HexBuffer,
                              _In_ uint32_t OutBufferLen,
