@@ -30,6 +30,9 @@ class QuicClient {
     static std::condition_variable cv;
     static std::mutex cv_m;
     static bool disconnected;
+    HQUIC TunnelStream;
+
+    bool openTunnel();
 
     void ClientLoadConfiguration(const char *cert, const char *key);
 
@@ -53,9 +56,10 @@ class QuicClient {
 
     QUIC_CREDENTIAL_CONFIG CredConfig;
     uint16_t UdpPort;
-    HQUIC Connection;
-    HQUIC Registration;
-    HQUIC Configuration;
+    HQUIC Connection = nullptr;
+    HQUIC Listener = nullptr;
+    HQUIC Registration = nullptr;
+    HQUIC Configuration = nullptr;
     uint8_t *ResumptionTicket = nullptr;
     uint16_t ResumptionTicketLength;
     QUIC_STATUS Status;

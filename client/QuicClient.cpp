@@ -12,7 +12,7 @@ bool fileExists(const char *file) {
     struct stat buffer;
     return (stat(file, &buffer) == 0);
 }
-//Test
+// Test
 typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
     QUIC_CREDENTIAL_CONFIG CredConfig;
     union {
@@ -78,6 +78,7 @@ void QuicClient::Connect() {
         printf("ConnectionStart failed, 0x%x!\n", Status);
         goto Error;
     }
+    
 Error:
     if (QUIC_FAILED(Status) && Connection != NULL) {
         MsQuic->ConnectionClose(Connection);
@@ -173,8 +174,9 @@ void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
     }
 }
 
-QuicClient::QuicClient(const char *Host, const uint16_t UdpPort, const char* Alpn,
-                       const char *cert, const char *key) : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn}{
+QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
+                       const char *Alpn, const char *cert, const char *key)
+    : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn} {
 
     this->Host = Host;
     this->UdpPort = UdpPort;
@@ -250,7 +252,7 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
                ResumptionTicketLength);
 
         printf("Resumption ticket stored.\n");
-        
+
         break;
     default:
         break;
@@ -317,13 +319,22 @@ Error:
     }
 }
 
-HQUIC QuicClient::getConnection(){
-    return Connection;
+HQUIC QuicClient::getConnection() { return Connection; }
+
+bool QuicClient::openTunnel() {
+
+    if (QUIC_FAILED(Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE, QuicClient::StaticClientStreamCallback, this, &TunnelStream))) {
+        printf("\nFailed to open Tunnel\n");
+        return false;                
+    }
+
+    printf("\nTunnel opened\n");
+    return true;
 }
 
 QuicClient::~QuicClient() {
     if (ResumptionTicket != nullptr) {
-        delete [] ResumptionTicket;
+        delete[] ResumptionTicket;
         ResumptionTicket = nullptr;
     }
     if (MsQuic) {

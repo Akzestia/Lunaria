@@ -17,6 +17,8 @@ int main() {
     if (w->SerializePartialToCord(output)) {
         std::cout << *output << "\n"; 
         client->send(*output);
+        getchar();
+        client->send(*output);
     } else {
         delete output;
         delete client;
