@@ -59,6 +59,7 @@ const ::uint32_t TableStruct_wrapper_2eproto::offsets[] PROTOBUF_SECTION_VARIABL
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
     PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.route_),
     PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.payload_),
 };
@@ -73,13 +74,15 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_wrapper_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     "\n\rwrapper.proto\032\nuser.proto\032\ntest.proto\032"
-    "\rmessage.proto\"r\n\007Wrapper\022\025\n\004user\030\001 \001(\0132"
-    "\005.UserH\000\022\031\n\006person\030\002 \001(\0132\007.PersonH\000\022\033\n\007m"
-    "essage\030\003 \001(\0132\010.MessageH\000\022\r\n\005route\030\004 \001(\rB"
-    "\t\n\007payloadb\006proto3"
+    "\rmessage.proto\032\nauth.proto\"\211\001\n\007Wrapper\022\025"
+    "\n\004user\030\001 \001(\0132\005.UserH\000\022\031\n\006person\030\002 \001(\0132\007."
+    "PersonH\000\022\033\n\007message\030\003 \001(\0132\010.MessageH\000\022\025\n"
+    "\004auth\030\004 \001(\0132\005.AuthH\000\022\r\n\005route\030\005 \001(\rB\t\n\007p"
+    "ayloadb\006proto3"
 };
-static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[3] =
+static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[4] =
     {
+        &::descriptor_table_auth_2eproto,
         &::descriptor_table_message_2eproto,
         &::descriptor_table_test_2eproto,
         &::descriptor_table_user_2eproto,
@@ -88,12 +91,12 @@ static ::absl::once_flag descriptor_table_wrapper_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_wrapper_2eproto = {
     false,
     false,
-    178,
+    214,
     descriptor_table_protodef_wrapper_2eproto,
     "wrapper.proto",
     &descriptor_table_wrapper_2eproto_once,
     descriptor_table_wrapper_2eproto_deps,
-    3,
+    4,
     1,
     schemas,
     file_default_instances,
@@ -129,6 +132,7 @@ class Wrapper::_Internal {
   static const ::User& user(const Wrapper* msg);
   static const ::Person& person(const Wrapper* msg);
   static const ::Message& message(const Wrapper* msg);
+  static const ::Auth& auth(const Wrapper* msg);
 };
 
 const ::User& Wrapper::_Internal::user(const Wrapper* msg) {
@@ -139,6 +143,9 @@ const ::Person& Wrapper::_Internal::person(const Wrapper* msg) {
 }
 const ::Message& Wrapper::_Internal::message(const Wrapper* msg) {
   return *msg->_impl_.payload_.message_;
+}
+const ::Auth& Wrapper::_Internal::auth(const Wrapper* msg) {
+  return *msg->_impl_.payload_.auth_;
 }
 void Wrapper::set_allocated_user(::User* user) {
   ::google::protobuf::Arena* message_arena = GetArena();
@@ -206,6 +213,28 @@ void Wrapper::clear_message() {
     clear_has_payload();
   }
 }
+void Wrapper::set_allocated_auth(::Auth* auth) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (auth) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(auth)->GetArena();
+    if (message_arena != submessage_arena) {
+      auth = ::google::protobuf::internal::GetOwnedMessage(message_arena, auth, submessage_arena);
+    }
+    set_has_auth();
+    _impl_.payload_.auth_ = auth;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Wrapper.auth)
+}
+void Wrapper::clear_auth() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  if (payload_case() == kAuth) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.auth_;
+    }
+    clear_has_payload();
+  }
+}
 Wrapper::Wrapper(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -239,6 +268,9 @@ Wrapper::Wrapper(
         break;
       case kMessage:
         _impl_.payload_.message_ = CreateMaybeMessage<::Message>(arena, *from._impl_.payload_.message_);
+        break;
+      case kAuth:
+        _impl_.payload_.auth_ = CreateMaybeMessage<::Auth>(arena, *from._impl_.payload_.auth_);
         break;
   }
 
@@ -290,6 +322,12 @@ void Wrapper::clear_payload() {
       }
       break;
     }
+    case kAuth: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.auth_;
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -318,23 +356,23 @@ const char* Wrapper::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 4, 3, 0, 2> Wrapper::_table_ = {
+const ::_pbi::TcParseTable<0, 5, 4, 0, 2> Wrapper::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    4, 0,  // max_field_number, fast_idx_mask
+    5, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967280,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    4,  // num_field_entries
-    3,  // num_aux_entries
+    5,  // num_field_entries
+    4,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_Wrapper_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    // uint32 route = 4;
+    // uint32 route = 5;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Wrapper, _impl_.route_), 63>(),
-     {32, 63, 0, PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_)}},
+     {40, 63, 0, PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -347,13 +385,17 @@ const ::_pbi::TcParseTable<0, 4, 3, 0, 2> Wrapper::_table_ = {
     // .Message message = 3;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.message_), _Internal::kOneofCaseOffset + 0, 2,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // uint32 route = 4;
+    // .Auth auth = 4;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.auth_), _Internal::kOneofCaseOffset + 0, 3,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // uint32 route = 5;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
   }}, {{
     {::_pbi::TcParser::GetTable<::User>()},
     {::_pbi::TcParser::GetTable<::Person>()},
     {::_pbi::TcParser::GetTable<::Message>()},
+    {::_pbi::TcParser::GetTable<::Auth>()},
   }}, {{
   }},
 };
@@ -384,14 +426,20 @@ const ::_pbi::TcParseTable<0, 4, 3, 0, 2> Wrapper::_table_ = {
           _Internal::message(this).GetCachedSize(), target, stream);
       break;
     }
+    case kAuth: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          4, _Internal::auth(this),
+          _Internal::auth(this).GetCachedSize(), target, stream);
+      break;
+    }
     default:
       break;
   }
-  // uint32 route = 4;
+  // uint32 route = 5;
   if (this->_internal_route() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        4, this->_internal_route(), target);
+        5, this->_internal_route(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -411,7 +459,7 @@ const ::_pbi::TcParseTable<0, 4, 3, 0, 2> Wrapper::_table_ = {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // uint32 route = 4;
+  // uint32 route = 5;
   if (this->_internal_route() != 0) {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
         this->_internal_route());
@@ -434,6 +482,12 @@ const ::_pbi::TcParseTable<0, 4, 3, 0, 2> Wrapper::_table_ = {
     case kMessage: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.message_);
+      break;
+    }
+    // .Auth auth = 4;
+    case kAuth: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.auth_);
       break;
     }
     case PAYLOAD_NOT_SET: {
@@ -476,6 +530,11 @@ void Wrapper::MergeImpl(::google::protobuf::Message& to_msg, const ::google::pro
     case kMessage: {
       _this->_internal_mutable_message()->::Message::MergeFrom(
           from._internal_message());
+      break;
+    }
+    case kAuth: {
+      _this->_internal_mutable_auth()->::Auth::MergeFrom(
+          from._internal_auth());
       break;
     }
     case PAYLOAD_NOT_SET: {

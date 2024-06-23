@@ -23,5 +23,11 @@ if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/message.pr
     exit 1
 fi
 
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/auth.proto; then
+    echo "Error: Proto failed \`auth\`";
+    exit 1
+fi
+
+
 
 echo "Proto files were successfully compiled";

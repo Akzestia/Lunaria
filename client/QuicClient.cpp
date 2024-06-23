@@ -78,7 +78,7 @@ void QuicClient::Connect() {
         printf("ConnectionStart failed, 0x%x!\n", Status);
         goto Error;
     }
-    
+
 Error:
     if (QUIC_FAILED(Status) && Connection != NULL) {
         MsQuic->ConnectionClose(Connection);
@@ -323,9 +323,12 @@ HQUIC QuicClient::getConnection() { return Connection; }
 
 bool QuicClient::openTunnel() {
 
-    if (QUIC_FAILED(Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE, QuicClient::StaticClientStreamCallback, this, &TunnelStream))) {
+    if (QUIC_FAILED(
+            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
+                                        QuicClient::StaticClientStreamCallback,
+                                        this, &TunnelStream))) {
         printf("\nFailed to open Tunnel\n");
-        return false;                
+        return false;
     }
 
     printf("\nTunnel opened\n");
@@ -350,4 +353,57 @@ QuicClient::~QuicClient() {
         MsQuicClose(MsQuic);
         MsQuic = nullptr;
     }
+}
+
+bool QuicClient::AuthRequest(const absl::Cord &auth_request) {
+
+    QUIC_BUFFER *SendBuffer;
+    HQUIC Stream = NULL;
+
+    absl::Cord::ChunkIterator start = auth_request.chunk_begin();
+    absl::Cord::ChunkIterator end = auth_request.chunk_end();
+    std::vector<uint8_t> buffer;
+    for (auto it = start; it != end; ++it) {
+        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
+    }
+
+    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    SendBuffer->Length = buffer.size();
+    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+
+    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
+
+    if (QUIC_FAILED(
+            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
+                                        QuicClient::StaticClientStreamCallback,
+                                        this, &Stream))) {
+        printf("StreamOpen failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    printf("[strm][%p] Starting Auth Request...\n", Stream);
+
+    if (QUIC_FAILED(Status = MsQuic->StreamStart(
+                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
+        printf("StreamStart failed, 0x%x!\n", Status);
+        MsQuic->StreamClose(Stream);
+        goto Error;
+    }
+
+    printf("[strm][%p] Sending Auth Request...\n", Stream);
+
+    if (QUIC_FAILED(Status =
+                        MsQuic->StreamSend(Stream, SendBuffer, 1,
+                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
+        printf("StreamSend failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+Error:
+    if (QUIC_FAILED(Status)) {
+        MsQuic->ConnectionShutdown(Connection,
+                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        free(SendBuffer);
+    }
+    return false;
 }

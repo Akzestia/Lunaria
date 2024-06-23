@@ -22,6 +22,7 @@ if ! g++ -g ./test.server.cpp -o./build/server \
     ../proto/build/user.pb.cc \
     ../proto/build/message.pb.cc \
     ../proto/build/wrapper.pb.cc \
+    ../proto/build/auth.pb.cc \
     ../Helpers/ConnectionManager/ConnectionManager.cpp \
     ../db/DbManager.cpp \
     ../Helpers/PeerHandler/PeerHandler.cpp; then

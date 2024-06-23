@@ -37,6 +37,7 @@
 #include "user.pb.h"
 #include "test.pb.h"
 #include "message.pb.h"
+#include "auth.pb.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
@@ -130,6 +131,7 @@ class Wrapper final :
     kUser = 1,
     kPerson = 2,
     kMessage = 3,
+    kAuth = 4,
     PAYLOAD_NOT_SET = 0,
   };
 
@@ -211,12 +213,13 @@ class Wrapper final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kRouteFieldNumber = 4,
+    kRouteFieldNumber = 5,
     kUserFieldNumber = 1,
     kPersonFieldNumber = 2,
     kMessageFieldNumber = 3,
+    kAuthFieldNumber = 4,
   };
-  // uint32 route = 4;
+  // uint32 route = 5;
   void clear_route() ;
   ::uint32_t route() const;
   void set_route(::uint32_t value);
@@ -283,6 +286,25 @@ class Wrapper final :
   ::Message* _internal_mutable_message();
 
   public:
+  // .Auth auth = 4;
+  bool has_auth() const;
+  private:
+  bool _internal_has_auth() const;
+
+  public:
+  void clear_auth() ;
+  const ::Auth& auth() const;
+  PROTOBUF_NODISCARD ::Auth* release_auth();
+  ::Auth* mutable_auth();
+  void set_allocated_auth(::Auth* value);
+  void unsafe_arena_set_allocated_auth(::Auth* value);
+  ::Auth* unsafe_arena_release_auth();
+
+  private:
+  const ::Auth& _internal_auth() const;
+  ::Auth* _internal_mutable_auth();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:Wrapper)
@@ -291,13 +313,14 @@ class Wrapper final :
   void set_has_user();
   void set_has_person();
   void set_has_message();
+  void set_has_auth();
 
   inline bool has_payload() const;
   inline void clear_has_payload();
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 4, 3,
+      0, 5, 4,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -321,6 +344,7 @@ class Wrapper final :
       ::User* user_;
       ::Person* person_;
       ::Message* message_;
+      ::Auth* auth_;
     } payload_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -548,7 +572,74 @@ inline ::Message* Wrapper::mutable_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// uint32 route = 4;
+// .Auth auth = 4;
+inline bool Wrapper::has_auth() const {
+  return payload_case() == kAuth;
+}
+inline bool Wrapper::_internal_has_auth() const {
+  return payload_case() == kAuth;
+}
+inline void Wrapper::set_has_auth() {
+  _impl_._oneof_case_[0] = kAuth;
+}
+inline ::Auth* Wrapper::release_auth() {
+  // @@protoc_insertion_point(field_release:Wrapper.auth)
+  if (payload_case() == kAuth) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.auth_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.auth_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Auth& Wrapper::_internal_auth() const {
+  return payload_case() == kAuth ? *_impl_.payload_.auth_ : reinterpret_cast<::Auth&>(::_Auth_default_instance_);
+}
+inline const ::Auth& Wrapper::auth() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.auth)
+  return _internal_auth();
+}
+inline ::Auth* Wrapper::unsafe_arena_release_auth() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.auth)
+  if (payload_case() == kAuth) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.auth_;
+    _impl_.payload_.auth_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_auth(::Auth* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_auth();
+    _impl_.payload_.auth_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.auth)
+}
+inline ::Auth* Wrapper::_internal_mutable_auth() {
+  if (payload_case() != kAuth) {
+    clear_payload();
+    set_has_auth();
+    _impl_.payload_.auth_ = CreateMaybeMessage<::Auth>(GetArena());
+  }
+  return _impl_.payload_.auth_;
+}
+inline ::Auth* Wrapper::mutable_auth() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Auth* _msg = _internal_mutable_auth();
+  // @@protoc_insertion_point(field_mutable:Wrapper.auth)
+  return _msg;
+}
+
+// uint32 route = 5;
 inline void Wrapper::clear_route() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.route_ = 0u;

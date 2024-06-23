@@ -35,6 +35,7 @@ if ! g++ -g ./test.client.cpp -o ./build/client \
     ../proto/build/user.pb.cc \
     ../proto/build/message.pb.cc \
     ../proto/build/wrapper.pb.cc \
+    ../proto/build/auth.pb.cc \
     ../Helpers/ConnectionManager/ConnectionManager.cpp \
     ../Helpers/ScreenCapture/ScreenCapture.cpp \
     ../db/DbManager.cpp \

@@ -9,6 +9,7 @@
 #include <iostream>
 #include <mutex>
 #include <sys/stat.h>
+#include "../proto/build/auth.pb.h"
 
 class QuicClient {
   public:
@@ -33,6 +34,8 @@ class QuicClient {
     HQUIC TunnelStream;
 
     bool openTunnel();
+
+    bool AuthRequest(const absl::Cord &);
 
     void ClientLoadConfiguration(const char *cert, const char *key);
 
