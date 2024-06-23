@@ -22,4 +22,5 @@
      9 -> Git actions optimization
     10 -> Fix texts.js.yml modified files processing
     11 -> Implement Client Authentication
+    12 -> VPN graphs
 ```
