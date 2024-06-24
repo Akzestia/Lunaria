@@ -4,4 +4,5 @@ message User {
     string name = 1;
     string email = 2;
     bytes avatar = 3;
+    bool online = 4;
 }

@@ -32,6 +32,7 @@ inline constexpr User::Impl_::Impl_(
         avatar_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
+        online_{false},
         _cached_size_{0} {}
 
 template <typename>
@@ -65,6 +66,7 @@ const ::uint32_t TableStruct_user_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
     PROTOBUF_FIELD_OFFSET(::User, _impl_.name_),
     PROTOBUF_FIELD_OFFSET(::User, _impl_.email_),
     PROTOBUF_FIELD_OFFSET(::User, _impl_.avatar_),
+    PROTOBUF_FIELD_OFFSET(::User, _impl_.online_),
 };
 
 static const ::_pbi::MigrationSchema
@@ -76,14 +78,15 @@ static const ::_pb::Message* const file_default_instances[] = {
     &::_User_default_instance_._instance,
 };
 const char descriptor_table_protodef_user_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-    "\n\nuser.proto\"3\n\004User\022\014\n\004name\030\001 \001(\t\022\r\n\005em"
-    "ail\030\002 \001(\t\022\016\n\006avatar\030\003 \001(\014b\006proto3"
+    "\n\nuser.proto\"C\n\004User\022\014\n\004name\030\001 \001(\t\022\r\n\005em"
+    "ail\030\002 \001(\t\022\016\n\006avatar\030\003 \001(\014\022\016\n\006online\030\004 \001("
+    "\010b\006proto3"
 };
 static ::absl::once_flag descriptor_table_user_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_user_2eproto = {
     false,
     false,
-    73,
+    89,
     descriptor_table_protodef_user_2eproto,
     "user.proto",
     &descriptor_table_user_2eproto_once,
@@ -143,6 +146,7 @@ User::User(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
+  _impl_.online_ = from._impl_.online_;
 
   // @@protoc_insertion_point(copy_constructor:User)
 }
@@ -156,6 +160,7 @@ inline PROTOBUF_NDEBUG_INLINE User::Impl_::Impl_(
 
 inline void User::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.online_ = {};
 }
 User::~User() {
   // @@protoc_insertion_point(destructor:User)
@@ -180,6 +185,7 @@ PROTOBUF_NOINLINE void User::Clear() {
   _impl_.name_.ClearToEmpty();
   _impl_.email_.ClearToEmpty();
   _impl_.avatar_.ClearToEmpty();
+  _impl_.online_ = false;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -191,21 +197,23 @@ const char* User::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<2, 3, 0, 22, 2> User::_table_ = {
+const ::_pbi::TcParseTable<2, 4, 0, 22, 2> User::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    3, 24,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_User_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    {::_pbi::TcParser::MiniParse, {}},
+    // bool online = 4;
+    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(User, _impl_.online_), 63>(),
+     {32, 63, 0, PROTOBUF_FIELD_OFFSET(User, _impl_.online_)}},
     // string name = 1;
     {::_pbi::TcParser::FastUS1,
      {10, 63, 0, PROTOBUF_FIELD_OFFSET(User, _impl_.name_)}},
@@ -227,6 +235,9 @@ const ::_pbi::TcParseTable<2, 3, 0, 22, 2> User::_table_ = {
     // bytes avatar = 3;
     {PROTOBUF_FIELD_OFFSET(User, _impl_.avatar_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
+    // bool online = 4;
+    {PROTOBUF_FIELD_OFFSET(User, _impl_.online_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
   }},
   // no aux_entries
   {{
@@ -266,6 +277,13 @@ const ::_pbi::TcParseTable<2, 3, 0, 22, 2> User::_table_ = {
     target = stream->WriteBytesMaybeAliased(3, _s, target);
   }
 
+  // bool online = 4;
+  if (this->_internal_online() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(
+        4, this->_internal_online(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -301,6 +319,11 @@ const ::_pbi::TcParseTable<2, 3, 0, 22, 2> User::_table_ = {
                                     this->_internal_avatar());
   }
 
+  // bool online = 4;
+  if (this->_internal_online() != 0) {
+    total_size += 2;
+  }
+
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -329,6 +352,9 @@ void User::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protob
   if (!from._internal_avatar().empty()) {
     _this->_internal_set_avatar(from._internal_avatar());
   }
+  if (from._internal_online() != 0) {
+    _this->_internal_set_online(from._internal_online());
+  }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
@@ -354,6 +380,7 @@ void User::InternalSwap(User* PROTOBUF_RESTRICT other) {
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.email_, &other->_impl_.email_, arena);
   ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.avatar_, &other->_impl_.avatar_, arena);
+        swap(_impl_.online_, other->_impl_.online_);
 }
 
 ::google::protobuf::Metadata User::GetMetadata() const {

@@ -204,6 +204,7 @@ class User final :
     kNameFieldNumber = 1,
     kEmailFieldNumber = 2,
     kAvatarFieldNumber = 3,
+    kOnlineFieldNumber = 4,
   };
   // string name = 1;
   void clear_name() ;
@@ -253,13 +254,23 @@ class User final :
   std::string* _internal_mutable_avatar();
 
   public:
+  // bool online = 4;
+  void clear_online() ;
+  bool online() const;
+  void set_online(bool value);
+
+  private:
+  bool _internal_online() const;
+  void _internal_set_online(bool value);
+
+  public:
   // @@protoc_insertion_point(class_scope:User)
  private:
   class _Internal;
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 3, 0,
+      2, 4, 0,
       22, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -279,6 +290,7 @@ class User final :
     ::google::protobuf::internal::ArenaStringPtr name_;
     ::google::protobuf::internal::ArenaStringPtr email_;
     ::google::protobuf::internal::ArenaStringPtr avatar_;
+    bool online_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -459,6 +471,29 @@ inline void User::set_allocated_avatar(std::string* value) {
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:User.avatar)
+}
+
+// bool online = 4;
+inline void User::clear_online() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  _impl_.online_ = false;
+}
+inline bool User::online() const {
+  // @@protoc_insertion_point(field_get:User.online)
+  return _internal_online();
+}
+inline void User::set_online(bool value) {
+  _internal_set_online(value);
+  // @@protoc_insertion_point(field_set:User.online)
+}
+inline bool User::_internal_online() const {
+  PROTOBUF_TSAN_READ(&_impl_._tsan_detect_race);
+  return _impl_.online_;
+}
+inline void User::_internal_set_online(bool value) {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ;
+  _impl_.online_ = value;
 }
 
 #ifdef __GNUC__
