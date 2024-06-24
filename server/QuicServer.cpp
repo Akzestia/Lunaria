@@ -56,12 +56,10 @@ uint32_t QuicServer::DecodeHexBuffer(_In_z_ const char *HexBuffer,
 
 void QuicServer::ServerLoadConfiguration(const char *cert, const char *key) {
     QUIC_SETTINGS Settings = {0};
-    // printf("OPENSSL\n");
     Settings.IdleTimeoutMs = 0;
     Settings.IsSet.IdleTimeoutMs = TRUE;
 
-    Settings.ServerResumptionLevel =
-        QUIC_SERVER_RESUME_AND_ZERORTT; // QUIC_SERVER_RESUME_AND_ZERORTT
+    Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT; // QUIC_SERVER_RESUME_AND_ZERORTT
     Settings.IsSet.ServerResumptionLevel = TRUE;
 
     Settings.PeerBidiStreamCount = 100;
@@ -256,6 +254,7 @@ QUIC_STATUS QUIC_API QuicServer::StaticClientStreamCallback(
         Stream, Context, Event);
 }
 
+#pragma region ServerConnectionCallback
 _IRQL_requires_max_(DISPATCH_LEVEL)
     _Function_class_(QUIC_CONNECTION_CALLBACK) QUIC_STATUS QUIC_API
     QuicServer::ServerConnectionCallback(_In_ HQUIC Connection,
@@ -311,7 +310,9 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     }
     return QUIC_STATUS_SUCCESS;
 }
+#pragma endregion
 
+#pragma region ServerListenerCallback
 _IRQL_requires_max_(PASSIVE_LEVEL)
     _Function_class_(QUIC_LISTENER_CALLBACK) QUIC_STATUS QUIC_API
     QuicServer::ServerListenerCallback(_In_ HQUIC Listener,
@@ -336,6 +337,7 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
     }
     return Status;
 }
+#pragma endregion
 
 QUIC_STATUS QUIC_API QuicServer::StaticServerListenerCallback(
     _In_ HQUIC Listener, _In_opt_ void *Context,
@@ -344,6 +346,7 @@ QUIC_STATUS QUIC_API QuicServer::StaticServerListenerCallback(
         Listener, Context, Event);
 }
 
+#pragma region Start()
 void QuicServer::Start() {
     std::cout << "Start"
               << "\n";
@@ -373,6 +376,9 @@ void QuicServer::Start() {
         });
     }
 }
+#pragma endregion
+
+#pragma region Close()
 void QuicServer::Close() {
     if (this->isRunning.load()) {
         this->isRunning.store(false);
@@ -391,6 +397,8 @@ void QuicServer::Close() {
 
     std::cout << "isRunning: " << this->isRunning.load() << std::endl;
 }
+#pragma endregion
+
 
 bool QuicServer::getIsRunning() { return this->isRunning.load(); }
 
