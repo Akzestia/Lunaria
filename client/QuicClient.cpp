@@ -251,8 +251,7 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
             printf("Failed to allocate memory for ResumptionTicket\n");
             break;
         }
-
-        // Copy the ticket data
+        
         memcpy(ResumptionTicket,
                Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket,
                ResumptionTicketLength);
