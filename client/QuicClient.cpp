@@ -50,6 +50,8 @@ uint32_t QuicClient::DecodeHexBuffer(_In_z_ const char *HexBuffer,
     return HexBufferLen;
 }
 
+
+#pragma region Connect()
 void QuicClient::Connect() {
     if (QUIC_FAILED(Status = MsQuic->ConnectionOpen(
                         Registration,
@@ -84,6 +86,7 @@ Error:
         MsQuic->ConnectionClose(Connection);
     }
 }
+#pragma endregion
 
 void QuicClient::Disconnect() {
     if (Connection != NULL) {
@@ -93,6 +96,7 @@ void QuicClient::Disconnect() {
     }
 }
 
+#pragma region ClientStreamCallback
 _IRQL_requires_max_(DISPATCH_LEVEL)
     _Function_class_(QUIC_STREAM_CALLBACK) QUIC_STATUS QUIC_API
     QuicClient::ClientStreamCallback(_In_ HQUIC Stream, _In_opt_ void *Context,
@@ -123,6 +127,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     }
     return QUIC_STATUS_SUCCESS;
 }
+#pragma endregion
 
 QUIC_STATUS QUIC_API QuicClient::StaticClientStreamCallback(
     _In_ HQUIC Stream, _In_opt_ void *Context,
@@ -196,6 +201,7 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
     HQUIC Connection = NULL;
 }
 
+#pragma region ClientConnectionCallback
 _IRQL_requires_max_(PASSIVE_LEVEL)
     _Function_class_(QUIC_CONNECTION_CALLBACK) QUIC_STATUS QUIC_API
     QuicClient::ClientConnectionCallback(_In_ HQUIC Connection,
@@ -259,6 +265,7 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
     }
     return QUIC_STATUS_SUCCESS;
 }
+#pragma endregion
 
 QUIC_STATUS QUIC_API QuicClient::StaticClientConnectionCallback(
     _In_ HQUIC Connection, _In_opt_ void *Context,
@@ -267,6 +274,8 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientConnectionCallback(
         Connection, Context, Event);
 }
 
+
+#pragma region send(const absl::Cord &message)
 void QuicClient::send(const absl::Cord &message) {
     HQUIC Stream = NULL;
     QUIC_BUFFER *SendBuffer;
@@ -318,9 +327,11 @@ Error:
         free(SendBuffer);
     }
 }
+#pragma endregion
 
 HQUIC QuicClient::getConnection() { return Connection; }
 
+#pragma region openTunnel()
 bool QuicClient::openTunnel() {
 
     if (QUIC_FAILED(
@@ -334,6 +345,7 @@ bool QuicClient::openTunnel() {
     printf("\nTunnel opened\n");
     return true;
 }
+#pragma endregion
 
 QuicClient::~QuicClient() {
     if (ResumptionTicket != nullptr) {
@@ -355,6 +367,8 @@ QuicClient::~QuicClient() {
     }
 }
 
+
+#pragma region AuthRequest()
 bool QuicClient::AuthRequest(const absl::Cord &auth_request) {
 
     QUIC_BUFFER *SendBuffer;
@@ -407,3 +421,4 @@ Error:
     }
     return false;
 }
+#pragma endregion
