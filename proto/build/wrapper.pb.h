@@ -38,6 +38,10 @@
 #include "test.pb.h"
 #include "message.pb.h"
 #include "auth.pb.h"
+#include "report.pb.h"
+#include "invite_link.pb.h"
+#include "server.pb.h"
+#include "vpn_graph.pb.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
@@ -132,6 +136,10 @@ class Wrapper final :
     kPerson = 2,
     kMessage = 3,
     kAuth = 4,
+    kReport = 5,
+    kSerevr = 6,
+    kInviteLink = 7,
+    kVpnGraph = 8,
     PAYLOAD_NOT_SET = 0,
   };
 
@@ -213,13 +221,17 @@ class Wrapper final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kRouteFieldNumber = 5,
+    kRouteFieldNumber = 9,
     kUserFieldNumber = 1,
     kPersonFieldNumber = 2,
     kMessageFieldNumber = 3,
     kAuthFieldNumber = 4,
+    kReportFieldNumber = 5,
+    kSerevrFieldNumber = 6,
+    kInviteLinkFieldNumber = 7,
+    kVpnGraphFieldNumber = 8,
   };
-  // uint32 route = 5;
+  // uint32 route = 9;
   void clear_route() ;
   ::uint32_t route() const;
   void set_route(::uint32_t value);
@@ -305,6 +317,82 @@ class Wrapper final :
   ::Auth* _internal_mutable_auth();
 
   public:
+  // .Report report = 5;
+  bool has_report() const;
+  private:
+  bool _internal_has_report() const;
+
+  public:
+  void clear_report() ;
+  const ::Report& report() const;
+  PROTOBUF_NODISCARD ::Report* release_report();
+  ::Report* mutable_report();
+  void set_allocated_report(::Report* value);
+  void unsafe_arena_set_allocated_report(::Report* value);
+  ::Report* unsafe_arena_release_report();
+
+  private:
+  const ::Report& _internal_report() const;
+  ::Report* _internal_mutable_report();
+
+  public:
+  // .Server serevr = 6;
+  bool has_serevr() const;
+  private:
+  bool _internal_has_serevr() const;
+
+  public:
+  void clear_serevr() ;
+  const ::Server& serevr() const;
+  PROTOBUF_NODISCARD ::Server* release_serevr();
+  ::Server* mutable_serevr();
+  void set_allocated_serevr(::Server* value);
+  void unsafe_arena_set_allocated_serevr(::Server* value);
+  ::Server* unsafe_arena_release_serevr();
+
+  private:
+  const ::Server& _internal_serevr() const;
+  ::Server* _internal_mutable_serevr();
+
+  public:
+  // .Invite_link invite_link = 7;
+  bool has_invite_link() const;
+  private:
+  bool _internal_has_invite_link() const;
+
+  public:
+  void clear_invite_link() ;
+  const ::Invite_link& invite_link() const;
+  PROTOBUF_NODISCARD ::Invite_link* release_invite_link();
+  ::Invite_link* mutable_invite_link();
+  void set_allocated_invite_link(::Invite_link* value);
+  void unsafe_arena_set_allocated_invite_link(::Invite_link* value);
+  ::Invite_link* unsafe_arena_release_invite_link();
+
+  private:
+  const ::Invite_link& _internal_invite_link() const;
+  ::Invite_link* _internal_mutable_invite_link();
+
+  public:
+  // .Vpn_graph vpn_graph = 8;
+  bool has_vpn_graph() const;
+  private:
+  bool _internal_has_vpn_graph() const;
+
+  public:
+  void clear_vpn_graph() ;
+  const ::Vpn_graph& vpn_graph() const;
+  PROTOBUF_NODISCARD ::Vpn_graph* release_vpn_graph();
+  ::Vpn_graph* mutable_vpn_graph();
+  void set_allocated_vpn_graph(::Vpn_graph* value);
+  void unsafe_arena_set_allocated_vpn_graph(::Vpn_graph* value);
+  ::Vpn_graph* unsafe_arena_release_vpn_graph();
+
+  private:
+  const ::Vpn_graph& _internal_vpn_graph() const;
+  ::Vpn_graph* _internal_mutable_vpn_graph();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:Wrapper)
@@ -314,13 +402,17 @@ class Wrapper final :
   void set_has_person();
   void set_has_message();
   void set_has_auth();
+  void set_has_report();
+  void set_has_serevr();
+  void set_has_invite_link();
+  void set_has_vpn_graph();
 
   inline bool has_payload() const;
   inline void clear_has_payload();
 
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 5, 4,
+      0, 9, 8,
       0, 2>
       _table_;
   friend class ::google::protobuf::MessageLite;
@@ -345,6 +437,10 @@ class Wrapper final :
       ::Person* person_;
       ::Message* message_;
       ::Auth* auth_;
+      ::Report* report_;
+      ::Server* serevr_;
+      ::Invite_link* invite_link_;
+      ::Vpn_graph* vpn_graph_;
     } payload_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -639,7 +735,275 @@ inline ::Auth* Wrapper::mutable_auth() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// uint32 route = 5;
+// .Report report = 5;
+inline bool Wrapper::has_report() const {
+  return payload_case() == kReport;
+}
+inline bool Wrapper::_internal_has_report() const {
+  return payload_case() == kReport;
+}
+inline void Wrapper::set_has_report() {
+  _impl_._oneof_case_[0] = kReport;
+}
+inline ::Report* Wrapper::release_report() {
+  // @@protoc_insertion_point(field_release:Wrapper.report)
+  if (payload_case() == kReport) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.report_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.report_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Report& Wrapper::_internal_report() const {
+  return payload_case() == kReport ? *_impl_.payload_.report_ : reinterpret_cast<::Report&>(::_Report_default_instance_);
+}
+inline const ::Report& Wrapper::report() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.report)
+  return _internal_report();
+}
+inline ::Report* Wrapper::unsafe_arena_release_report() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.report)
+  if (payload_case() == kReport) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.report_;
+    _impl_.payload_.report_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_report(::Report* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_report();
+    _impl_.payload_.report_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.report)
+}
+inline ::Report* Wrapper::_internal_mutable_report() {
+  if (payload_case() != kReport) {
+    clear_payload();
+    set_has_report();
+    _impl_.payload_.report_ = CreateMaybeMessage<::Report>(GetArena());
+  }
+  return _impl_.payload_.report_;
+}
+inline ::Report* Wrapper::mutable_report() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Report* _msg = _internal_mutable_report();
+  // @@protoc_insertion_point(field_mutable:Wrapper.report)
+  return _msg;
+}
+
+// .Server serevr = 6;
+inline bool Wrapper::has_serevr() const {
+  return payload_case() == kSerevr;
+}
+inline bool Wrapper::_internal_has_serevr() const {
+  return payload_case() == kSerevr;
+}
+inline void Wrapper::set_has_serevr() {
+  _impl_._oneof_case_[0] = kSerevr;
+}
+inline ::Server* Wrapper::release_serevr() {
+  // @@protoc_insertion_point(field_release:Wrapper.serevr)
+  if (payload_case() == kSerevr) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.serevr_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.serevr_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Server& Wrapper::_internal_serevr() const {
+  return payload_case() == kSerevr ? *_impl_.payload_.serevr_ : reinterpret_cast<::Server&>(::_Server_default_instance_);
+}
+inline const ::Server& Wrapper::serevr() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.serevr)
+  return _internal_serevr();
+}
+inline ::Server* Wrapper::unsafe_arena_release_serevr() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.serevr)
+  if (payload_case() == kSerevr) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.serevr_;
+    _impl_.payload_.serevr_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_serevr(::Server* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_serevr();
+    _impl_.payload_.serevr_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.serevr)
+}
+inline ::Server* Wrapper::_internal_mutable_serevr() {
+  if (payload_case() != kSerevr) {
+    clear_payload();
+    set_has_serevr();
+    _impl_.payload_.serevr_ = CreateMaybeMessage<::Server>(GetArena());
+  }
+  return _impl_.payload_.serevr_;
+}
+inline ::Server* Wrapper::mutable_serevr() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Server* _msg = _internal_mutable_serevr();
+  // @@protoc_insertion_point(field_mutable:Wrapper.serevr)
+  return _msg;
+}
+
+// .Invite_link invite_link = 7;
+inline bool Wrapper::has_invite_link() const {
+  return payload_case() == kInviteLink;
+}
+inline bool Wrapper::_internal_has_invite_link() const {
+  return payload_case() == kInviteLink;
+}
+inline void Wrapper::set_has_invite_link() {
+  _impl_._oneof_case_[0] = kInviteLink;
+}
+inline ::Invite_link* Wrapper::release_invite_link() {
+  // @@protoc_insertion_point(field_release:Wrapper.invite_link)
+  if (payload_case() == kInviteLink) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.invite_link_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.invite_link_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Invite_link& Wrapper::_internal_invite_link() const {
+  return payload_case() == kInviteLink ? *_impl_.payload_.invite_link_ : reinterpret_cast<::Invite_link&>(::_Invite_link_default_instance_);
+}
+inline const ::Invite_link& Wrapper::invite_link() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.invite_link)
+  return _internal_invite_link();
+}
+inline ::Invite_link* Wrapper::unsafe_arena_release_invite_link() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.invite_link)
+  if (payload_case() == kInviteLink) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.invite_link_;
+    _impl_.payload_.invite_link_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_invite_link(::Invite_link* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_invite_link();
+    _impl_.payload_.invite_link_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.invite_link)
+}
+inline ::Invite_link* Wrapper::_internal_mutable_invite_link() {
+  if (payload_case() != kInviteLink) {
+    clear_payload();
+    set_has_invite_link();
+    _impl_.payload_.invite_link_ = CreateMaybeMessage<::Invite_link>(GetArena());
+  }
+  return _impl_.payload_.invite_link_;
+}
+inline ::Invite_link* Wrapper::mutable_invite_link() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Invite_link* _msg = _internal_mutable_invite_link();
+  // @@protoc_insertion_point(field_mutable:Wrapper.invite_link)
+  return _msg;
+}
+
+// .Vpn_graph vpn_graph = 8;
+inline bool Wrapper::has_vpn_graph() const {
+  return payload_case() == kVpnGraph;
+}
+inline bool Wrapper::_internal_has_vpn_graph() const {
+  return payload_case() == kVpnGraph;
+}
+inline void Wrapper::set_has_vpn_graph() {
+  _impl_._oneof_case_[0] = kVpnGraph;
+}
+inline ::Vpn_graph* Wrapper::release_vpn_graph() {
+  // @@protoc_insertion_point(field_release:Wrapper.vpn_graph)
+  if (payload_case() == kVpnGraph) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.vpn_graph_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.vpn_graph_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Vpn_graph& Wrapper::_internal_vpn_graph() const {
+  return payload_case() == kVpnGraph ? *_impl_.payload_.vpn_graph_ : reinterpret_cast<::Vpn_graph&>(::_Vpn_graph_default_instance_);
+}
+inline const ::Vpn_graph& Wrapper::vpn_graph() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.vpn_graph)
+  return _internal_vpn_graph();
+}
+inline ::Vpn_graph* Wrapper::unsafe_arena_release_vpn_graph() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.vpn_graph)
+  if (payload_case() == kVpnGraph) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.vpn_graph_;
+    _impl_.payload_.vpn_graph_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_vpn_graph(::Vpn_graph* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_vpn_graph();
+    _impl_.payload_.vpn_graph_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.vpn_graph)
+}
+inline ::Vpn_graph* Wrapper::_internal_mutable_vpn_graph() {
+  if (payload_case() != kVpnGraph) {
+    clear_payload();
+    set_has_vpn_graph();
+    _impl_.payload_.vpn_graph_ = CreateMaybeMessage<::Vpn_graph>(GetArena());
+  }
+  return _impl_.payload_.vpn_graph_;
+}
+inline ::Vpn_graph* Wrapper::mutable_vpn_graph() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Vpn_graph* _msg = _internal_mutable_vpn_graph();
+  // @@protoc_insertion_point(field_mutable:Wrapper.vpn_graph)
+  return _msg;
+}
+
+// uint32 route = 9;
 inline void Wrapper::clear_route() {
   PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
   _impl_.route_ = 0u;

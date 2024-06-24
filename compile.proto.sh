@@ -28,6 +28,27 @@ if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/auth.proto
     exit 1
 fi
 
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/server.proto; then
+    echo "Error: Proto failed \`server\`";
+    exit 1
+fi
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/report.proto; then
+    echo "Error: Proto failed \`report\`";
+    exit 1
+fi
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/vpn_graph.proto; then
+    echo "Error: Proto failed \`vpn graph\`";
+    exit 1
+fi
+
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/invite_link.proto; then
+    echo "Error: Proto failed \`invite link\`";
+    exit 1
+fi
+
 
 
 echo "Proto files were successfully compiled";

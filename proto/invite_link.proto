@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message Invite_link {
+    int32 id = 1;
+}

@@ -4,6 +4,10 @@ import "user.proto";
 import "test.proto";
 import "message.proto";
 import "auth.proto";
+import "report.proto";
+import "invite_link.proto";
+import "server.proto";
+import "vpn_graph.proto";
 
 message Wrapper {
     oneof payload {
@@ -11,6 +15,10 @@ message Wrapper {
         Person person = 2;
         Message message = 3;
         Auth auth = 4;
+        Report report = 5;
+        Server serevr = 6;
+        Invite_link invite_link = 7;
+        Vpn_graph vpn_graph = 8;
     }
-    uint32 route = 5;
+    uint32 route = 9;
 }

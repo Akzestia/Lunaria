@@ -60,6 +60,10 @@ const ::uint32_t TableStruct_wrapper_2eproto::offsets[] PROTOBUF_SECTION_VARIABL
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
     ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
+    ::_pbi::kInvalidFieldOffsetTag,
     PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.route_),
     PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.payload_),
 };
@@ -74,29 +78,38 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_wrapper_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
     "\n\rwrapper.proto\032\nuser.proto\032\ntest.proto\032"
-    "\rmessage.proto\032\nauth.proto\"\211\001\n\007Wrapper\022\025"
-    "\n\004user\030\001 \001(\0132\005.UserH\000\022\031\n\006person\030\002 \001(\0132\007."
-    "PersonH\000\022\033\n\007message\030\003 \001(\0132\010.MessageH\000\022\025\n"
-    "\004auth\030\004 \001(\0132\005.AuthH\000\022\r\n\005route\030\005 \001(\rB\t\n\007p"
-    "ayloadb\006proto3"
+    "\rmessage.proto\032\nauth.proto\032\014report.proto"
+    "\032\021invite_link.proto\032\014server.proto\032\017vpn_g"
+    "raph.proto\"\205\002\n\007Wrapper\022\025\n\004user\030\001 \001(\0132\005.U"
+    "serH\000\022\031\n\006person\030\002 \001(\0132\007.PersonH\000\022\033\n\007mess"
+    "age\030\003 \001(\0132\010.MessageH\000\022\025\n\004auth\030\004 \001(\0132\005.Au"
+    "thH\000\022\031\n\006report\030\005 \001(\0132\007.ReportH\000\022\031\n\006serev"
+    "r\030\006 \001(\0132\007.ServerH\000\022#\n\013invite_link\030\007 \001(\0132"
+    "\014.Invite_linkH\000\022\037\n\tvpn_graph\030\010 \001(\0132\n.Vpn"
+    "_graphH\000\022\r\n\005route\030\t \001(\rB\t\n\007payloadb\006prot"
+    "o3"
 };
-static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[4] =
+static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[8] =
     {
         &::descriptor_table_auth_2eproto,
+        &::descriptor_table_invite_5flink_2eproto,
         &::descriptor_table_message_2eproto,
+        &::descriptor_table_report_2eproto,
+        &::descriptor_table_server_2eproto,
         &::descriptor_table_test_2eproto,
         &::descriptor_table_user_2eproto,
+        &::descriptor_table_vpn_5fgraph_2eproto,
 };
 static ::absl::once_flag descriptor_table_wrapper_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_wrapper_2eproto = {
     false,
     false,
-    214,
+    402,
     descriptor_table_protodef_wrapper_2eproto,
     "wrapper.proto",
     &descriptor_table_wrapper_2eproto_once,
     descriptor_table_wrapper_2eproto_deps,
-    4,
+    8,
     1,
     schemas,
     file_default_instances,
@@ -133,6 +146,10 @@ class Wrapper::_Internal {
   static const ::Person& person(const Wrapper* msg);
   static const ::Message& message(const Wrapper* msg);
   static const ::Auth& auth(const Wrapper* msg);
+  static const ::Report& report(const Wrapper* msg);
+  static const ::Server& serevr(const Wrapper* msg);
+  static const ::Invite_link& invite_link(const Wrapper* msg);
+  static const ::Vpn_graph& vpn_graph(const Wrapper* msg);
 };
 
 const ::User& Wrapper::_Internal::user(const Wrapper* msg) {
@@ -146,6 +163,18 @@ const ::Message& Wrapper::_Internal::message(const Wrapper* msg) {
 }
 const ::Auth& Wrapper::_Internal::auth(const Wrapper* msg) {
   return *msg->_impl_.payload_.auth_;
+}
+const ::Report& Wrapper::_Internal::report(const Wrapper* msg) {
+  return *msg->_impl_.payload_.report_;
+}
+const ::Server& Wrapper::_Internal::serevr(const Wrapper* msg) {
+  return *msg->_impl_.payload_.serevr_;
+}
+const ::Invite_link& Wrapper::_Internal::invite_link(const Wrapper* msg) {
+  return *msg->_impl_.payload_.invite_link_;
+}
+const ::Vpn_graph& Wrapper::_Internal::vpn_graph(const Wrapper* msg) {
+  return *msg->_impl_.payload_.vpn_graph_;
 }
 void Wrapper::set_allocated_user(::User* user) {
   ::google::protobuf::Arena* message_arena = GetArena();
@@ -235,6 +264,94 @@ void Wrapper::clear_auth() {
     clear_has_payload();
   }
 }
+void Wrapper::set_allocated_report(::Report* report) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (report) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(report)->GetArena();
+    if (message_arena != submessage_arena) {
+      report = ::google::protobuf::internal::GetOwnedMessage(message_arena, report, submessage_arena);
+    }
+    set_has_report();
+    _impl_.payload_.report_ = report;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Wrapper.report)
+}
+void Wrapper::clear_report() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  if (payload_case() == kReport) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.report_;
+    }
+    clear_has_payload();
+  }
+}
+void Wrapper::set_allocated_serevr(::Server* serevr) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (serevr) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(serevr)->GetArena();
+    if (message_arena != submessage_arena) {
+      serevr = ::google::protobuf::internal::GetOwnedMessage(message_arena, serevr, submessage_arena);
+    }
+    set_has_serevr();
+    _impl_.payload_.serevr_ = serevr;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Wrapper.serevr)
+}
+void Wrapper::clear_serevr() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  if (payload_case() == kSerevr) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.serevr_;
+    }
+    clear_has_payload();
+  }
+}
+void Wrapper::set_allocated_invite_link(::Invite_link* invite_link) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (invite_link) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(invite_link)->GetArena();
+    if (message_arena != submessage_arena) {
+      invite_link = ::google::protobuf::internal::GetOwnedMessage(message_arena, invite_link, submessage_arena);
+    }
+    set_has_invite_link();
+    _impl_.payload_.invite_link_ = invite_link;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Wrapper.invite_link)
+}
+void Wrapper::clear_invite_link() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  if (payload_case() == kInviteLink) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.invite_link_;
+    }
+    clear_has_payload();
+  }
+}
+void Wrapper::set_allocated_vpn_graph(::Vpn_graph* vpn_graph) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (vpn_graph) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(vpn_graph)->GetArena();
+    if (message_arena != submessage_arena) {
+      vpn_graph = ::google::protobuf::internal::GetOwnedMessage(message_arena, vpn_graph, submessage_arena);
+    }
+    set_has_vpn_graph();
+    _impl_.payload_.vpn_graph_ = vpn_graph;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Wrapper.vpn_graph)
+}
+void Wrapper::clear_vpn_graph() {
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  if (payload_case() == kVpnGraph) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.vpn_graph_;
+    }
+    clear_has_payload();
+  }
+}
 Wrapper::Wrapper(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -271,6 +388,18 @@ Wrapper::Wrapper(
         break;
       case kAuth:
         _impl_.payload_.auth_ = CreateMaybeMessage<::Auth>(arena, *from._impl_.payload_.auth_);
+        break;
+      case kReport:
+        _impl_.payload_.report_ = CreateMaybeMessage<::Report>(arena, *from._impl_.payload_.report_);
+        break;
+      case kSerevr:
+        _impl_.payload_.serevr_ = CreateMaybeMessage<::Server>(arena, *from._impl_.payload_.serevr_);
+        break;
+      case kInviteLink:
+        _impl_.payload_.invite_link_ = CreateMaybeMessage<::Invite_link>(arena, *from._impl_.payload_.invite_link_);
+        break;
+      case kVpnGraph:
+        _impl_.payload_.vpn_graph_ = CreateMaybeMessage<::Vpn_graph>(arena, *from._impl_.payload_.vpn_graph_);
         break;
   }
 
@@ -328,6 +457,30 @@ void Wrapper::clear_payload() {
       }
       break;
     }
+    case kReport: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.report_;
+      }
+      break;
+    }
+    case kSerevr: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.serevr_;
+      }
+      break;
+    }
+    case kInviteLink: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.invite_link_;
+      }
+      break;
+    }
+    case kVpnGraph: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.vpn_graph_;
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -356,23 +509,23 @@ const char* Wrapper::_InternalParse(
 
 
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 5, 4, 0, 2> Wrapper::_table_ = {
+const ::_pbi::TcParseTable<0, 9, 8, 0, 2> Wrapper::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    5, 0,  // max_field_number, fast_idx_mask
+    9, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967264,  // skipmap
+    4294966784,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    5,  // num_field_entries
-    4,  // num_aux_entries
+    9,  // num_field_entries
+    8,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_Wrapper_default_instance_._instance,
     ::_pbi::TcParser::GenericFallback,  // fallback
   }, {{
-    // uint32 route = 5;
+    // uint32 route = 9;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Wrapper, _impl_.route_), 63>(),
-     {40, 63, 0, PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_)}},
+     {72, 63, 0, PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_)}},
   }}, {{
     65535, 65535
   }}, {{
@@ -388,7 +541,19 @@ const ::_pbi::TcParseTable<0, 5, 4, 0, 2> Wrapper::_table_ = {
     // .Auth auth = 4;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.auth_), _Internal::kOneofCaseOffset + 0, 3,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // uint32 route = 5;
+    // .Report report = 5;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.report_), _Internal::kOneofCaseOffset + 0, 4,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .Server serevr = 6;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.serevr_), _Internal::kOneofCaseOffset + 0, 5,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .Invite_link invite_link = 7;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.invite_link_), _Internal::kOneofCaseOffset + 0, 6,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .Vpn_graph vpn_graph = 8;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.vpn_graph_), _Internal::kOneofCaseOffset + 0, 7,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // uint32 route = 9;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
   }}, {{
@@ -396,6 +561,10 @@ const ::_pbi::TcParseTable<0, 5, 4, 0, 2> Wrapper::_table_ = {
     {::_pbi::TcParser::GetTable<::Person>()},
     {::_pbi::TcParser::GetTable<::Message>()},
     {::_pbi::TcParser::GetTable<::Auth>()},
+    {::_pbi::TcParser::GetTable<::Report>()},
+    {::_pbi::TcParser::GetTable<::Server>()},
+    {::_pbi::TcParser::GetTable<::Invite_link>()},
+    {::_pbi::TcParser::GetTable<::Vpn_graph>()},
   }}, {{
   }},
 };
@@ -432,14 +601,38 @@ const ::_pbi::TcParseTable<0, 5, 4, 0, 2> Wrapper::_table_ = {
           _Internal::auth(this).GetCachedSize(), target, stream);
       break;
     }
+    case kReport: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          5, _Internal::report(this),
+          _Internal::report(this).GetCachedSize(), target, stream);
+      break;
+    }
+    case kSerevr: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          6, _Internal::serevr(this),
+          _Internal::serevr(this).GetCachedSize(), target, stream);
+      break;
+    }
+    case kInviteLink: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          7, _Internal::invite_link(this),
+          _Internal::invite_link(this).GetCachedSize(), target, stream);
+      break;
+    }
+    case kVpnGraph: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          8, _Internal::vpn_graph(this),
+          _Internal::vpn_graph(this).GetCachedSize(), target, stream);
+      break;
+    }
     default:
       break;
   }
-  // uint32 route = 5;
+  // uint32 route = 9;
   if (this->_internal_route() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteUInt32ToArray(
-        5, this->_internal_route(), target);
+        9, this->_internal_route(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -459,7 +652,7 @@ const ::_pbi::TcParseTable<0, 5, 4, 0, 2> Wrapper::_table_ = {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // uint32 route = 5;
+  // uint32 route = 9;
   if (this->_internal_route() != 0) {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
         this->_internal_route());
@@ -488,6 +681,30 @@ const ::_pbi::TcParseTable<0, 5, 4, 0, 2> Wrapper::_table_ = {
     case kAuth: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.auth_);
+      break;
+    }
+    // .Report report = 5;
+    case kReport: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.report_);
+      break;
+    }
+    // .Server serevr = 6;
+    case kSerevr: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.serevr_);
+      break;
+    }
+    // .Invite_link invite_link = 7;
+    case kInviteLink: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.invite_link_);
+      break;
+    }
+    // .Vpn_graph vpn_graph = 8;
+    case kVpnGraph: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.vpn_graph_);
       break;
     }
     case PAYLOAD_NOT_SET: {
@@ -535,6 +752,26 @@ void Wrapper::MergeImpl(::google::protobuf::Message& to_msg, const ::google::pro
     case kAuth: {
       _this->_internal_mutable_auth()->::Auth::MergeFrom(
           from._internal_auth());
+      break;
+    }
+    case kReport: {
+      _this->_internal_mutable_report()->::Report::MergeFrom(
+          from._internal_report());
+      break;
+    }
+    case kSerevr: {
+      _this->_internal_mutable_serevr()->::Server::MergeFrom(
+          from._internal_serevr());
+      break;
+    }
+    case kInviteLink: {
+      _this->_internal_mutable_invite_link()->::Invite_link::MergeFrom(
+          from._internal_invite_link());
+      break;
+    }
+    case kVpnGraph: {
+      _this->_internal_mutable_vpn_graph()->::Vpn_graph::MergeFrom(
+          from._internal_vpn_graph());
       break;
     }
     case PAYLOAD_NOT_SET: {
