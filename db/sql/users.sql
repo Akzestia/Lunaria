@@ -6,5 +6,5 @@ CREATE TABLE
         user_avatar BYTEA,
         user_password VARCHAR(200) NOT NULL,
         online_status INT NOT NULL DEFAULT 0,
-        joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

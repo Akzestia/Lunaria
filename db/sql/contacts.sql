@@ -6,5 +6,5 @@ CREATE TABLE
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (a_user_id) REFERENCES Users (id),
         FOREIGN KEY (b_user_id) REFERENCES Users (id),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )

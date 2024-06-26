@@ -7,5 +7,5 @@ CREATE TABLE
         _report_reason VARCHAR(150),
         FOREIGN KEY (_reported_id) REFERENCES Users (id),
         FOREIGN KEY (_reporter_id) REFERENCES Users (id),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
