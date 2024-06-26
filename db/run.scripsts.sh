@@ -27,6 +27,7 @@ SCRIPTS=(
     "./sql/messages.sql"
     "./sql/blocked_users.sql"
     "./sql/reports.sql"
+    "./sql/calls.sql"
 )
 
 execute_script() {
