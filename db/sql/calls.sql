@@ -4,6 +4,7 @@ CREATE TABLE
         _type INT NOT NULL DEFAULT 0,
         _sender_id INT NOT NULL,
         _receiver_id INT NOT NULL,
+        _duration INT NOT NULL DEFAULT 0,
 
         FOREIGN KEY (_sender_id) REFERENCES Users(id),
         FOREIGN KEY (_receiver_id) REFERENCES Users(id),
