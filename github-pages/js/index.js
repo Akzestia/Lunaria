@@ -1,6 +1,6 @@
 import { QuicClient, Wayland, QuicServer } from "./texts.js";
 
-render("Akzestia");
+render("Client");
 
 function render(title) {
   const rootElement = document.getElementById("root");
