@@ -23,4 +23,5 @@
     10 -> Fix texts.js.yml modified files processing
     11 -> Implement Client Authentication
     12 -> VPN graphs
+    13 -> p2p communication via QUIC
 ```
