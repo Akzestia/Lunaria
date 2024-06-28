@@ -4,6 +4,10 @@
 
 <h3 align="center">Welcome to Linux-x64-HTTP3</h3>
 
+## About
+
+This project is an open-source chat application, which is build around QUIC protocol.
+
 ## GUI
 
 <img src="./GUI/Frame 1.png" alt="Example">
