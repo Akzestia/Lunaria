@@ -11,17 +11,16 @@
 ```
 
 ```
-     1 -> GUI implementation with Qt or platform specific native GUI API 
-     2 -> Create windows client
-     3 -> Client GUI applications for windows/linux
-     4 -> DbManager thread safety
-     5 -> Github pages
-     6 -> Localization Jp | Ua | Eng
-     7 -> Fix zwlr_screencopy_frame_v1_copy in Wayland
-     8 -> Update code blocks on github pages
-     9 -> Git actions optimization
-    10 -> Fix texts.js.yml modified files processing
-    11 -> Implement Client Authentication
-    12 -> VPN graphs
-    13 -> p2p communication via QUIC
+     1 -> Create windows client
+     2 -> Client GUI applications for windows/linux
+     3 -> DbManager thread safety
+     4 -> Github pages
+     5 -> Localization Jap | Ukr | Eng
+     6 -> Fix zwlr_screencopy_frame_v1_copy in Wayland
+     7 -> Update code blocks on github pages
+     8 -> Git actions optimization
+     9 -> Fix texts.js.yml modified files processing
+    10 -> Implement Client Authentication
+    11 -> VPN graphs
+    12 -> p2p communication via QUIC
 ```
