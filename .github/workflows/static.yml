@@ -9,8 +9,8 @@ on:
       - 'index.html'
       - 'github-pages/**'
     paths-ignore:
-      - 'github-pages/js/test.js'
-      - 'github-pages/js/texts.js'
+      #- 'github-pages/js/test.js'
+      #- 'github-pages/js/texts.js'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
