@@ -4,6 +4,27 @@
 
 <h3 align="center">Welcome to Linux-x64-HTTP3</h3>
 
+## GUI
+
+<img src="./GUI/Frame 1.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 54.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 55.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 57.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 59.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 60.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 62.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 63.png" alt="Example">
+<br/>
+<img src="./GUI/Frame 64.png" alt="Example">
+<br/>
+
 ## Todo
 
 ```
