@@ -130,9 +130,9 @@ function styleText(text) {
 
   return text;
 }
-document.getElementById("Akzestia-x").addEventListener("click", function () {
-  render("Akzestia");
-});
+// document.getElementById("Akzestia-x").addEventListener("click", function () {
+//   render("Akzestia");
+// });
 document.getElementById("Client-x").addEventListener("click", function () {
   render("Client");
 });
