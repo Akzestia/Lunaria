@@ -28,6 +28,7 @@ SCRIPTS=(
     "./sql/blocked_users.sql"
     "./sql/reports.sql"
     "./sql/calls.sql"
+    "./sql/ecnrypt_keys.sql"
 )
 
 execute_script() {
