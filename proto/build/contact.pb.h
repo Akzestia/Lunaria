@@ -187,16 +187,27 @@ class Contact final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kIdFieldNumber = 1,
+    kAUserIdFieldNumber = 1,
+    kBUserIdFieldNumber = 2,
   };
-  // int32 id = 1;
-  void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
+  // int32 a_user_id = 1;
+  void clear_a_user_id() ;
+  ::int32_t a_user_id() const;
+  void set_a_user_id(::int32_t value);
 
   private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
+  ::int32_t _internal_a_user_id() const;
+  void _internal_set_a_user_id(::int32_t value);
+
+  public:
+  // int32 b_user_id = 2;
+  void clear_b_user_id() ;
+  ::int32_t b_user_id() const;
+  void set_b_user_id(::int32_t value);
+
+  private:
+  ::int32_t _internal_b_user_id() const;
+  void _internal_set_b_user_id(::int32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:Contact)
@@ -204,7 +215,7 @@ class Contact final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
+      1, 2, 0,
       0, 2>
       _table_;
 
@@ -225,7 +236,8 @@ class Contact final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Contact& from_msg);
-    ::int32_t id_;
+    ::int32_t a_user_id_;
+    ::int32_t b_user_id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -249,26 +261,48 @@ class Contact final : public ::google::protobuf::Message
 
 // Contact
 
-// int32 id = 1;
-inline void Contact::clear_id() {
+// int32 a_user_id = 1;
+inline void Contact::clear_a_user_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0;
+  _impl_.a_user_id_ = 0;
 }
-inline ::int32_t Contact::id() const {
-  // @@protoc_insertion_point(field_get:Contact.id)
-  return _internal_id();
+inline ::int32_t Contact::a_user_id() const {
+  // @@protoc_insertion_point(field_get:Contact.a_user_id)
+  return _internal_a_user_id();
 }
-inline void Contact::set_id(::int32_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Contact.id)
+inline void Contact::set_a_user_id(::int32_t value) {
+  _internal_set_a_user_id(value);
+  // @@protoc_insertion_point(field_set:Contact.a_user_id)
 }
-inline ::int32_t Contact::_internal_id() const {
+inline ::int32_t Contact::_internal_a_user_id() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
+  return _impl_.a_user_id_;
 }
-inline void Contact::_internal_set_id(::int32_t value) {
+inline void Contact::_internal_set_a_user_id(::int32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
+  _impl_.a_user_id_ = value;
+}
+
+// int32 b_user_id = 2;
+inline void Contact::clear_b_user_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.b_user_id_ = 0;
+}
+inline ::int32_t Contact::b_user_id() const {
+  // @@protoc_insertion_point(field_get:Contact.b_user_id)
+  return _internal_b_user_id();
+}
+inline void Contact::set_b_user_id(::int32_t value) {
+  _internal_set_b_user_id(value);
+  // @@protoc_insertion_point(field_set:Contact.b_user_id)
+}
+inline ::int32_t Contact::_internal_b_user_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.b_user_id_;
+}
+inline void Contact::_internal_set_b_user_id(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.b_user_id_ = value;
 }
 
 #ifdef __GNUC__
