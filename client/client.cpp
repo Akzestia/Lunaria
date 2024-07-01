@@ -58,13 +58,6 @@ int main() {
     client.Disconnect();
 
     char cx = getchar();
-    // client.Connect();
-
-    // char cu = getchar();
-
-    // client.Disconnect();
-
-    // DbManager::test();
-
+    
     return 0;
 }

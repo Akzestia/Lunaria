@@ -264,19 +264,157 @@ bool DbManager::addContact(const Contact &contact) {
 #pragma endregion
 
 #pragma region PUT
-bool DbManager::updateUser(const User &user) { return true; }
+bool DbManager::updateUser(const User &user) {
 
-bool DbManager::updateMessage(const Message &message) { return true; }
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
 
-bool DbManager::updateContact(const Contact &contact) { return true; }
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        // Todo
+
+        std::cout << "\nUser updated successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool DbManager::updateMessage(const Message &message) {
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
+
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        // Todo
+
+        std::cout << "\nMessage updated successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool DbManager::updateContact(const Contact &contact) {
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
+
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        // Todo
+
+        std::cout << "\nContact updated successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
+}
 #pragma endregion
 
 #pragma region DELETE
-bool DbManager::deleteUser(const User &user) { return true; }
+bool DbManager::deleteUser(const User &user) {
 
-bool DbManager::deleteMessage(const Message &message) { return true; }
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
 
-bool DbManager::deleteContact(const Contact &contact) { return true; }
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        // Todo
+
+        std::cout << "\nUser deleted successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool DbManager::deleteMessage(const Message &message) {
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
+
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        // Todo
+
+        std::cout << "\nMessage deleted successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+    return true;
+}
+
+bool DbManager::deleteContact(const Contact &contact) {
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
+
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        // Todo
+
+        std::cout << "\nContact deleted successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+    return true;
+}
 #pragma endregion
 
 std::string DbManager::getConnectionString() {
