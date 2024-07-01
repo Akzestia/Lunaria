@@ -1,1 +1,1 @@
-## Chatbot CLI for client
+## Chatbot CLI for client (Lua)
