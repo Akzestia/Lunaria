@@ -17,6 +17,7 @@ This project uses the following technologies:
   - [C](https://en.cppreference.com/w/c)
   - [Python](https://www.python.org/)
   - [Shell](https://www.gnu.org/software/bash/)
+  - [Lua](https://www.lua.org/)
 
 - **Libraries/Frameworks**
   - [Qt](https://www.qt.io/) - C++ GUI Framework
