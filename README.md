@@ -6,22 +6,21 @@
 
 ## About
 
-This project is an open-source chat application built around the QUIC protocol.
+Linux-x64-HTTP3 is an open-source chat application built around the QUIC protocol, designed for secure and efficient communication.
 
 <br/>
 
 ## Features
-- Enhanced security
-- Built on IETF QUIC protocol
+- Enhanced security with QUIC protocol
 - Self-hostable server
-- Peer-to-peer communication within VPN networks to utilize QUIC for p2p
-- Extensive customization options for the client using Lua scripts
-- Includes CLI/chatbot functionality written in Lua
+- Peer-to-peer communication within VPN networks
+- Extensive client customization using Lua scripts
+- CLI/chatbot functionality powered by Lua
 
 <br/>
 
 ## Technologies Used
-This project uses the following technologies:
+This project utilizes various technologies including:
 
 - **Programming Languages**
   - [C++](https://en.cppreference.com/w/cpp)
@@ -35,27 +34,27 @@ This project uses the following technologies:
   - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ Library
   - [Protobuf](https://developers.google.com/protocol-buffers) - Protocol Buffers
   - [OpenVPN](https://openvpn.net/) - VPN solution
-  - [MsQuic](https://github.com/microsoft/msquic) - Cross-platform, C implementation of the IETF QUIC protocol
+  - [MsQuic](https://github.com/microsoft/msquic) - Cross-platform QUIC protocol implementation
 
 - **Database**
   - [PostgreSQL](https://www.postgresql.org/)
 
 - **Tools**
-  - [g++](https://gcc.gnu.org/) - Compiling source files
-  - [CMake](https://cmake.org/) - Build system generator
-  - [Git](https://git-scm.com/) - Version control system
+  - [g++](https://gcc.gnu.org/) - Compiler
+  - [CMake](https://cmake.org/) - Build system
+  - [Git](https://git-scm.com/) - Version control
 
 <br/>
 
 ## Supported Platforms
-This application supports the following platforms:
+Linux-x64-HTTP3 supports:
 - Linux
 - Windows
 
 <br/>
 
 ## Supported Languages
-This application supports the following languages for localization:
+Localization support includes:
 - Ukrainian
 - Japanese
 - English
@@ -63,6 +62,8 @@ This application supports the following languages for localization:
 <br/>
 
 ## GUI
+
+Here are some snapshots of the graphical user interface (GUI):
 
 <img src="./GUI/Frame 1.png" alt="Example">
 <br/>
