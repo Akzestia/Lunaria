@@ -22,7 +22,7 @@ This project uses the following technologies:
   - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ Library
   - [Protobuf](https://developers.google.com/protocol-buffers) - Protocol Buffers
   - [OpenVPN](https://openvpn.net/) - VPN solution
-  - [MsQuic] (https://github.com/microsoft/msquic) - Cross-platform, C implementation of the IETF QUIC protocol
+  - [MsQuic](https://github.com/microsoft/msquic) - Cross-platform, C implementation of the IETF QUIC protocol
 
 - **Database**
   - [PostgreSQL](https://www.postgresql.org/)
