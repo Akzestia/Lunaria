@@ -154,6 +154,51 @@ bool DbManager::getGraphs(const User& u, std::vector<uint8_t>* output){
     }
 }
 
+
+#pragma region POST
+bool DbManager::addUser (const User& user){
+    return true;
+}
+
+bool DbManager::addMessage(const Message& message){
+    return true;
+}
+
+bool DbManager::addContact (const Contact&  contact){
+    return true;
+}
+#pragma endregion
+
+
+#pragma region PUT
+bool DbManager::updateUser (const User& user){
+    return true;
+}
+
+bool DbManager::updateMessage(const Message& message){
+    return true;
+}
+
+bool DbManager::updateContact (const Contact& contact){
+    return true;
+}
+#pragma endregion
+
+#pragma region DELETE
+bool DbManager::deleteUser (const User& user){
+    return true;
+}
+
+bool DbManager::deleteMessage(const Message& message){
+    return true;
+}
+
+bool DbManager::deleteContact (const Contact& contact){
+    return true;
+}
+#pragma endregion
+
+
 std::string DbManager::getConnectionString() {
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini("./db/config.ini", pt);
