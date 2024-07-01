@@ -36,6 +36,7 @@ void DbManager::test() {
     }
 }
 
+#pragma region GET
 bool DbManager::getMessages(const User& u, std::vector<uint8_t>* output){
     try{
         const std::string connection_str = DbManager::getConnectionString();
@@ -153,6 +154,7 @@ bool DbManager::getGraphs(const User& u, std::vector<uint8_t>* output){
         return false;
     }
 }
+#pragma endregion
 
 
 #pragma region POST
