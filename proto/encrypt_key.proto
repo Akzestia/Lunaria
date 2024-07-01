@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Encrypt_key {
+    string _key = 1;
+    int32 _user_id = 2;
+}

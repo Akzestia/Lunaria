@@ -229,7 +229,6 @@ bool DbManager::addMessage(const Message &message) {
 }
 
 bool DbManager::addContact(const Contact &contact) {
-
     try {
         const std::string connection_str = DbManager::getConnectionString();
 

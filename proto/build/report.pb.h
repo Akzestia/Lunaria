@@ -187,16 +187,72 @@ class Report final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kIdFieldNumber = 1,
+    kReportReasonFieldNumber = 4,
+    kCreatedAtFieldNumber = 5,
+    kReportedIdFieldNumber = 1,
+    kReporterIdFieldNumber = 2,
+    kReportReasonIdFieldNumber = 3,
   };
-  // int32 id = 1;
-  void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
+  // string _report_reason = 4;
+  void clear__report_reason() ;
+  const std::string& _report_reason() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set__report_reason(Arg_&& arg, Args_... args);
+  std::string* mutable__report_reason();
+  PROTOBUF_NODISCARD std::string* release__report_reason();
+  void set_allocated__report_reason(std::string* value);
 
   private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
+  const std::string& _internal__report_reason() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set__report_reason(
+      const std::string& value);
+  std::string* _internal_mutable__report_reason();
+
+  public:
+  // string created_at = 5;
+  void clear_created_at() ;
+  const std::string& created_at() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_created_at(Arg_&& arg, Args_... args);
+  std::string* mutable_created_at();
+  PROTOBUF_NODISCARD std::string* release_created_at();
+  void set_allocated_created_at(std::string* value);
+
+  private:
+  const std::string& _internal_created_at() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_created_at(
+      const std::string& value);
+  std::string* _internal_mutable_created_at();
+
+  public:
+  // int32 _reported_id = 1;
+  void clear__reported_id() ;
+  ::int32_t _reported_id() const;
+  void set__reported_id(::int32_t value);
+
+  private:
+  ::int32_t _internal__reported_id() const;
+  void _internal_set__reported_id(::int32_t value);
+
+  public:
+  // int32 _reporter_id = 2;
+  void clear__reporter_id() ;
+  ::int32_t _reporter_id() const;
+  void set__reporter_id(::int32_t value);
+
+  private:
+  ::int32_t _internal__reporter_id() const;
+  void _internal_set__reporter_id(::int32_t value);
+
+  public:
+  // int32 _report_reason_id = 3;
+  void clear__report_reason_id() ;
+  ::int32_t _report_reason_id() const;
+  void set__report_reason_id(::int32_t value);
+
+  private:
+  ::int32_t _internal__report_reason_id() const;
+  void _internal_set__report_reason_id(::int32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:Report)
@@ -204,8 +260,8 @@ class Report final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      0, 2>
+      3, 5, 0,
+      39, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -225,7 +281,11 @@ class Report final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Report& from_msg);
-    ::int32_t id_;
+    ::google::protobuf::internal::ArenaStringPtr _report_reason_;
+    ::google::protobuf::internal::ArenaStringPtr created_at_;
+    ::int32_t _reported_id_;
+    ::int32_t _reporter_id_;
+    ::int32_t _report_reason_id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -249,26 +309,170 @@ class Report final : public ::google::protobuf::Message
 
 // Report
 
-// int32 id = 1;
-inline void Report::clear_id() {
+// int32 _reported_id = 1;
+inline void Report::clear__reported_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0;
+  _impl_._reported_id_ = 0;
 }
-inline ::int32_t Report::id() const {
-  // @@protoc_insertion_point(field_get:Report.id)
-  return _internal_id();
+inline ::int32_t Report::_reported_id() const {
+  // @@protoc_insertion_point(field_get:Report._reported_id)
+  return _internal__reported_id();
 }
-inline void Report::set_id(::int32_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Report.id)
+inline void Report::set__reported_id(::int32_t value) {
+  _internal_set__reported_id(value);
+  // @@protoc_insertion_point(field_set:Report._reported_id)
 }
-inline ::int32_t Report::_internal_id() const {
+inline ::int32_t Report::_internal__reported_id() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
+  return _impl_._reported_id_;
 }
-inline void Report::_internal_set_id(::int32_t value) {
+inline void Report::_internal_set__reported_id(::int32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
+  _impl_._reported_id_ = value;
+}
+
+// int32 _reporter_id = 2;
+inline void Report::clear__reporter_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._reporter_id_ = 0;
+}
+inline ::int32_t Report::_reporter_id() const {
+  // @@protoc_insertion_point(field_get:Report._reporter_id)
+  return _internal__reporter_id();
+}
+inline void Report::set__reporter_id(::int32_t value) {
+  _internal_set__reporter_id(value);
+  // @@protoc_insertion_point(field_set:Report._reporter_id)
+}
+inline ::int32_t Report::_internal__reporter_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._reporter_id_;
+}
+inline void Report::_internal_set__reporter_id(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._reporter_id_ = value;
+}
+
+// int32 _report_reason_id = 3;
+inline void Report::clear__report_reason_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._report_reason_id_ = 0;
+}
+inline ::int32_t Report::_report_reason_id() const {
+  // @@protoc_insertion_point(field_get:Report._report_reason_id)
+  return _internal__report_reason_id();
+}
+inline void Report::set__report_reason_id(::int32_t value) {
+  _internal_set__report_reason_id(value);
+  // @@protoc_insertion_point(field_set:Report._report_reason_id)
+}
+inline ::int32_t Report::_internal__report_reason_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._report_reason_id_;
+}
+inline void Report::_internal_set__report_reason_id(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._report_reason_id_ = value;
+}
+
+// string _report_reason = 4;
+inline void Report::clear__report_reason() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._report_reason_.ClearToEmpty();
+}
+inline const std::string& Report::_report_reason() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Report._report_reason)
+  return _internal__report_reason();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Report::set__report_reason(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._report_reason_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Report._report_reason)
+}
+inline std::string* Report::mutable__report_reason() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable__report_reason();
+  // @@protoc_insertion_point(field_mutable:Report._report_reason)
+  return _s;
+}
+inline const std::string& Report::_internal__report_reason() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_._report_reason_.Get();
+}
+inline void Report::_internal_set__report_reason(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._report_reason_.Set(value, GetArena());
+}
+inline std::string* Report::_internal_mutable__report_reason() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_._report_reason_.Mutable( GetArena());
+}
+inline std::string* Report::release__report_reason() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Report._report_reason)
+  return _impl_._report_reason_.Release();
+}
+inline void Report::set_allocated__report_reason(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_._report_reason_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_._report_reason_.IsDefault()) {
+          _impl_._report_reason_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Report._report_reason)
+}
+
+// string created_at = 5;
+inline void Report::clear_created_at() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.ClearToEmpty();
+}
+inline const std::string& Report::created_at() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Report.created_at)
+  return _internal_created_at();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Report::set_created_at(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Report.created_at)
+}
+inline std::string* Report::mutable_created_at() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_created_at();
+  // @@protoc_insertion_point(field_mutable:Report.created_at)
+  return _s;
+}
+inline const std::string& Report::_internal_created_at() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.created_at_.Get();
+}
+inline void Report::_internal_set_created_at(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.Set(value, GetArena());
+}
+inline std::string* Report::_internal_mutable_created_at() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.created_at_.Mutable( GetArena());
+}
+inline std::string* Report::release_created_at() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Report.created_at)
+  return _impl_.created_at_.Release();
+}
+inline void Report::set_allocated_created_at(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.created_at_.IsDefault()) {
+          _impl_.created_at_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Report.created_at)
 }
 
 #ifdef __GNUC__

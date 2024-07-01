@@ -1,5 +1,9 @@
 syntax = "proto3";
 
 message Report {
-    int32 id = 1;
+    int32 _reported_id = 1;
+    int32 _reporter_id = 2;
+    int32 _report_reason_id = 3;
+    string _report_reason = 4;
+    string created_at = 5;
 }

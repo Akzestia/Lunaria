@@ -26,7 +26,15 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Report::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : id_{0},
+      : _report_reason_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        created_at_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        _reported_id_{0},
+        _reporter_id_{0},
+        _report_reason_id_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -57,7 +65,11 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::Report, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::Report, _impl_._reported_id_),
+        PROTOBUF_FIELD_OFFSET(::Report, _impl_._reporter_id_),
+        PROTOBUF_FIELD_OFFSET(::Report, _impl_._report_reason_id_),
+        PROTOBUF_FIELD_OFFSET(::Report, _impl_._report_reason_),
+        PROTOBUF_FIELD_OFFSET(::Report, _impl_.created_at_),
 };
 
 static const ::_pbi::MigrationSchema
@@ -69,14 +81,16 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_report_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\014report.proto\"\024\n\006Report\022\n\n\002id\030\001 \001(\005b\006pr"
-    "oto3"
+    "\n\014report.proto\"{\n\006Report\022\024\n\014_reported_id"
+    "\030\001 \001(\005\022\024\n\014_reporter_id\030\002 \001(\005\022\031\n\021_report_"
+    "reason_id\030\003 \001(\005\022\026\n\016_report_reason\030\004 \001(\t\022"
+    "\022\n\ncreated_at\030\005 \001(\tb\006proto3"
 };
 static ::absl::once_flag descriptor_table_report_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_report_2eproto = {
     false,
     false,
-    44,
+    147,
     descriptor_table_protodef_report_2eproto,
     "report.proto",
     &descriptor_table_report_2eproto_once,
@@ -100,19 +114,47 @@ Report::Report(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:Report)
 }
+inline PROTOBUF_NDEBUG_INLINE Report::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::Report& from_msg)
+      : _report_reason_(arena, from._report_reason_),
+        created_at_(arena, from.created_at_),
+        _cached_size_{0} {}
+
 Report::Report(
-    ::google::protobuf::Arena* arena, const Report& from)
-    : Report(arena) {
-  MergeFrom(from);
+    ::google::protobuf::Arena* arena,
+    const Report& from)
+    : ::google::protobuf::Message(arena) {
+  Report* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, _reported_id_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, _reported_id_),
+           offsetof(Impl_, _report_reason_id_) -
+               offsetof(Impl_, _reported_id_) +
+               sizeof(Impl_::_report_reason_id_));
+
+  // @@protoc_insertion_point(copy_constructor:Report)
 }
 inline PROTOBUF_NDEBUG_INLINE Report::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
+      : _report_reason_(arena),
+        created_at_(arena),
+        _cached_size_{0} {}
 
 inline void Report::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, _reported_id_),
+           0,
+           offsetof(Impl_, _report_reason_id_) -
+               offsetof(Impl_, _reported_id_) +
+               sizeof(Impl_::_report_reason_id_));
 }
 Report::~Report() {
   // @@protoc_insertion_point(destructor:Report)
@@ -121,6 +163,8 @@ Report::~Report() {
 }
 inline void Report::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
+  _impl_._report_reason_.Destroy();
+  _impl_.created_at_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -145,15 +189,15 @@ Report::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Report::_table_ = {
+const ::_pbi::TcParseTable<3, 5, 0, 39, 2> Report::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    5,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_Report_default_instance_._instance,
@@ -163,18 +207,49 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Report::_table_ = {
     ::_pbi::TcParser::GetTable<::Report>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // int32 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Report, _impl_.id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Report, _impl_.id_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    // int32 _reported_id = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Report, _impl_._reported_id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Report, _impl_._reported_id_)}},
+    // int32 _reporter_id = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Report, _impl_._reporter_id_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(Report, _impl_._reporter_id_)}},
+    // int32 _report_reason_id = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Report, _impl_._report_reason_id_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(Report, _impl_._report_reason_id_)}},
+    // string _report_reason = 4;
+    {::_pbi::TcParser::FastUS1,
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(Report, _impl_._report_reason_)}},
+    // string created_at = 5;
+    {::_pbi::TcParser::FastUS1,
+     {42, 63, 0, PROTOBUF_FIELD_OFFSET(Report, _impl_.created_at_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
-    // int32 id = 1;
-    {PROTOBUF_FIELD_OFFSET(Report, _impl_.id_), 0, 0,
+    // int32 _reported_id = 1;
+    {PROTOBUF_FIELD_OFFSET(Report, _impl_._reported_id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 _reporter_id = 2;
+    {PROTOBUF_FIELD_OFFSET(Report, _impl_._reporter_id_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 _report_reason_id = 3;
+    {PROTOBUF_FIELD_OFFSET(Report, _impl_._report_reason_id_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // string _report_reason = 4;
+    {PROTOBUF_FIELD_OFFSET(Report, _impl_._report_reason_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string created_at = 5;
+    {PROTOBUF_FIELD_OFFSET(Report, _impl_.created_at_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\6\0\0\0\16\12\0\0"
+    "Report"
+    "_report_reason"
+    "created_at"
   }},
 };
 
@@ -185,7 +260,11 @@ PROTOBUF_NOINLINE void Report::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.id_ = 0;
+  _impl_._report_reason_.ClearToEmpty();
+  _impl_.created_at_.ClearToEmpty();
+  ::memset(&_impl_._reported_id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_._report_reason_id_) -
+      reinterpret_cast<char*>(&_impl_._reported_id_)) + sizeof(_impl_._report_reason_id_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -196,11 +275,41 @@ PROTOBUF_NOINLINE void Report::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
+  // int32 _reported_id = 1;
+  if (this->_internal__reported_id() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt32ToArrayWithField<1>(
-            stream, this->_internal_id(), target);
+            stream, this->_internal__reported_id(), target);
+  }
+
+  // int32 _reporter_id = 2;
+  if (this->_internal__reporter_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<2>(
+            stream, this->_internal__reporter_id(), target);
+  }
+
+  // int32 _report_reason_id = 3;
+  if (this->_internal__report_reason_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<3>(
+            stream, this->_internal__report_reason_id(), target);
+  }
+
+  // string _report_reason = 4;
+  if (!this->_internal__report_reason().empty()) {
+    const std::string& _s = this->_internal__report_reason();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Report._report_reason");
+    target = stream->WriteStringMaybeAliased(4, _s, target);
+  }
+
+  // string created_at = 5;
+  if (!this->_internal_created_at().empty()) {
+    const std::string& _s = this->_internal_created_at();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Report.created_at");
+    target = stream->WriteStringMaybeAliased(5, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -220,10 +329,35 @@ PROTOBUF_NOINLINE void Report::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
+  ::_pbi::Prefetch5LinesFrom7Lines(reinterpret_cast<const void*>(this));
+  // string _report_reason = 4;
+  if (!this->_internal__report_reason().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal__report_reason());
+  }
+
+  // string created_at = 5;
+  if (!this->_internal_created_at().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_created_at());
+  }
+
+  // int32 _reported_id = 1;
+  if (this->_internal__reported_id() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_id());
+        this->_internal__reported_id());
+  }
+
+  // int32 _reporter_id = 2;
+  if (this->_internal__reporter_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+        this->_internal__reporter_id());
+  }
+
+  // int32 _report_reason_id = 3;
+  if (this->_internal__report_reason_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+        this->_internal__report_reason_id());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -238,8 +372,20 @@ void Report::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_id() != 0) {
-    _this->_impl_.id_ = from._impl_.id_;
+  if (!from._internal__report_reason().empty()) {
+    _this->_internal_set__report_reason(from._internal__report_reason());
+  }
+  if (!from._internal_created_at().empty()) {
+    _this->_internal_set_created_at(from._internal_created_at());
+  }
+  if (from._internal__reported_id() != 0) {
+    _this->_impl_._reported_id_ = from._impl_._reported_id_;
+  }
+  if (from._internal__reporter_id() != 0) {
+    _this->_impl_._reporter_id_ = from._impl_._reporter_id_;
+  }
+  if (from._internal__report_reason_id() != 0) {
+    _this->_impl_._report_reason_id_ = from._impl_._report_reason_id_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -254,8 +400,17 @@ void Report::CopyFrom(const Report& from) {
 
 void Report::InternalSwap(Report* PROTOBUF_RESTRICT other) {
   using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(_impl_.id_, other->_impl_.id_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_._report_reason_, &other->_impl_._report_reason_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.created_at_, &other->_impl_.created_at_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Report, _impl_._report_reason_id_)
+      + sizeof(Report::_impl_._report_reason_id_)
+      - PROTOBUF_FIELD_OFFSET(Report, _impl_._reported_id_)>(
+          reinterpret_cast<char*>(&_impl_._reported_id_),
+          reinterpret_cast<char*>(&other->_impl_._reported_id_));
 }
 
 ::google::protobuf::Metadata Report::GetMetadata() const {
