@@ -8,6 +8,8 @@
 
 This project is an open-source chat application, which is build around QUIC protocol.
 
+<br/>
+
 ## Features
   - Enhanced security
   - Built on IETF QUIC protocol
@@ -17,7 +19,7 @@ This project is an open-source chat application, which is build around QUIC prot
   - Includes CLI/chatbot functionality written in Lua
 
 <br/>
-<br/>
+
 
 ## Technologies Used
 This project uses the following technologies:
