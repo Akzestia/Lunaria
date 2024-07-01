@@ -49,6 +49,9 @@ if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/invite_lin
     exit 1
 fi
 
-
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/contact.proto; then
+    echo "Error: Proto failed \`contact\`";
+    exit 1
+fi
 
 echo "Proto files were successfully compiled";
