@@ -187,16 +187,78 @@ class Message final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kIdFieldNumber = 1,
+    kTextContentFieldNumber = 3,
+    kByteContentFieldNumber = 4,
+    kCreatedAtFieldNumber = 5,
+    kSenderIdFieldNumber = 1,
+    kReceiverIdFieldNumber = 2,
   };
-  // int32 id = 1;
-  void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
+  // string text_content = 3;
+  void clear_text_content() ;
+  const std::string& text_content() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_text_content(Arg_&& arg, Args_... args);
+  std::string* mutable_text_content();
+  PROTOBUF_NODISCARD std::string* release_text_content();
+  void set_allocated_text_content(std::string* value);
 
   private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
+  const std::string& _internal_text_content() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_text_content(
+      const std::string& value);
+  std::string* _internal_mutable_text_content();
+
+  public:
+  // bytes byte_content = 4;
+  void clear_byte_content() ;
+  const std::string& byte_content() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_byte_content(Arg_&& arg, Args_... args);
+  std::string* mutable_byte_content();
+  PROTOBUF_NODISCARD std::string* release_byte_content();
+  void set_allocated_byte_content(std::string* value);
+
+  private:
+  const std::string& _internal_byte_content() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_byte_content(
+      const std::string& value);
+  std::string* _internal_mutable_byte_content();
+
+  public:
+  // string created_at = 5;
+  void clear_created_at() ;
+  const std::string& created_at() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_created_at(Arg_&& arg, Args_... args);
+  std::string* mutable_created_at();
+  PROTOBUF_NODISCARD std::string* release_created_at();
+  void set_allocated_created_at(std::string* value);
+
+  private:
+  const std::string& _internal_created_at() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_created_at(
+      const std::string& value);
+  std::string* _internal_mutable_created_at();
+
+  public:
+  // int32 sender_id = 1;
+  void clear_sender_id() ;
+  ::int32_t sender_id() const;
+  void set_sender_id(::int32_t value);
+
+  private:
+  ::int32_t _internal_sender_id() const;
+  void _internal_set_sender_id(::int32_t value);
+
+  public:
+  // int32 receiver_id = 2;
+  void clear_receiver_id() ;
+  ::int32_t receiver_id() const;
+  void set_receiver_id(::int32_t value);
+
+  private:
+  ::int32_t _internal_receiver_id() const;
+  void _internal_set_receiver_id(::int32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:Message)
@@ -204,8 +266,8 @@ class Message final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      0, 2>
+      3, 5, 0,
+      38, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -225,7 +287,11 @@ class Message final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Message& from_msg);
-    ::int32_t id_;
+    ::google::protobuf::internal::ArenaStringPtr text_content_;
+    ::google::protobuf::internal::ArenaStringPtr byte_content_;
+    ::google::protobuf::internal::ArenaStringPtr created_at_;
+    ::int32_t sender_id_;
+    ::int32_t receiver_id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -249,26 +315,198 @@ class Message final : public ::google::protobuf::Message
 
 // Message
 
-// int32 id = 1;
-inline void Message::clear_id() {
+// int32 sender_id = 1;
+inline void Message::clear_sender_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0;
+  _impl_.sender_id_ = 0;
 }
-inline ::int32_t Message::id() const {
-  // @@protoc_insertion_point(field_get:Message.id)
-  return _internal_id();
+inline ::int32_t Message::sender_id() const {
+  // @@protoc_insertion_point(field_get:Message.sender_id)
+  return _internal_sender_id();
 }
-inline void Message::set_id(::int32_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Message.id)
+inline void Message::set_sender_id(::int32_t value) {
+  _internal_set_sender_id(value);
+  // @@protoc_insertion_point(field_set:Message.sender_id)
 }
-inline ::int32_t Message::_internal_id() const {
+inline ::int32_t Message::_internal_sender_id() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
+  return _impl_.sender_id_;
 }
-inline void Message::_internal_set_id(::int32_t value) {
+inline void Message::_internal_set_sender_id(::int32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
+  _impl_.sender_id_ = value;
+}
+
+// int32 receiver_id = 2;
+inline void Message::clear_receiver_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.receiver_id_ = 0;
+}
+inline ::int32_t Message::receiver_id() const {
+  // @@protoc_insertion_point(field_get:Message.receiver_id)
+  return _internal_receiver_id();
+}
+inline void Message::set_receiver_id(::int32_t value) {
+  _internal_set_receiver_id(value);
+  // @@protoc_insertion_point(field_set:Message.receiver_id)
+}
+inline ::int32_t Message::_internal_receiver_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.receiver_id_;
+}
+inline void Message::_internal_set_receiver_id(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.receiver_id_ = value;
+}
+
+// string text_content = 3;
+inline void Message::clear_text_content() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.text_content_.ClearToEmpty();
+}
+inline const std::string& Message::text_content() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Message.text_content)
+  return _internal_text_content();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Message::set_text_content(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.text_content_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Message.text_content)
+}
+inline std::string* Message::mutable_text_content() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_text_content();
+  // @@protoc_insertion_point(field_mutable:Message.text_content)
+  return _s;
+}
+inline const std::string& Message::_internal_text_content() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.text_content_.Get();
+}
+inline void Message::_internal_set_text_content(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.text_content_.Set(value, GetArena());
+}
+inline std::string* Message::_internal_mutable_text_content() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.text_content_.Mutable( GetArena());
+}
+inline std::string* Message::release_text_content() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Message.text_content)
+  return _impl_.text_content_.Release();
+}
+inline void Message::set_allocated_text_content(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.text_content_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.text_content_.IsDefault()) {
+          _impl_.text_content_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Message.text_content)
+}
+
+// bytes byte_content = 4;
+inline void Message::clear_byte_content() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.byte_content_.ClearToEmpty();
+}
+inline const std::string& Message::byte_content() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Message.byte_content)
+  return _internal_byte_content();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Message::set_byte_content(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.byte_content_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Message.byte_content)
+}
+inline std::string* Message::mutable_byte_content() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_byte_content();
+  // @@protoc_insertion_point(field_mutable:Message.byte_content)
+  return _s;
+}
+inline const std::string& Message::_internal_byte_content() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.byte_content_.Get();
+}
+inline void Message::_internal_set_byte_content(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.byte_content_.Set(value, GetArena());
+}
+inline std::string* Message::_internal_mutable_byte_content() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.byte_content_.Mutable( GetArena());
+}
+inline std::string* Message::release_byte_content() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Message.byte_content)
+  return _impl_.byte_content_.Release();
+}
+inline void Message::set_allocated_byte_content(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.byte_content_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.byte_content_.IsDefault()) {
+          _impl_.byte_content_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Message.byte_content)
+}
+
+// string created_at = 5;
+inline void Message::clear_created_at() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.ClearToEmpty();
+}
+inline const std::string& Message::created_at() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Message.created_at)
+  return _internal_created_at();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Message::set_created_at(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Message.created_at)
+}
+inline std::string* Message::mutable_created_at() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_created_at();
+  // @@protoc_insertion_point(field_mutable:Message.created_at)
+  return _s;
+}
+inline const std::string& Message::_internal_created_at() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.created_at_.Get();
+}
+inline void Message::_internal_set_created_at(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.Set(value, GetArena());
+}
+inline std::string* Message::_internal_mutable_created_at() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.created_at_.Mutable( GetArena());
+}
+inline std::string* Message::release_created_at() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Message.created_at)
+  return _impl_.created_at_.Release();
+}
+inline void Message::set_allocated_created_at(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.created_at_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.created_at_.IsDefault()) {
+          _impl_.created_at_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Message.created_at)
 }
 
 #ifdef __GNUC__

@@ -190,7 +190,44 @@ bool DbManager::addUser(const User &user) {
     return true;
 }
 
-bool DbManager::addMessage(const Message &message) { return true; }
+bool DbManager::addMessage(const Message &message) { 
+    
+      try {
+        const std::string connection_str = DbManager::getConnectionString();
+
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        pqxx::work txn(connection);
+
+        std::string query =
+            "INSERT INTO Messages (sender_id, receiver_id, text_content, "
+            "byte_content) VALUES (" +
+            txn.quote(message.sender_id()) + ", " +
+            txn.quote(message.receiver_id()) + ", " + 
+            txn.quote(message.text_content()) + ", " + 
+            txn.quote(message.byte_content()) + ");";
+
+        txn.exec(query);
+
+        txn.commit();
+
+        std::cout << "\nUser added successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
+
+    return true;     
+}
 
 bool DbManager::addContact(const Contact &contact) { return true; }
 #pragma endregion

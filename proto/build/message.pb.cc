@@ -26,7 +26,17 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Message::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : id_{0},
+      : text_content_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        byte_content_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        created_at_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        sender_id_{0},
+        receiver_id_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -57,7 +67,11 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::Message, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::Message, _impl_.sender_id_),
+        PROTOBUF_FIELD_OFFSET(::Message, _impl_.receiver_id_),
+        PROTOBUF_FIELD_OFFSET(::Message, _impl_.text_content_),
+        PROTOBUF_FIELD_OFFSET(::Message, _impl_.byte_content_),
+        PROTOBUF_FIELD_OFFSET(::Message, _impl_.created_at_),
 };
 
 static const ::_pbi::MigrationSchema
@@ -69,14 +83,16 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_message_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\rmessage.proto\"\025\n\007Message\022\n\n\002id\030\001 \001(\005b\006"
-    "proto3"
+    "\n\rmessage.proto\"q\n\007Message\022\021\n\tsender_id\030"
+    "\001 \001(\005\022\023\n\013receiver_id\030\002 \001(\005\022\024\n\014text_conte"
+    "nt\030\003 \001(\t\022\024\n\014byte_content\030\004 \001(\014\022\022\n\ncreate"
+    "d_at\030\005 \001(\tb\006proto3"
 };
 static ::absl::once_flag descriptor_table_message_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_message_2eproto = {
     false,
     false,
-    46,
+    138,
     descriptor_table_protodef_message_2eproto,
     "message.proto",
     &descriptor_table_message_2eproto_once,
@@ -100,19 +116,49 @@ Message::Message(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:Message)
 }
+inline PROTOBUF_NDEBUG_INLINE Message::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::Message& from_msg)
+      : text_content_(arena, from.text_content_),
+        byte_content_(arena, from.byte_content_),
+        created_at_(arena, from.created_at_),
+        _cached_size_{0} {}
+
 Message::Message(
-    ::google::protobuf::Arena* arena, const Message& from)
-    : Message(arena) {
-  MergeFrom(from);
+    ::google::protobuf::Arena* arena,
+    const Message& from)
+    : ::google::protobuf::Message(arena) {
+  Message* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, sender_id_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, sender_id_),
+           offsetof(Impl_, receiver_id_) -
+               offsetof(Impl_, sender_id_) +
+               sizeof(Impl_::receiver_id_));
+
+  // @@protoc_insertion_point(copy_constructor:Message)
 }
 inline PROTOBUF_NDEBUG_INLINE Message::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
+      : text_content_(arena),
+        byte_content_(arena),
+        created_at_(arena),
+        _cached_size_{0} {}
 
 inline void Message::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, sender_id_),
+           0,
+           offsetof(Impl_, receiver_id_) -
+               offsetof(Impl_, sender_id_) +
+               sizeof(Impl_::receiver_id_));
 }
 Message::~Message() {
   // @@protoc_insertion_point(destructor:Message)
@@ -121,6 +167,9 @@ Message::~Message() {
 }
 inline void Message::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.text_content_.Destroy();
+  _impl_.byte_content_.Destroy();
+  _impl_.created_at_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -145,15 +194,15 @@ Message::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Message::_table_ = {
+const ::_pbi::TcParseTable<3, 5, 0, 38, 2> Message::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    5, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967264,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    5,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_Message_default_instance_._instance,
@@ -163,18 +212,49 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Message::_table_ = {
     ::_pbi::TcParser::GetTable<::Message>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // int32 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Message, _impl_.id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Message, _impl_.id_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    // int32 sender_id = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Message, _impl_.sender_id_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Message, _impl_.sender_id_)}},
+    // int32 receiver_id = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Message, _impl_.receiver_id_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(Message, _impl_.receiver_id_)}},
+    // string text_content = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 63, 0, PROTOBUF_FIELD_OFFSET(Message, _impl_.text_content_)}},
+    // bytes byte_content = 4;
+    {::_pbi::TcParser::FastBS1,
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(Message, _impl_.byte_content_)}},
+    // string created_at = 5;
+    {::_pbi::TcParser::FastUS1,
+     {42, 63, 0, PROTOBUF_FIELD_OFFSET(Message, _impl_.created_at_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
-    // int32 id = 1;
-    {PROTOBUF_FIELD_OFFSET(Message, _impl_.id_), 0, 0,
+    // int32 sender_id = 1;
+    {PROTOBUF_FIELD_OFFSET(Message, _impl_.sender_id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 receiver_id = 2;
+    {PROTOBUF_FIELD_OFFSET(Message, _impl_.receiver_id_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // string text_content = 3;
+    {PROTOBUF_FIELD_OFFSET(Message, _impl_.text_content_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // bytes byte_content = 4;
+    {PROTOBUF_FIELD_OFFSET(Message, _impl_.byte_content_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
+    // string created_at = 5;
+    {PROTOBUF_FIELD_OFFSET(Message, _impl_.created_at_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\7\0\0\14\0\12\0\0"
+    "Message"
+    "text_content"
+    "created_at"
   }},
 };
 
@@ -185,7 +265,12 @@ PROTOBUF_NOINLINE void Message::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.id_ = 0;
+  _impl_.text_content_.ClearToEmpty();
+  _impl_.byte_content_.ClearToEmpty();
+  _impl_.created_at_.ClearToEmpty();
+  ::memset(&_impl_.sender_id_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.receiver_id_) -
+      reinterpret_cast<char*>(&_impl_.sender_id_)) + sizeof(_impl_.receiver_id_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -196,11 +281,40 @@ PROTOBUF_NOINLINE void Message::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
+  // int32 sender_id = 1;
+  if (this->_internal_sender_id() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::
         WriteInt32ToArrayWithField<1>(
-            stream, this->_internal_id(), target);
+            stream, this->_internal_sender_id(), target);
+  }
+
+  // int32 receiver_id = 2;
+  if (this->_internal_receiver_id() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<2>(
+            stream, this->_internal_receiver_id(), target);
+  }
+
+  // string text_content = 3;
+  if (!this->_internal_text_content().empty()) {
+    const std::string& _s = this->_internal_text_content();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Message.text_content");
+    target = stream->WriteStringMaybeAliased(3, _s, target);
+  }
+
+  // bytes byte_content = 4;
+  if (!this->_internal_byte_content().empty()) {
+    const std::string& _s = this->_internal_byte_content();
+    target = stream->WriteBytesMaybeAliased(4, _s, target);
+  }
+
+  // string created_at = 5;
+  if (!this->_internal_created_at().empty()) {
+    const std::string& _s = this->_internal_created_at();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Message.created_at");
+    target = stream->WriteStringMaybeAliased(5, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -220,10 +334,35 @@ PROTOBUF_NOINLINE void Message::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
+  ::_pbi::Prefetch5LinesFrom7Lines(reinterpret_cast<const void*>(this));
+  // string text_content = 3;
+  if (!this->_internal_text_content().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_text_content());
+  }
+
+  // bytes byte_content = 4;
+  if (!this->_internal_byte_content().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
+                                    this->_internal_byte_content());
+  }
+
+  // string created_at = 5;
+  if (!this->_internal_created_at().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_created_at());
+  }
+
+  // int32 sender_id = 1;
+  if (this->_internal_sender_id() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_id());
+        this->_internal_sender_id());
+  }
+
+  // int32 receiver_id = 2;
+  if (this->_internal_receiver_id() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+        this->_internal_receiver_id());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -238,8 +377,20 @@ void Message::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google:
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_id() != 0) {
-    _this->_impl_.id_ = from._impl_.id_;
+  if (!from._internal_text_content().empty()) {
+    _this->_internal_set_text_content(from._internal_text_content());
+  }
+  if (!from._internal_byte_content().empty()) {
+    _this->_internal_set_byte_content(from._internal_byte_content());
+  }
+  if (!from._internal_created_at().empty()) {
+    _this->_internal_set_created_at(from._internal_created_at());
+  }
+  if (from._internal_sender_id() != 0) {
+    _this->_impl_.sender_id_ = from._impl_.sender_id_;
+  }
+  if (from._internal_receiver_id() != 0) {
+    _this->_impl_.receiver_id_ = from._impl_.receiver_id_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -254,8 +405,18 @@ void Message::CopyFrom(const Message& from) {
 
 void Message::InternalSwap(Message* PROTOBUF_RESTRICT other) {
   using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(_impl_.id_, other->_impl_.id_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.text_content_, &other->_impl_.text_content_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.byte_content_, &other->_impl_.byte_content_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.created_at_, &other->_impl_.created_at_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Message, _impl_.receiver_id_)
+      + sizeof(Message::_impl_.receiver_id_)
+      - PROTOBUF_FIELD_OFFSET(Message, _impl_.sender_id_)>(
+          reinterpret_cast<char*>(&_impl_.sender_id_),
+          reinterpret_cast<char*>(&other->_impl_.sender_id_));
 }
 
 ::google::protobuf::Metadata Message::GetMetadata() const {
