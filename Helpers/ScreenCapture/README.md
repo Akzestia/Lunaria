@@ -1,0 +1,1 @@
+## Screen capture implementation for X11
