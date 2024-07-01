@@ -37,11 +37,11 @@ void DbManager::test() {
 }
 
 #pragma region GET
-bool DbManager::getMessages(const User& u, std::vector<uint8_t>* output){
-    try{
+bool DbManager::getMessages(const User &u, std::vector<uint8_t> *output) {
+    try {
         const std::string connection_str = DbManager::getConnectionString();
 
-        const char* buffer = "test";
+        const char *buffer = "test";
         memcpy(&output, buffer, 4);
         pqxx::connection connection(connection_str);
 
@@ -55,7 +55,7 @@ bool DbManager::getMessages(const User& u, std::vector<uint8_t>* output){
 
         pqxx::nontransaction nontransaction(connection);
 
-        //Todo
+        // Todo
         pqxx::result result = nontransaction.exec("SELECT * FROM messages;");
 
         pqxx::result::const_iterator row_it = result.begin();
@@ -70,17 +70,15 @@ bool DbManager::getMessages(const User& u, std::vector<uint8_t>* output){
 
         connection.close();
         return true;
-    }
-    catch (const std::exception &e) {
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
     }
 }
 
-
-bool DbManager::getContacts(const User& u, std::vector<uint8_t>* output){
-       try{
-         const std::string connection_str = DbManager::getConnectionString();
+bool DbManager::getContacts(const User &u, std::vector<uint8_t> *output) {
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
 
         pqxx::connection connection(connection_str);
 
@@ -94,7 +92,7 @@ bool DbManager::getContacts(const User& u, std::vector<uint8_t>* output){
 
         pqxx::nontransaction nontransaction(connection);
 
-        //Todo
+        // Todo
         pqxx::result result = nontransaction.exec("SELECT * FROM contacts;");
 
         pqxx::result::const_iterator row_it = result.begin();
@@ -109,17 +107,15 @@ bool DbManager::getContacts(const User& u, std::vector<uint8_t>* output){
 
         connection.close();
         return true;
-    }
-    catch (const std::exception &e) {
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
     }
 }
 
-
-bool DbManager::getGraphs(const User& u, std::vector<uint8_t>* output){
-        try{
-         const std::string connection_str = DbManager::getConnectionString();
+bool DbManager::getGraphs(const User &u, std::vector<uint8_t> *output) {
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
 
         pqxx::connection connection(connection_str);
 
@@ -133,7 +129,7 @@ bool DbManager::getGraphs(const User& u, std::vector<uint8_t>* output){
 
         pqxx::nontransaction nontransaction(connection);
 
-        //Todo
+        // Todo
         pqxx::result result = nontransaction.exec("SELECT * FROM graphs;");
 
         pqxx::result::const_iterator row_it = result.begin();
@@ -148,58 +144,72 @@ bool DbManager::getGraphs(const User& u, std::vector<uint8_t>* output){
 
         connection.close();
         return true;
-    }
-    catch (const std::exception &e) {
+    } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
     }
 }
 #pragma endregion
 
-
 #pragma region POST
-bool DbManager::addUser (const User& user){
+bool DbManager::addUser(const User &user) {
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
+
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: "
+                      << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return false;
+        }
+
+        pqxx::work txn(connection);
+
+        std::string query =
+            "INSERT INTO Users (user_display_name, user_name, user_email, "
+            "user_avatar, user_password, online_status) VALUES (" +
+            txn.quote(user.user_display_name()) + ", " +
+            txn.quote(user.user_name()) + ", " + txn.quote(user.user_email()) +
+            ", " + txn.quote(user.user_avatar()) + ", " +
+            txn.quote(user.user_password()) + ", " +
+            txn.quote(user.online_status()) + ");";
+
+        txn.exec(query);
+
+        txn.commit();
+
+        std::cout << "\nUser added successfully." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
     return true;
 }
 
-bool DbManager::addMessage(const Message& message){
-    return true;
-}
+bool DbManager::addMessage(const Message &message) { return true; }
 
-bool DbManager::addContact (const Contact&  contact){
-    return true;
-}
+bool DbManager::addContact(const Contact &contact) { return true; }
 #pragma endregion
 
-
 #pragma region PUT
-bool DbManager::updateUser (const User& user){
-    return true;
-}
+bool DbManager::updateUser(const User &user) { return true; }
 
-bool DbManager::updateMessage(const Message& message){
-    return true;
-}
+bool DbManager::updateMessage(const Message &message) { return true; }
 
-bool DbManager::updateContact (const Contact& contact){
-    return true;
-}
+bool DbManager::updateContact(const Contact &contact) { return true; }
 #pragma endregion
 
 #pragma region DELETE
-bool DbManager::deleteUser (const User& user){
-    return true;
-}
+bool DbManager::deleteUser(const User &user) { return true; }
 
-bool DbManager::deleteMessage(const Message& message){
-    return true;
-}
+bool DbManager::deleteMessage(const Message &message) { return true; }
 
-bool DbManager::deleteContact (const Contact& contact){
-    return true;
-}
+bool DbManager::deleteContact(const Contact &contact) { return true; }
 #pragma endregion
-
 
 std::string DbManager::getConnectionString() {
     boost::property_tree::ptree pt;
@@ -216,10 +226,9 @@ std::string DbManager::getConnectionString() {
                                         " password=" + db_password;
         return connection_string;
     } catch (const boost::property_tree::ptree_error &e) {
-        throw std::runtime_error("One or more configuration variables are not set.");
+        throw std::runtime_error(
+            "One or more configuration variables are not set.");
     }
 }
 
-DbManager::~DbManager(){
-
-}
+DbManager::~DbManager() {}

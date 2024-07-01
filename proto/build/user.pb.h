@@ -187,67 +187,101 @@ class User final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kNameFieldNumber = 1,
-    kEmailFieldNumber = 2,
-    kAvatarFieldNumber = 3,
-    kOnlineFieldNumber = 4,
+    kUserDisplayNameFieldNumber = 1,
+    kUserNameFieldNumber = 2,
+    kUserEmailFieldNumber = 3,
+    kUserPasswordFieldNumber = 4,
+    kUserAvatarFieldNumber = 5,
+    kOnlineStatusFieldNumber = 6,
   };
-  // string name = 1;
-  void clear_name() ;
-  const std::string& name() const;
+  // string user_display_name = 1;
+  void clear_user_display_name() ;
+  const std::string& user_display_name() const;
   template <typename Arg_ = const std::string&, typename... Args_>
-  void set_name(Arg_&& arg, Args_... args);
-  std::string* mutable_name();
-  PROTOBUF_NODISCARD std::string* release_name();
-  void set_allocated_name(std::string* value);
+  void set_user_display_name(Arg_&& arg, Args_... args);
+  std::string* mutable_user_display_name();
+  PROTOBUF_NODISCARD std::string* release_user_display_name();
+  void set_allocated_user_display_name(std::string* value);
 
   private:
-  const std::string& _internal_name() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(
+  const std::string& _internal_user_display_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_display_name(
       const std::string& value);
-  std::string* _internal_mutable_name();
+  std::string* _internal_mutable_user_display_name();
 
   public:
-  // string email = 2;
-  void clear_email() ;
-  const std::string& email() const;
+  // string user_name = 2;
+  void clear_user_name() ;
+  const std::string& user_name() const;
   template <typename Arg_ = const std::string&, typename... Args_>
-  void set_email(Arg_&& arg, Args_... args);
-  std::string* mutable_email();
-  PROTOBUF_NODISCARD std::string* release_email();
-  void set_allocated_email(std::string* value);
+  void set_user_name(Arg_&& arg, Args_... args);
+  std::string* mutable_user_name();
+  PROTOBUF_NODISCARD std::string* release_user_name();
+  void set_allocated_user_name(std::string* value);
 
   private:
-  const std::string& _internal_email() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_email(
+  const std::string& _internal_user_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_name(
       const std::string& value);
-  std::string* _internal_mutable_email();
+  std::string* _internal_mutable_user_name();
 
   public:
-  // bytes avatar = 3;
-  void clear_avatar() ;
-  const std::string& avatar() const;
+  // string user_email = 3;
+  void clear_user_email() ;
+  const std::string& user_email() const;
   template <typename Arg_ = const std::string&, typename... Args_>
-  void set_avatar(Arg_&& arg, Args_... args);
-  std::string* mutable_avatar();
-  PROTOBUF_NODISCARD std::string* release_avatar();
-  void set_allocated_avatar(std::string* value);
+  void set_user_email(Arg_&& arg, Args_... args);
+  std::string* mutable_user_email();
+  PROTOBUF_NODISCARD std::string* release_user_email();
+  void set_allocated_user_email(std::string* value);
 
   private:
-  const std::string& _internal_avatar() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_avatar(
+  const std::string& _internal_user_email() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_email(
       const std::string& value);
-  std::string* _internal_mutable_avatar();
+  std::string* _internal_mutable_user_email();
 
   public:
-  // bool online = 4;
-  void clear_online() ;
-  bool online() const;
-  void set_online(bool value);
+  // string user_password = 4;
+  void clear_user_password() ;
+  const std::string& user_password() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_user_password(Arg_&& arg, Args_... args);
+  std::string* mutable_user_password();
+  PROTOBUF_NODISCARD std::string* release_user_password();
+  void set_allocated_user_password(std::string* value);
 
   private:
-  bool _internal_online() const;
-  void _internal_set_online(bool value);
+  const std::string& _internal_user_password() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_password(
+      const std::string& value);
+  std::string* _internal_mutable_user_password();
+
+  public:
+  // bytes user_avatar = 5;
+  void clear_user_avatar() ;
+  const std::string& user_avatar() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_user_avatar(Arg_&& arg, Args_... args);
+  std::string* mutable_user_avatar();
+  PROTOBUF_NODISCARD std::string* release_user_avatar();
+  void set_allocated_user_avatar(std::string* value);
+
+  private:
+  const std::string& _internal_user_avatar() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_avatar(
+      const std::string& value);
+  std::string* _internal_mutable_user_avatar();
+
+  public:
+  // bool online_status = 6;
+  void clear_online_status() ;
+  bool online_status() const;
+  void set_online_status(bool value);
+
+  private:
+  bool _internal_online_status() const;
+  void _internal_set_online_status(bool value);
 
   public:
   // @@protoc_insertion_point(class_scope:User)
@@ -255,8 +289,8 @@ class User final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      2, 4, 0,
-      22, 2>
+      3, 6, 0,
+      62, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -276,10 +310,12 @@ class User final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const User& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr name_;
-    ::google::protobuf::internal::ArenaStringPtr email_;
-    ::google::protobuf::internal::ArenaStringPtr avatar_;
-    bool online_;
+    ::google::protobuf::internal::ArenaStringPtr user_display_name_;
+    ::google::protobuf::internal::ArenaStringPtr user_name_;
+    ::google::protobuf::internal::ArenaStringPtr user_email_;
+    ::google::protobuf::internal::ArenaStringPtr user_password_;
+    ::google::protobuf::internal::ArenaStringPtr user_avatar_;
+    bool online_status_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -303,176 +339,276 @@ class User final : public ::google::protobuf::Message
 
 // User
 
-// string name = 1;
-inline void User::clear_name() {
+// string user_display_name = 1;
+inline void User::clear_user_display_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.name_.ClearToEmpty();
+  _impl_.user_display_name_.ClearToEmpty();
 }
-inline const std::string& User::name() const
+inline const std::string& User::user_display_name() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:User.name)
-  return _internal_name();
+  // @@protoc_insertion_point(field_get:User.user_display_name)
+  return _internal_user_display_name();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void User::set_name(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void User::set_user_display_name(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:User.name)
+  _impl_.user_display_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:User.user_display_name)
 }
-inline std::string* User::mutable_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_name();
-  // @@protoc_insertion_point(field_mutable:User.name)
+inline std::string* User::mutable_user_display_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_display_name();
+  // @@protoc_insertion_point(field_mutable:User.user_display_name)
   return _s;
 }
-inline const std::string& User::_internal_name() const {
+inline const std::string& User::_internal_user_display_name() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.name_.Get();
+  return _impl_.user_display_name_.Get();
 }
-inline void User::_internal_set_name(const std::string& value) {
+inline void User::_internal_set_user_display_name(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.name_.Set(value, GetArena());
+  _impl_.user_display_name_.Set(value, GetArena());
 }
-inline std::string* User::_internal_mutable_name() {
+inline std::string* User::_internal_mutable_user_display_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.name_.Mutable( GetArena());
+  return _impl_.user_display_name_.Mutable( GetArena());
 }
-inline std::string* User::release_name() {
+inline std::string* User::release_user_display_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:User.name)
-  return _impl_.name_.Release();
+  // @@protoc_insertion_point(field_release:User.user_display_name)
+  return _impl_.user_display_name_.Release();
 }
-inline void User::set_allocated_name(std::string* value) {
+inline void User::set_allocated_user_display_name(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.name_.SetAllocated(value, GetArena());
+  _impl_.user_display_name_.SetAllocated(value, GetArena());
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.name_.IsDefault()) {
-          _impl_.name_.Set("", GetArena());
+        if (_impl_.user_display_name_.IsDefault()) {
+          _impl_.user_display_name_.Set("", GetArena());
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:User.name)
+  // @@protoc_insertion_point(field_set_allocated:User.user_display_name)
 }
 
-// string email = 2;
-inline void User::clear_email() {
+// string user_name = 2;
+inline void User::clear_user_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.email_.ClearToEmpty();
+  _impl_.user_name_.ClearToEmpty();
 }
-inline const std::string& User::email() const
+inline const std::string& User::user_name() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:User.email)
-  return _internal_email();
+  // @@protoc_insertion_point(field_get:User.user_name)
+  return _internal_user_name();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void User::set_email(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void User::set_user_name(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.email_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:User.email)
+  _impl_.user_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:User.user_name)
 }
-inline std::string* User::mutable_email() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_email();
-  // @@protoc_insertion_point(field_mutable:User.email)
+inline std::string* User::mutable_user_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_name();
+  // @@protoc_insertion_point(field_mutable:User.user_name)
   return _s;
 }
-inline const std::string& User::_internal_email() const {
+inline const std::string& User::_internal_user_name() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.email_.Get();
+  return _impl_.user_name_.Get();
 }
-inline void User::_internal_set_email(const std::string& value) {
+inline void User::_internal_set_user_name(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.email_.Set(value, GetArena());
+  _impl_.user_name_.Set(value, GetArena());
 }
-inline std::string* User::_internal_mutable_email() {
+inline std::string* User::_internal_mutable_user_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.email_.Mutable( GetArena());
+  return _impl_.user_name_.Mutable( GetArena());
 }
-inline std::string* User::release_email() {
+inline std::string* User::release_user_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:User.email)
-  return _impl_.email_.Release();
+  // @@protoc_insertion_point(field_release:User.user_name)
+  return _impl_.user_name_.Release();
 }
-inline void User::set_allocated_email(std::string* value) {
+inline void User::set_allocated_user_name(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.email_.SetAllocated(value, GetArena());
+  _impl_.user_name_.SetAllocated(value, GetArena());
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.email_.IsDefault()) {
-          _impl_.email_.Set("", GetArena());
+        if (_impl_.user_name_.IsDefault()) {
+          _impl_.user_name_.Set("", GetArena());
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:User.email)
+  // @@protoc_insertion_point(field_set_allocated:User.user_name)
 }
 
-// bytes avatar = 3;
-inline void User::clear_avatar() {
+// string user_email = 3;
+inline void User::clear_user_email() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.avatar_.ClearToEmpty();
+  _impl_.user_email_.ClearToEmpty();
 }
-inline const std::string& User::avatar() const
+inline const std::string& User::user_email() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:User.avatar)
-  return _internal_avatar();
+  // @@protoc_insertion_point(field_get:User.user_email)
+  return _internal_user_email();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void User::set_avatar(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void User::set_user_email(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.avatar_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:User.avatar)
+  _impl_.user_email_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:User.user_email)
 }
-inline std::string* User::mutable_avatar() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_avatar();
-  // @@protoc_insertion_point(field_mutable:User.avatar)
+inline std::string* User::mutable_user_email() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_email();
+  // @@protoc_insertion_point(field_mutable:User.user_email)
   return _s;
 }
-inline const std::string& User::_internal_avatar() const {
+inline const std::string& User::_internal_user_email() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.avatar_.Get();
+  return _impl_.user_email_.Get();
 }
-inline void User::_internal_set_avatar(const std::string& value) {
+inline void User::_internal_set_user_email(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.avatar_.Set(value, GetArena());
+  _impl_.user_email_.Set(value, GetArena());
 }
-inline std::string* User::_internal_mutable_avatar() {
+inline std::string* User::_internal_mutable_user_email() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.avatar_.Mutable( GetArena());
+  return _impl_.user_email_.Mutable( GetArena());
 }
-inline std::string* User::release_avatar() {
+inline std::string* User::release_user_email() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:User.avatar)
-  return _impl_.avatar_.Release();
+  // @@protoc_insertion_point(field_release:User.user_email)
+  return _impl_.user_email_.Release();
 }
-inline void User::set_allocated_avatar(std::string* value) {
+inline void User::set_allocated_user_email(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.avatar_.SetAllocated(value, GetArena());
+  _impl_.user_email_.SetAllocated(value, GetArena());
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.avatar_.IsDefault()) {
-          _impl_.avatar_.Set("", GetArena());
+        if (_impl_.user_email_.IsDefault()) {
+          _impl_.user_email_.Set("", GetArena());
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:User.avatar)
+  // @@protoc_insertion_point(field_set_allocated:User.user_email)
 }
 
-// bool online = 4;
-inline void User::clear_online() {
+// string user_password = 4;
+inline void User::clear_user_password() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.online_ = false;
+  _impl_.user_password_.ClearToEmpty();
 }
-inline bool User::online() const {
-  // @@protoc_insertion_point(field_get:User.online)
-  return _internal_online();
+inline const std::string& User::user_password() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:User.user_password)
+  return _internal_user_password();
 }
-inline void User::set_online(bool value) {
-  _internal_set_online(value);
-  // @@protoc_insertion_point(field_set:User.online)
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void User::set_user_password(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:User.user_password)
 }
-inline bool User::_internal_online() const {
+inline std::string* User::mutable_user_password() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_password();
+  // @@protoc_insertion_point(field_mutable:User.user_password)
+  return _s;
+}
+inline const std::string& User::_internal_user_password() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.online_;
+  return _impl_.user_password_.Get();
 }
-inline void User::_internal_set_online(bool value) {
+inline void User::_internal_set_user_password(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.online_ = value;
+  _impl_.user_password_.Set(value, GetArena());
+}
+inline std::string* User::_internal_mutable_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.user_password_.Mutable( GetArena());
+}
+inline std::string* User::release_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:User.user_password)
+  return _impl_.user_password_.Release();
+}
+inline void User::set_allocated_user_password(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.user_password_.IsDefault()) {
+          _impl_.user_password_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:User.user_password)
+}
+
+// bytes user_avatar = 5;
+inline void User::clear_user_avatar() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_avatar_.ClearToEmpty();
+}
+inline const std::string& User::user_avatar() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:User.user_avatar)
+  return _internal_user_avatar();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void User::set_user_avatar(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_avatar_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:User.user_avatar)
+}
+inline std::string* User::mutable_user_avatar() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_avatar();
+  // @@protoc_insertion_point(field_mutable:User.user_avatar)
+  return _s;
+}
+inline const std::string& User::_internal_user_avatar() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.user_avatar_.Get();
+}
+inline void User::_internal_set_user_avatar(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_avatar_.Set(value, GetArena());
+}
+inline std::string* User::_internal_mutable_user_avatar() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.user_avatar_.Mutable( GetArena());
+}
+inline std::string* User::release_user_avatar() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:User.user_avatar)
+  return _impl_.user_avatar_.Release();
+}
+inline void User::set_allocated_user_avatar(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_avatar_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.user_avatar_.IsDefault()) {
+          _impl_.user_avatar_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:User.user_avatar)
+}
+
+// bool online_status = 6;
+inline void User::clear_online_status() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.online_status_ = false;
+}
+inline bool User::online_status() const {
+  // @@protoc_insertion_point(field_get:User.online_status)
+  return _internal_online_status();
+}
+inline void User::set_online_status(bool value) {
+  _internal_set_online_status(value);
+  // @@protoc_insertion_point(field_set:User.online_status)
+}
+inline bool User::_internal_online_status() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.online_status_;
+}
+inline void User::_internal_set_online_status(bool value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.online_status_ = value;
 }
 
 #ifdef __GNUC__

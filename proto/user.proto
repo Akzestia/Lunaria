@@ -1,8 +1,10 @@
 syntax = "proto3";
 
 message User {
-    string name = 1;
-    string email = 2;
-    bytes avatar = 3;
-    bool online = 4;
+    string user_display_name = 1;
+    string user_name = 2;
+    string user_email = 3;
+    string user_password = 4; 
+    bytes user_avatar = 5;
+    bool online_status = 6;
 }
