@@ -7,7 +7,8 @@
 ## About
 
 This project is an open-source chat application, which is build around QUIC protocol.
-
+<br/>
+<br/>
 ## Technologies Used
 This project uses the following technologies:
 
@@ -31,6 +32,7 @@ This project uses the following technologies:
   - [g++](https://gcc.gnu.org/) - Compiling source files
   - [CMake](https://cmake.org/) - Build system generator
   - [Git](https://git-scm.com/) - Version control system
+<br/>
 
 ## GUI
 
