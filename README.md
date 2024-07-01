@@ -8,6 +8,29 @@
 
 This project is an open-source chat application, which is build around QUIC protocol.
 
+## Technologies Used
+This project uses the following technologies:
+
+- **Programming Languages**
+  - [C++](https://en.cppreference.com/w/cpp)
+  - [C](https://en.cppreference.com/w/c)
+  - [Python](https://www.python.org/)
+  - [Shell](https://www.gnu.org/software/bash/)
+
+- **Libraries/Frameworks**
+  - [Qt](https://www.qt.io/) - C++ GUI Framework
+  - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ Library
+  - [Protobuf](https://developers.google.com/protocol-buffers) - Protocol Buffers
+  - [OpenVPN](https://openvpn.net/) - VPN solution
+
+- **Database**
+  - [PostgreSQL](https://www.postgresql.org/)
+
+- **Tools**
+  - [g++](https://gcc.gnu.org/) - Compiling source files
+  - [CMake](https://cmake.org/) - Build system generator
+  - [Git](https://git-scm.com/) - Version control system
+
 ## GUI
 
 <img src="./GUI/Frame 1.png" alt="Example">
