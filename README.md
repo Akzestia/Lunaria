@@ -67,6 +67,8 @@ Here are some snapshots of the graphical user interface (GUI):
 
 <img src="./GUI/Frame 1.png" alt="Example">
 <br/>
+<img src="./GUI/Frame 65.png" alt="Example">
+<br/>
 <img src="./GUI/Frame 54.png" alt="Example">
 <br/>
 <img src="./GUI/Frame 55.png" alt="Example">
