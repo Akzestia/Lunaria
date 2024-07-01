@@ -6,20 +6,19 @@
 
 ## About
 
-This project is an open-source chat application, which is build around QUIC protocol.
+This project is an open-source chat application built around the QUIC protocol.
 
 <br/>
 
 ## Features
-  - Enhanced security
-  - Built on IETF QUIC protocol
-  - Self-hostable server
-  - Peer-to-peer communication within VPN networks to utilize QUIC for p2p
-  - Extensive customization options for the client using Lua scripts
-  - Includes CLI/chatbot functionality written in Lua
+- Enhanced security
+- Built on IETF QUIC protocol
+- Self-hostable server
+- Peer-to-peer communication within VPN networks to utilize QUIC for p2p
+- Extensive customization options for the client using Lua scripts
+- Includes CLI/chatbot functionality written in Lua
 
 <br/>
-
 
 ## Technologies Used
 This project uses the following technologies:
@@ -45,6 +44,22 @@ This project uses the following technologies:
   - [g++](https://gcc.gnu.org/) - Compiling source files
   - [CMake](https://cmake.org/) - Build system generator
   - [Git](https://git-scm.com/) - Version control system
+
+<br/>
+
+## Supported Platforms
+This application supports the following platforms:
+- Linux
+- Windows
+
+<br/>
+
+## Supported Languages
+This application supports the following languages for localization:
+- Ukrainian
+- Japanese
+- English
+
 <br/>
 
 ## GUI
