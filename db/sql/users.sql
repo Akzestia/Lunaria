@@ -9,3 +9,7 @@ CREATE TABLE
         online_status INT NOT NULL DEFAULT 0,
         joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
+
+CREATE INDEX idx_users_user_name ON Users(user_name);
+CREATE INDEX idx_users_user_email ON Users(user_email);
+CREATE INDEX idx_users_online_status ON Users(online_status);

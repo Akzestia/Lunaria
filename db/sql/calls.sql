@@ -11,3 +11,7 @@ CREATE TABLE
 
         made_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
+
+CREATE INDEX idx_calls_sender_id ON Calls(_sender_id);
+CREATE INDEX idx_calls_receiver_id ON Calls(_receiver_id);
+CREATE INDEX idx_calls_made_at ON Calls(made_at);

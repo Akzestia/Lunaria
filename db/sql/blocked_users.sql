@@ -6,3 +6,6 @@ CREATE TABLE Blocked_users (
     FOREIGN KEY (_blocker_id) REFERENCES Users (id),
     blocked_from TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
+
+CREATE INDEX idx_blocked_users_blocked_id ON Blocked_users(_blocked_id);
+CREATE INDEX idx_blocked_users_blocker_id ON Blocked_users(_blocker_id);
