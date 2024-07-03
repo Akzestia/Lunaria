@@ -1,4 +1,9 @@
--- Customization settings for the chat application
+## Lua customization scripts
+
+
+
+```
+    -- Customization settings for the chat application
 
 local customization = {
     -- Font settings
@@ -52,3 +57,5 @@ local customization = {
 }
 
 return customization
+
+```
