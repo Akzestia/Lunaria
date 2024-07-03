@@ -3,7 +3,7 @@
 
 
 ```
-    -- Customization settings for the chat application
+-- Customization settings for the chat application
 
 local customization = {
     -- Font settings
@@ -13,7 +13,7 @@ local customization = {
             secondary = "#666666",  -- Secondary font color
             link = "#1E90FF",  -- Link color
             highlight = "#FFD700"  -- Highlighted text color
-        },
+        
         size = {
             small = 12,  -- Small font size
             medium = 14,  -- Medium font size
