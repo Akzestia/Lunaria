@@ -9,7 +9,7 @@ HQUIC ConnectionManager::getConenction(User user) {
     auto end = (*users).end();
 
     for (; start != end; start++)
-        if (start->second.email() == user.email())
+        if (start->second.user_email() == user.user_email())
             return start->first;
     return nullptr;
 }
