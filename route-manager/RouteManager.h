@@ -12,7 +12,7 @@ class RouteManager {
     bool proccesRoute(const Wrapper&);
     virtual ~RouteManager();
   private:
-  using Payload = std::variant<User, Message, Contact>;
+    using Payload = std::variant<User, Message, Contact>;
     using RouteFunction = std::function<bool(const Payload&)>;
     static std::unordered_map<uint8_t, RouteFunction>* routes;
 };
