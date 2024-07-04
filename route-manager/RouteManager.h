@@ -23,5 +23,6 @@ class RouteManager {
     virtual ~RouteManager();
   private:
     static bool handleAuth(const Payload&);
+    static bool handleReport(const Payload&);
     static std::unordered_map<uint8_t, RouteFunction> *routes;
 };
