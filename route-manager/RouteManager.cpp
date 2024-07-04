@@ -20,7 +20,7 @@ bool RouteManager::handleReport(const Payload &payload) {
 
 std::unordered_map<uint8_t, RouteFunction> *RouteManager::routes =
     new std::unordered_map<uint8_t, RouteFunction>(
-        {{1, RouteManager::handleAuth}});
+        {{1, RouteManager::handleAuth}, {2, RouteManager::handleReport}});
 
 RouteManager::~RouteManager() {
     if (routes)
