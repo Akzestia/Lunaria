@@ -23,8 +23,6 @@ using Payload = std::variant<User, Message, Contact, Auth, Vpn_graph, Server,
                              Report, Invite_link, Encrypt_key>;
 using RouteFunction = std::function<Lxcode(const Payload &)>;
 
-
-
 class RouteManager : protected DbManager {
   public:
   protected:

@@ -6,7 +6,7 @@ Lxcode RouteManager::handleAuth(const Payload &payload) {
     return_code.is_successful = true;
     if (std::holds_alternative<Auth>(payload)) {
         const Auth &auth = std::get<Auth>(payload);
-
+        
         return return_code;
     } else {
         return_code.error_code = 0x01;
@@ -41,7 +41,7 @@ Lxcode RouteManager::getMessages(const Payload &payload, std::set<Message> &) {
     } else {
         return_code.error_code = 0x01;
         return_code.is_successful = false;
-        return return_code;
+        return return_code; 
     }
 }
 
