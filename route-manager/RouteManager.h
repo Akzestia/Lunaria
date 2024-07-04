@@ -14,26 +14,33 @@
 #include <set>
 #include <unordered_map>
 
+typedef struct Lxcode{
+  bool is_successful;
+  uint8_t error_code;
+} Lxcode;
+
 using Payload = std::variant<User, Message, Contact, Auth, Vpn_graph, Server,
                              Report, Invite_link, Encrypt_key>;
-using RouteFunction = std::function<bool(const Payload &)>;
+using RouteFunction = std::function<Lxcode(const Payload &)>;
+
+
 
 class RouteManager : protected DbManager {
   public:
   protected:
-    static bool proccesRoute(const Wrapper &);
+    static Lxcode proccesRoute(const Wrapper &);
     virtual ~RouteManager();
 
   private:
-    static bool handleAuth(const Payload &);
-    static bool handleReport(const Payload &);
+    static Lxcode handleAuth(const Payload &);
+    static Lxcode handleReport(const Payload &);
 
-    static bool getMessages(const Payload &, std::set<Message> &);
-    static bool getContacts(const Payload &, std::set<User> &);
-    static bool getServers(const Payload &, std::set<Server> &);
+    static Lxcode getMessages(const Payload &, std::set<Message> &);
+    static Lxcode getContacts(const Payload &, std::set<User> &);
+    static Lxcode getServers(const Payload &, std::set<Server> &);
 
-    static bool updateUser(const Payload &);
-    static bool updateServer(const Payload &);
+    static Lxcode updateUser(const Payload &);
+    static Lxcode updateServer(const Payload &);
 
     static std::unordered_map<uint8_t, RouteFunction> *routes;
 };

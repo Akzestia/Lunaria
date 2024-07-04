@@ -1,21 +1,50 @@
 #include "RouteManager.h"
 
-bool RouteManager::handleAuth(const Payload &payload) {
+Lxcode RouteManager::handleAuth(const Payload &payload) {
+    Lxcode return_code;
     if (std::holds_alternative<Auth>(payload)) {
         const Auth &auth = std::get<Auth>(payload);
 
-        return true;
+        return_code.error_code = 0x00;
+        return_code.is_successful = true;
+        return return_code;
     }
-    return false;
+    else {
+        return_code.error_code = 0x01;
+        return_code.is_successful = false;
+        return return_code;
+    }
 }
 
-bool RouteManager::handleReport(const Payload &payload) {
+Lxcode RouteManager::handleReport(const Payload &payload) {
+    Lxcode return_code;
     if (std::holds_alternative<Report>(payload)) {
         const Report &report = std::get<Report>(payload);
 
-        return true;
+        return_code.error_code = 0x00;
+        return_code.is_successful = true;
+        return return_code;
     }
-    return true;
+    else {
+        return_code.error_code = 0x01;
+        return_code.is_successful = false;
+        return return_code;
+    }
+}
+
+Lxcode RouteManager::getMessages(const Payload &payload, std::set<Message> &) {
+    Lxcode return_code;
+    if (std::holds_alternative<User>(payload)) {
+        const User &user = std::get<User>(payload);
+
+        return_code.error_code = 0x00;
+        return_code.is_successful = true;
+        return return_code;
+    } else {
+        return_code.error_code = 0x01;
+        return_code.is_successful = false;
+        return return_code;
+    }
 }
 
 std::unordered_map<uint8_t, RouteFunction> *RouteManager::routes =
