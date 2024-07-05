@@ -28,6 +28,8 @@ if ! g++ -g ./server/server.cpp -o./build/server \
     ./proto/build/report.pb.cc \
     ./proto/build/server.pb.cc \
     ./proto/build/vpn_graph.pb.cc \
+    ./proto/build/sign_in.pb.cc \
+    ./proto/build/sign_up.pb.cc \
     ./proto/build/wrapper.pb.cc \
     ./Helpers/ConnectionManager/ConnectionManager.cpp \
     ./Helpers/Encryption/EncryptionManager.cpp \
