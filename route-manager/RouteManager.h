@@ -31,6 +31,7 @@ class RouteManager : protected DbManager {
   private:
     static Lxcode handleAuth(const Payload &);
     static Lxcode handleReport(const Payload &);
+    static Lxcode handleSignUp(const Payload &);
 
     static Lxcode getMessages(const Payload &, std::set<Message> &);
     static Lxcode getContacts(const Payload &, std::set<User> &);
