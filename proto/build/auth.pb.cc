@@ -27,7 +27,9 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 inline constexpr Auth::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
       : id_{0},
-        _cached_size_{0} {}
+        payload_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR Auth::Auth(::_pbi::ConstantInitialized)
@@ -52,12 +54,15 @@ const ::uint32_t
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::Auth, _internal_metadata_),
         ~0u,  // no _extensions_
-        ~0u,  // no _oneof_case_
+        PROTOBUF_FIELD_OFFSET(::Auth, _impl_._oneof_case_[0]),
         ~0u,  // no _weak_field_map_
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::Auth, _impl_.id_),
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        PROTOBUF_FIELD_OFFSET(::Auth, _impl_.payload_),
 };
 
 static const ::_pbi::MigrationSchema
@@ -69,18 +74,26 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_auth_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\nauth.proto\"\022\n\004Auth\022\n\n\002id\030\001 \001(\005b\006proto3"
+    "\n\nauth.proto\032\rsign_up.proto\032\rsign_in.pro"
+    "to\"W\n\004Auth\022\n\n\002id\030\001 \001(\005\022\033\n\007sign_up\030\002 \001(\0132"
+    "\010.Sign_upH\000\022\033\n\007sign_in\030\003 \001(\0132\010.Sign_inH\000"
+    "B\t\n\007payloadb\006proto3"
+};
+static const ::_pbi::DescriptorTable* const descriptor_table_auth_2eproto_deps[2] =
+    {
+        &::descriptor_table_sign_5fin_2eproto,
+        &::descriptor_table_sign_5fup_2eproto,
 };
 static ::absl::once_flag descriptor_table_auth_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_auth_2eproto = {
     false,
     false,
-    40,
+    139,
     descriptor_table_protodef_auth_2eproto,
     "auth.proto",
     &descriptor_table_auth_2eproto_once,
-    nullptr,
-    0,
+    descriptor_table_auth_2eproto_deps,
+    2,
     1,
     schemas,
     file_default_instances,
@@ -92,22 +105,99 @@ PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_auth_2eproto =
 
 class Auth::_Internal {
  public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::Auth, _impl_._oneof_case_);
 };
 
+void Auth::set_allocated_sign_up(::Sign_up* sign_up) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (sign_up) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(sign_up)->GetArena();
+    if (message_arena != submessage_arena) {
+      sign_up = ::google::protobuf::internal::GetOwnedMessage(message_arena, sign_up, submessage_arena);
+    }
+    set_has_sign_up();
+    _impl_.payload_.sign_up_ = sign_up;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Auth.sign_up)
+}
+void Auth::clear_sign_up() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kSignUp) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.sign_up_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sign_up_);
+    }
+    clear_has_payload();
+  }
+}
+void Auth::set_allocated_sign_in(::Sign_in* sign_in) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (sign_in) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(sign_in)->GetArena();
+    if (message_arena != submessage_arena) {
+      sign_in = ::google::protobuf::internal::GetOwnedMessage(message_arena, sign_in, submessage_arena);
+    }
+    set_has_sign_in();
+    _impl_.payload_.sign_in_ = sign_in;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Auth.sign_in)
+}
+void Auth::clear_sign_in() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kSignIn) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.sign_in_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sign_in_);
+    }
+    clear_has_payload();
+  }
+}
 Auth::Auth(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:Auth)
 }
+inline PROTOBUF_NDEBUG_INLINE Auth::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::Auth& from_msg)
+      : payload_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0]} {}
+
 Auth::Auth(
-    ::google::protobuf::Arena* arena, const Auth& from)
-    : Auth(arena) {
-  MergeFrom(from);
+    ::google::protobuf::Arena* arena,
+    const Auth& from)
+    : ::google::protobuf::Message(arena) {
+  Auth* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  _impl_.id_ = from._impl_.id_;
+  switch (payload_case()) {
+    case PAYLOAD_NOT_SET:
+      break;
+      case kSignUp:
+        _impl_.payload_.sign_up_ = ::google::protobuf::Message::CopyConstruct<::Sign_up>(arena, *from._impl_.payload_.sign_up_);
+        break;
+      case kSignIn:
+        _impl_.payload_.sign_in_ = ::google::protobuf::Message::CopyConstruct<::Sign_in>(arena, *from._impl_.payload_.sign_in_);
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:Auth)
 }
 inline PROTOBUF_NDEBUG_INLINE Auth::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
+      : payload_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
 
 inline void Auth::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
@@ -120,8 +210,39 @@ Auth::~Auth() {
 }
 inline void Auth::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
+  if (has_payload()) {
+    clear_payload();
+  }
   _impl_.~Impl_();
 }
+
+void Auth::clear_payload() {
+// @@protoc_insertion_point(one_of_clear_start:Auth)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (payload_case()) {
+    case kSignUp: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.sign_up_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sign_up_);
+      }
+      break;
+    }
+    case kSignIn: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.sign_in_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.sign_in_);
+      }
+      break;
+    }
+    case PAYLOAD_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = PAYLOAD_NOT_SET;
+}
+
 
 const ::google::protobuf::MessageLite::ClassData*
 Auth::GetClassData() const {
@@ -144,17 +265,17 @@ Auth::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Auth::_table_ = {
+const ::_pbi::TcParseTable<0, 3, 2, 0, 2> Auth::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    3, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967288,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
-    0,  // num_aux_entries
-    offsetof(decltype(_table_), field_names),  // no aux_entries
+    3,  // num_field_entries
+    2,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
     &_Auth_default_instance_._instance,
     nullptr,  // post_loop_handler
     ::_pbi::TcParser::GenericFallback,  // fallback
@@ -171,9 +292,16 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Auth::_table_ = {
     // int32 id = 1;
     {PROTOBUF_FIELD_OFFSET(Auth, _impl_.id_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
-  }},
-  // no aux_entries
-  {{
+    // .Sign_up sign_up = 2;
+    {PROTOBUF_FIELD_OFFSET(Auth, _impl_.payload_.sign_up_), _Internal::kOneofCaseOffset + 0, 0,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .Sign_in sign_in = 3;
+    {PROTOBUF_FIELD_OFFSET(Auth, _impl_.payload_.sign_in_), _Internal::kOneofCaseOffset + 0, 1,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::Sign_up>()},
+    {::_pbi::TcParser::GetTable<::Sign_in>()},
+  }}, {{
   }},
 };
 
@@ -185,6 +313,7 @@ PROTOBUF_NOINLINE void Auth::Clear() {
   (void) cached_has_bits;
 
   _impl_.id_ = 0;
+  clear_payload();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -202,6 +331,20 @@ PROTOBUF_NOINLINE void Auth::Clear() {
             stream, this->_internal_id(), target);
   }
 
+  switch (payload_case()) {
+    case kSignUp: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          2, *_impl_.payload_.sign_up_, _impl_.payload_.sign_up_->GetCachedSize(), target, stream);
+      break;
+    }
+    case kSignIn: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          3, *_impl_.payload_.sign_in_, _impl_.payload_.sign_in_->GetCachedSize(), target, stream);
+      break;
+    }
+    default:
+      break;
+  }
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -225,6 +368,23 @@ PROTOBUF_NOINLINE void Auth::Clear() {
         this->_internal_id());
   }
 
+  switch (payload_case()) {
+    // .Sign_up sign_up = 2;
+    case kSignUp: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.sign_up_);
+      break;
+    }
+    // .Sign_in sign_in = 3;
+    case kSignIn: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.sign_in_);
+      break;
+    }
+    case PAYLOAD_NOT_SET: {
+      break;
+    }
+  }
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -232,6 +392,7 @@ PROTOBUF_NOINLINE void Auth::Clear() {
 void Auth::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
   auto* const _this = static_cast<Auth*>(&to_msg);
   auto& from = static_cast<const Auth&>(from_msg);
+  ::google::protobuf::Arena* arena = _this->GetArena();
   // @@protoc_insertion_point(class_specific_merge_from_start:Auth)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
@@ -239,6 +400,39 @@ void Auth::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::pr
 
   if (from._internal_id() != 0) {
     _this->_impl_.id_ = from._impl_.id_;
+  }
+  if (const uint32_t oneof_from_case = from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_payload();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kSignUp: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.sign_up_ =
+              ::google::protobuf::Message::CopyConstruct<::Sign_up>(arena, *from._impl_.payload_.sign_up_);
+        } else {
+          _this->_impl_.payload_.sign_up_->MergeFrom(from._internal_sign_up());
+        }
+        break;
+      }
+      case kSignIn: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.sign_in_ =
+              ::google::protobuf::Message::CopyConstruct<::Sign_in>(arena, *from._impl_.payload_.sign_in_);
+        } else {
+          _this->_impl_.payload_.sign_in_->MergeFrom(from._internal_sign_in());
+        }
+        break;
+      }
+      case PAYLOAD_NOT_SET:
+        break;
+    }
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -255,6 +449,8 @@ void Auth::InternalSwap(Auth* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
         swap(_impl_.id_, other->_impl_.id_);
+  swap(_impl_.payload_, other->_impl_.payload_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }
 
 ::google::protobuf::Metadata Auth::GetMetadata() const {

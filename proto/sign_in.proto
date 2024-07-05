@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message Sign_in {
+    int32 id = 1;
+}

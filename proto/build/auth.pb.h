@@ -28,6 +28,8 @@
 #include "google/protobuf/repeated_field.h"  // IWYU pragma: export
 #include "google/protobuf/extension_set.h"  // IWYU pragma: export
 #include "google/protobuf/unknown_field_set.h"
+#include "sign_up.pb.h"
+#include "sign_in.pb.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
@@ -114,6 +116,11 @@ class Auth final : public ::google::protobuf::Message
   static const Auth& default_instance() {
     return *internal_default_instance();
   }
+  enum PayloadCase {
+    kSignUp = 2,
+    kSignIn = 3,
+    PAYLOAD_NOT_SET = 0,
+  };
   static inline const Auth* internal_default_instance() {
     return reinterpret_cast<const Auth*>(
         &_Auth_default_instance_);
@@ -188,6 +195,8 @@ class Auth final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kIdFieldNumber = 1,
+    kSignUpFieldNumber = 2,
+    kSignInFieldNumber = 3,
   };
   // int32 id = 1;
   void clear_id() ;
@@ -199,12 +208,56 @@ class Auth final : public ::google::protobuf::Message
   void _internal_set_id(::int32_t value);
 
   public:
+  // .Sign_up sign_up = 2;
+  bool has_sign_up() const;
+  private:
+  bool _internal_has_sign_up() const;
+
+  public:
+  void clear_sign_up() ;
+  const ::Sign_up& sign_up() const;
+  PROTOBUF_NODISCARD ::Sign_up* release_sign_up();
+  ::Sign_up* mutable_sign_up();
+  void set_allocated_sign_up(::Sign_up* value);
+  void unsafe_arena_set_allocated_sign_up(::Sign_up* value);
+  ::Sign_up* unsafe_arena_release_sign_up();
+
+  private:
+  const ::Sign_up& _internal_sign_up() const;
+  ::Sign_up* _internal_mutable_sign_up();
+
+  public:
+  // .Sign_in sign_in = 3;
+  bool has_sign_in() const;
+  private:
+  bool _internal_has_sign_in() const;
+
+  public:
+  void clear_sign_in() ;
+  const ::Sign_in& sign_in() const;
+  PROTOBUF_NODISCARD ::Sign_in* release_sign_in();
+  ::Sign_in* mutable_sign_in();
+  void set_allocated_sign_in(::Sign_in* value);
+  void unsafe_arena_set_allocated_sign_in(::Sign_in* value);
+  ::Sign_in* unsafe_arena_release_sign_in();
+
+  private:
+  const ::Sign_in& _internal_sign_in() const;
+  ::Sign_in* _internal_mutable_sign_in();
+
+  public:
+  void clear_payload();
+  PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:Auth)
  private:
   class _Internal;
+  void set_has_sign_up();
+  void set_has_sign_in();
+  inline bool has_payload() const;
+  inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
+      0, 3, 2,
       0, 2>
       _table_;
 
@@ -226,7 +279,14 @@ class Auth final : public ::google::protobuf::Message
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Auth& from_msg);
     ::int32_t id_;
+    union PayloadUnion {
+      constexpr PayloadUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::Sign_up* sign_up_;
+      ::Sign_in* sign_in_;
+    } payload_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -271,6 +331,151 @@ inline void Auth::_internal_set_id(::int32_t value) {
   _impl_.id_ = value;
 }
 
+// .Sign_up sign_up = 2;
+inline bool Auth::has_sign_up() const {
+  return payload_case() == kSignUp;
+}
+inline bool Auth::_internal_has_sign_up() const {
+  return payload_case() == kSignUp;
+}
+inline void Auth::set_has_sign_up() {
+  _impl_._oneof_case_[0] = kSignUp;
+}
+inline ::Sign_up* Auth::release_sign_up() {
+  // @@protoc_insertion_point(field_release:Auth.sign_up)
+  if (payload_case() == kSignUp) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.sign_up_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.sign_up_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Sign_up& Auth::_internal_sign_up() const {
+  return payload_case() == kSignUp ? *_impl_.payload_.sign_up_ : reinterpret_cast<::Sign_up&>(::_Sign_up_default_instance_);
+}
+inline const ::Sign_up& Auth::sign_up() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Auth.sign_up)
+  return _internal_sign_up();
+}
+inline ::Sign_up* Auth::unsafe_arena_release_sign_up() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Auth.sign_up)
+  if (payload_case() == kSignUp) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.sign_up_;
+    _impl_.payload_.sign_up_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Auth::unsafe_arena_set_allocated_sign_up(::Sign_up* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_sign_up();
+    _impl_.payload_.sign_up_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Auth.sign_up)
+}
+inline ::Sign_up* Auth::_internal_mutable_sign_up() {
+  if (payload_case() != kSignUp) {
+    clear_payload();
+    set_has_sign_up();
+    _impl_.payload_.sign_up_ =
+        ::google::protobuf::Message::DefaultConstruct<::Sign_up>(GetArena());
+  }
+  return _impl_.payload_.sign_up_;
+}
+inline ::Sign_up* Auth::mutable_sign_up() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Sign_up* _msg = _internal_mutable_sign_up();
+  // @@protoc_insertion_point(field_mutable:Auth.sign_up)
+  return _msg;
+}
+
+// .Sign_in sign_in = 3;
+inline bool Auth::has_sign_in() const {
+  return payload_case() == kSignIn;
+}
+inline bool Auth::_internal_has_sign_in() const {
+  return payload_case() == kSignIn;
+}
+inline void Auth::set_has_sign_in() {
+  _impl_._oneof_case_[0] = kSignIn;
+}
+inline ::Sign_in* Auth::release_sign_in() {
+  // @@protoc_insertion_point(field_release:Auth.sign_in)
+  if (payload_case() == kSignIn) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.sign_in_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.sign_in_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Sign_in& Auth::_internal_sign_in() const {
+  return payload_case() == kSignIn ? *_impl_.payload_.sign_in_ : reinterpret_cast<::Sign_in&>(::_Sign_in_default_instance_);
+}
+inline const ::Sign_in& Auth::sign_in() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Auth.sign_in)
+  return _internal_sign_in();
+}
+inline ::Sign_in* Auth::unsafe_arena_release_sign_in() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Auth.sign_in)
+  if (payload_case() == kSignIn) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.sign_in_;
+    _impl_.payload_.sign_in_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Auth::unsafe_arena_set_allocated_sign_in(::Sign_in* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_sign_in();
+    _impl_.payload_.sign_in_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Auth.sign_in)
+}
+inline ::Sign_in* Auth::_internal_mutable_sign_in() {
+  if (payload_case() != kSignIn) {
+    clear_payload();
+    set_has_sign_in();
+    _impl_.payload_.sign_in_ =
+        ::google::protobuf::Message::DefaultConstruct<::Sign_in>(GetArena());
+  }
+  return _impl_.payload_.sign_in_;
+}
+inline ::Sign_in* Auth::mutable_sign_in() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Sign_in* _msg = _internal_mutable_sign_in();
+  // @@protoc_insertion_point(field_mutable:Auth.sign_in)
+  return _msg;
+}
+
+inline bool Auth::has_payload() const {
+  return payload_case() != PAYLOAD_NOT_SET;
+}
+inline void Auth::clear_has_payload() {
+  _impl_._oneof_case_[0] = PAYLOAD_NOT_SET;
+}
+inline Auth::PayloadCase Auth::payload_case() const {
+  return Auth::PayloadCase(_impl_._oneof_case_[0]);
+}
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif  // __GNUC__
