@@ -59,5 +59,15 @@ if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/encrypt_ke
     exit 1
 fi
 
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/sign_in.proto; then
+    echo "Error: Proto failed \`sign in\`";
+    exit 1
+fi
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/sign_up.proto; then
+    echo "Error: Proto failed \`sign up\`";
+    exit 1
+fi
+
 
 echo "Proto files were successfully compiled";
