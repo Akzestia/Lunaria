@@ -18,4 +18,6 @@ class ConnectionManager {
     static std::unordered_map<HQUIC, User>* users;
     static std::condition_variable user_cv;
     static std::mutex user_mutex;
+
+    ConnectionManager();
 };

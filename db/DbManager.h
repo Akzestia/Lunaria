@@ -41,4 +41,5 @@ class DbManager {
     virtual ~DbManager();
   private:
     static std::string getConnectionString();
+    DbManager();
 };

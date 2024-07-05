@@ -28,7 +28,6 @@ class RouteManager : protected DbManager {
   protected:
     static Lxcode proccesRoute(const Wrapper &);
     virtual ~RouteManager();
-
   private:
     static Lxcode handleAuth(const Payload &);
     static Lxcode handleReport(const Payload &);
@@ -41,4 +40,6 @@ class RouteManager : protected DbManager {
     static Lxcode updateServer(const Payload &);
 
     static std::unordered_map<uint8_t, RouteFunction> *routes;
+
+    RouteManager();
 };

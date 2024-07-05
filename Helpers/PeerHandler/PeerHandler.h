@@ -11,6 +11,7 @@
 
 //Todo mutex
 class PeerHandler {
+    PeerHandler();
   private:
     static std::unordered_map<HQUIC, uint8_t *> *peers;
     static std::unordered_map<HQUIC, size_t> *peerDataSizes;
