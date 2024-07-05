@@ -2,5 +2,5 @@
 
 Compiling protobuf files
 ```
-    ./compile.proto.sh
+./compile.proto.sh
 ```
