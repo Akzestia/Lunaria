@@ -8,6 +8,7 @@
 
 class ScreenCapture {
     static bool isCapture;
+    
 public:
     static void Start();
     static void Stop();

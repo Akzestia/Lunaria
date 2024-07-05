@@ -2,7 +2,8 @@
 
 class RequestManager {
   private:
-    RequestManager();
+    RequestManager() = default;
+    friend class QuicClient;
   protected:
 #pragma region Auth Requests
     void StartSignUpRequest();

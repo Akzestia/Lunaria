@@ -10,8 +10,9 @@
 #include <mutex>
 #include <sys/stat.h>
 #include "../proto/build/auth.pb.h"
+#include "clientRequestManager/RequestManager.h"
 
-class QuicClient {
+class QuicClient : protected RequestManager {
   public:
     void Connect();
 

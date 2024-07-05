@@ -9,12 +9,15 @@
 #include <string>
 #include <unordered_map>
 
-//Todo mutex
+// Todo mutex
 class PeerHandler {
-    PeerHandler();
+
   private:
     static std::unordered_map<HQUIC, uint8_t *> *peers;
     static std::unordered_map<HQUIC, size_t> *peerDataSizes;
+    PeerHandler() = default;
+    friend class QuicServer;
+
   protected:
     static void HandlePeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static std::unordered_map<HQUIC, uint8_t *> *GetPeers();

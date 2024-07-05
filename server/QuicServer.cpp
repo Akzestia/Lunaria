@@ -212,8 +212,8 @@ void QuicServer::send(HQUIC Stream, void *Context) {
 
 void QuicServer::send(HQUIC Stream) {
     User u;
-    u.set_name("Akzestia");
-    u.set_email("akzestia@xxx.com");
+    u.set_user_name("Akzestia");
+    u.set_user_email("akzestia@xxx.com");
 
     absl::Cord message;
     u.SerializePartialToCord(&message);

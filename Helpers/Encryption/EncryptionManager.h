@@ -1,12 +1,13 @@
-#include <cstring>
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
-class EncryptionManager
-{
-    EncryptionManager();
-protected:
-    bool encryptMessage(const char*, const char*, char**);
-    bool decryptMessage(const char*, const char*, char**);
-    bool generateKey(const char*, char**);
+class EncryptionManager {
+    EncryptionManager() = default;
+    friend class QuicServer;
+
+  protected:
+    bool encryptMessage(const char *, const char *, char **);
+    bool decryptMessage(const char *, const char *, char **);
+    bool generateKey(const char *, char **);
 };

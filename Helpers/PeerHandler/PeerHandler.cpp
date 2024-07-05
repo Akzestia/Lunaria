@@ -93,7 +93,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
     switch (wrapper.payload_case()) {
         case Wrapper::kUser: {
             const User& user = wrapper.user();
-            std::cout << "Received User: " << user.name() << ", " << user.email() << std::endl;
+            std::cout << "Received User: " << user.user_name() << ", " << user.user_email() << std::endl;
             break;
         }
         case Wrapper::kPerson: {

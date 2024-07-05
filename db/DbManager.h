@@ -41,5 +41,6 @@ class DbManager {
     virtual ~DbManager();
   private:
     static std::string getConnectionString();
-    DbManager();
+    DbManager() = default;
+    friend class QuicServer;
 };
