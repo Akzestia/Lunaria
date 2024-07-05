@@ -48,7 +48,7 @@ This project utilizes various technologies including:
 
 ## Supported Platforms
 Linux-x64-HTTP3 supports:
-- Linux
+- Linux (x11 | Wayland)
 - Windows
 
 <br/>
