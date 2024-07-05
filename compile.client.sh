@@ -35,7 +35,15 @@ if ! g++ -g -o ./build/client \
     ./proto/build/test.pb.cc \
     ./proto/build/user.pb.cc \
     ./proto/build/message.pb.cc \
+    ./proto/build/auth.pb.cc \
+    ./proto/build/contact.pb.cc \
+    ./proto/build/encrypt_key.pb.cc \
+    ./proto/build/invite_link.pb.cc \
+    ./proto/build/report.pb.cc \
+    ./proto/build/server.pb.cc \
+    ./proto/build/vpn_graph.pb.cc \
     ./proto/build/wrapper.pb.cc \
+    ./client/clientRequestManager/RequestManager.cpp \
     ./Helpers/ConnectionManager/ConnectionManager.cpp \
     ./Helpers/ScreenCapture/ScreenCapture.cpp \
     ./db/DbManager.cpp \
