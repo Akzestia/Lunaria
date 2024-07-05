@@ -1,18 +1,18 @@
 #include "../proto/build/user.pb.h"
 #include <set>
 bool operator<(const User& lhs, const User& rhs) {
-    return lhs.name() < rhs.name();
+    return lhs.user_name() < rhs.user_name();
 }
 
 bool operator>(const User& lhs, const User& rhs) {
-    return lhs.name() > rhs.name();
+    return lhs.user_name() > rhs.user_name();
 }
 
 
 bool operator==(const User& lhs, const User& rhs) {
-    return lhs.name() == rhs.name() &&
-           lhs.email() == rhs.email() &&
-           lhs.avatar() == rhs.avatar();
+    return lhs.user_name() == rhs.user_name() &&
+           lhs.user_email() == rhs.user_email() &&
+           lhs.user_avatar() == rhs.user_avatar();
 }
 
 
@@ -31,18 +31,18 @@ int main(){
     
     for (char c = 'Z'; c >= 'W'; --c) {
         User u;
-        u.set_name(std::string(1, c));
+        u.set_user_name(std::string(1, c));
         s->insert(u);
     }
 
     for (char c = 'A'; c <= 'D'; ++c) {
         User u;
-        u.set_name(std::string(1, c));
+        u.set_user_name(std::string(1, c));
         s->insert(u);
     }
 
     for (const auto& user : *s) {
-        std::cout << "User name: " << user.name() << "\n";
+        std::cout << "User name: " << user.user_name() << "\n";
     }
     delete s;
     return 0;
