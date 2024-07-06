@@ -1,5 +1,6 @@
 syntax = "proto3";
 
 message Sign_in {
-    int32 id = 1;
+    string user_name = 1;
+    string user_password = 2;
 }

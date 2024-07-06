@@ -187,16 +187,39 @@ class Sign_in final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kIdFieldNumber = 1,
+    kUserNameFieldNumber = 1,
+    kUserPasswordFieldNumber = 2,
   };
-  // int32 id = 1;
-  void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
+  // string user_name = 1;
+  void clear_user_name() ;
+  const std::string& user_name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_user_name(Arg_&& arg, Args_... args);
+  std::string* mutable_user_name();
+  PROTOBUF_NODISCARD std::string* release_user_name();
+  void set_allocated_user_name(std::string* value);
 
   private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
+  const std::string& _internal_user_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_name(
+      const std::string& value);
+  std::string* _internal_mutable_user_name();
+
+  public:
+  // string user_password = 2;
+  void clear_user_password() ;
+  const std::string& user_password() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_user_password(Arg_&& arg, Args_... args);
+  std::string* mutable_user_password();
+  PROTOBUF_NODISCARD std::string* release_user_password();
+  void set_allocated_user_password(std::string* value);
+
+  private:
+  const std::string& _internal_user_password() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_password(
+      const std::string& value);
+  std::string* _internal_mutable_user_password();
 
   public:
   // @@protoc_insertion_point(class_scope:Sign_in)
@@ -204,8 +227,8 @@ class Sign_in final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      0, 2>
+      1, 2, 0,
+      38, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -225,7 +248,8 @@ class Sign_in final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Sign_in& from_msg);
-    ::int32_t id_;
+    ::google::protobuf::internal::ArenaStringPtr user_name_;
+    ::google::protobuf::internal::ArenaStringPtr user_password_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -249,26 +273,104 @@ class Sign_in final : public ::google::protobuf::Message
 
 // Sign_in
 
-// int32 id = 1;
-inline void Sign_in::clear_id() {
+// string user_name = 1;
+inline void Sign_in::clear_user_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0;
+  _impl_.user_name_.ClearToEmpty();
 }
-inline ::int32_t Sign_in::id() const {
-  // @@protoc_insertion_point(field_get:Sign_in.id)
-  return _internal_id();
+inline const std::string& Sign_in::user_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Sign_in.user_name)
+  return _internal_user_name();
 }
-inline void Sign_in::set_id(::int32_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Sign_in.id)
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Sign_in::set_user_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Sign_in.user_name)
 }
-inline ::int32_t Sign_in::_internal_id() const {
+inline std::string* Sign_in::mutable_user_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_name();
+  // @@protoc_insertion_point(field_mutable:Sign_in.user_name)
+  return _s;
+}
+inline const std::string& Sign_in::_internal_user_name() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
+  return _impl_.user_name_.Get();
 }
-inline void Sign_in::_internal_set_id(::int32_t value) {
+inline void Sign_in::_internal_set_user_name(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
+  _impl_.user_name_.Set(value, GetArena());
+}
+inline std::string* Sign_in::_internal_mutable_user_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.user_name_.Mutable( GetArena());
+}
+inline std::string* Sign_in::release_user_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Sign_in.user_name)
+  return _impl_.user_name_.Release();
+}
+inline void Sign_in::set_allocated_user_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_name_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.user_name_.IsDefault()) {
+          _impl_.user_name_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Sign_in.user_name)
+}
+
+// string user_password = 2;
+inline void Sign_in::clear_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.ClearToEmpty();
+}
+inline const std::string& Sign_in::user_password() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Sign_in.user_password)
+  return _internal_user_password();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Sign_in::set_user_password(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Sign_in.user_password)
+}
+inline std::string* Sign_in::mutable_user_password() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_password();
+  // @@protoc_insertion_point(field_mutable:Sign_in.user_password)
+  return _s;
+}
+inline const std::string& Sign_in::_internal_user_password() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.user_password_.Get();
+}
+inline void Sign_in::_internal_set_user_password(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.Set(value, GetArena());
+}
+inline std::string* Sign_in::_internal_mutable_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.user_password_.Mutable( GetArena());
+}
+inline std::string* Sign_in::release_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Sign_in.user_password)
+  return _impl_.user_password_.Release();
+}
+inline void Sign_in::set_allocated_user_password(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.user_password_.IsDefault()) {
+          _impl_.user_password_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Sign_in.user_password)
 }
 
 #ifdef __GNUC__

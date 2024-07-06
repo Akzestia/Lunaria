@@ -26,8 +26,7 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Auth::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : id_{0},
-        payload_{},
+      : payload_{},
         _cached_size_{0},
         _oneof_case_{} {}
 
@@ -59,7 +58,6 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::Auth, _impl_.id_),
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::Auth, _impl_.payload_),
@@ -75,9 +73,9 @@ static const ::_pb::Message* const file_default_instances[] = {
 const char descriptor_table_protodef_auth_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
     "\n\nauth.proto\032\rsign_up.proto\032\rsign_in.pro"
-    "to\"W\n\004Auth\022\n\n\002id\030\001 \001(\005\022\033\n\007sign_up\030\002 \001(\0132"
-    "\010.Sign_upH\000\022\033\n\007sign_in\030\003 \001(\0132\010.Sign_inH\000"
-    "B\t\n\007payloadb\006proto3"
+    "to\"K\n\004Auth\022\033\n\007sign_up\030\001 \001(\0132\010.Sign_upH\000\022"
+    "\033\n\007sign_in\030\002 \001(\0132\010.Sign_inH\000B\t\n\007payloadb"
+    "\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_auth_2eproto_deps[2] =
     {
@@ -88,7 +86,7 @@ static ::absl::once_flag descriptor_table_auth_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_auth_2eproto = {
     false,
     false,
-    139,
+    127,
     descriptor_table_protodef_auth_2eproto,
     "auth.proto",
     &descriptor_table_auth_2eproto_once,
@@ -178,7 +176,6 @@ Auth::Auth(
   _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
       from._internal_metadata_);
   new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
-  _impl_.id_ = from._impl_.id_;
   switch (payload_case()) {
     case PAYLOAD_NOT_SET:
       break;
@@ -201,7 +198,6 @@ inline PROTOBUF_NDEBUG_INLINE Auth::Impl_::Impl_(
 
 inline void Auth::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
 }
 Auth::~Auth() {
   // @@protoc_insertion_point(destructor:Auth)
@@ -265,15 +261,15 @@ Auth::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 3, 2, 0, 2> Auth::_table_ = {
+const ::_pbi::TcParseTable<0, 2, 2, 0, 2> Auth::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    3, 0,  // max_field_number, fast_idx_mask
+    2, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967288,  // skipmap
+    4294967292,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    3,  // num_field_entries
+    2,  // num_field_entries
     2,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_Auth_default_instance_._instance,
@@ -283,19 +279,14 @@ const ::_pbi::TcParseTable<0, 3, 2, 0, 2> Auth::_table_ = {
     ::_pbi::TcParser::GetTable<::Auth>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // int32 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Auth, _impl_.id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Auth, _impl_.id_)}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
-    // int32 id = 1;
-    {PROTOBUF_FIELD_OFFSET(Auth, _impl_.id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
-    // .Sign_up sign_up = 2;
+    // .Sign_up sign_up = 1;
     {PROTOBUF_FIELD_OFFSET(Auth, _impl_.payload_.sign_up_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Sign_in sign_in = 3;
+    // .Sign_in sign_in = 2;
     {PROTOBUF_FIELD_OFFSET(Auth, _impl_.payload_.sign_in_), _Internal::kOneofCaseOffset + 0, 1,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
@@ -312,7 +303,6 @@ PROTOBUF_NOINLINE void Auth::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.id_ = 0;
   clear_payload();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
@@ -324,22 +314,15 @@ PROTOBUF_NOINLINE void Auth::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt32ToArrayWithField<1>(
-            stream, this->_internal_id(), target);
-  }
-
   switch (payload_case()) {
     case kSignUp: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          2, *_impl_.payload_.sign_up_, _impl_.payload_.sign_up_->GetCachedSize(), target, stream);
+          1, *_impl_.payload_.sign_up_, _impl_.payload_.sign_up_->GetCachedSize(), target, stream);
       break;
     }
     case kSignIn: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          3, *_impl_.payload_.sign_in_, _impl_.payload_.sign_in_->GetCachedSize(), target, stream);
+          2, *_impl_.payload_.sign_in_, _impl_.payload_.sign_in_->GetCachedSize(), target, stream);
       break;
     }
     default:
@@ -362,20 +345,14 @@ PROTOBUF_NOINLINE void Auth::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_id());
-  }
-
   switch (payload_case()) {
-    // .Sign_up sign_up = 2;
+    // .Sign_up sign_up = 1;
     case kSignUp: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.sign_up_);
       break;
     }
-    // .Sign_in sign_in = 3;
+    // .Sign_in sign_in = 2;
     case kSignIn: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.sign_in_);
@@ -398,9 +375,6 @@ void Auth::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::pr
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_id() != 0) {
-    _this->_impl_.id_ = from._impl_.id_;
-  }
   if (const uint32_t oneof_from_case = from._impl_._oneof_case_[0]) {
     const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
     const bool oneof_needs_init = oneof_to_case != oneof_from_case;
@@ -448,7 +422,6 @@ void Auth::CopyFrom(const Auth& from) {
 void Auth::InternalSwap(Auth* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(_impl_.id_, other->_impl_.id_);
   swap(_impl_.payload_, other->_impl_.payload_);
   swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
 }

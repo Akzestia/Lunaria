@@ -26,7 +26,18 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Sign_up::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : id_{0},
+      : user_name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        display_name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        user_email_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        user_password_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
         _cached_size_{0} {}
 
 template <typename>
@@ -57,7 +68,10 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::Sign_up, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::Sign_up, _impl_.user_name_),
+        PROTOBUF_FIELD_OFFSET(::Sign_up, _impl_.display_name_),
+        PROTOBUF_FIELD_OFFSET(::Sign_up, _impl_.user_email_),
+        PROTOBUF_FIELD_OFFSET(::Sign_up, _impl_.user_password_),
 };
 
 static const ::_pbi::MigrationSchema
@@ -69,14 +83,15 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_sign_5fup_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\rsign_up.proto\"\025\n\007Sign_up\022\n\n\002id\030\001 \001(\005b\006"
-    "proto3"
+    "\n\rsign_up.proto\"]\n\007Sign_up\022\021\n\tuser_name\030"
+    "\001 \001(\t\022\024\n\014display_name\030\002 \001(\t\022\022\n\nuser_emai"
+    "l\030\003 \001(\t\022\025\n\ruser_password\030\004 \001(\tb\006proto3"
 };
 static ::absl::once_flag descriptor_table_sign_5fup_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_sign_5fup_2eproto = {
     false,
     false,
-    46,
+    118,
     descriptor_table_protodef_sign_5fup_2eproto,
     "sign_up.proto",
     &descriptor_table_sign_5fup_2eproto_once,
@@ -100,19 +115,38 @@ Sign_up::Sign_up(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:Sign_up)
 }
+inline PROTOBUF_NDEBUG_INLINE Sign_up::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::Sign_up& from_msg)
+      : user_name_(arena, from.user_name_),
+        display_name_(arena, from.display_name_),
+        user_email_(arena, from.user_email_),
+        user_password_(arena, from.user_password_),
+        _cached_size_{0} {}
+
 Sign_up::Sign_up(
-    ::google::protobuf::Arena* arena, const Sign_up& from)
-    : Sign_up(arena) {
-  MergeFrom(from);
+    ::google::protobuf::Arena* arena,
+    const Sign_up& from)
+    : ::google::protobuf::Message(arena) {
+  Sign_up* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+
+  // @@protoc_insertion_point(copy_constructor:Sign_up)
 }
 inline PROTOBUF_NDEBUG_INLINE Sign_up::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
+      : user_name_(arena),
+        display_name_(arena),
+        user_email_(arena),
+        user_password_(arena),
+        _cached_size_{0} {}
 
 inline void Sign_up::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
 }
 Sign_up::~Sign_up() {
   // @@protoc_insertion_point(destructor:Sign_up)
@@ -121,6 +155,10 @@ Sign_up::~Sign_up() {
 }
 inline void Sign_up::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.user_name_.Destroy();
+  _impl_.display_name_.Destroy();
+  _impl_.user_email_.Destroy();
+  _impl_.user_password_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -145,15 +183,15 @@ Sign_up::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Sign_up::_table_ = {
+const ::_pbi::TcParseTable<2, 4, 0, 60, 2> Sign_up::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    4, 24,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_Sign_up_default_instance_._instance,
@@ -163,18 +201,42 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Sign_up::_table_ = {
     ::_pbi::TcParser::GetTable<::Sign_up>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // int32 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Sign_up, _impl_.id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.id_)}},
+    // string user_password = 4;
+    {::_pbi::TcParser::FastUS1,
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.user_password_)}},
+    // string user_name = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.user_name_)}},
+    // string display_name = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.display_name_)}},
+    // string user_email = 3;
+    {::_pbi::TcParser::FastUS1,
+     {26, 63, 0, PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.user_email_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // int32 id = 1;
-    {PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // string user_name = 1;
+    {PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.user_name_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string display_name = 2;
+    {PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.display_name_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string user_email = 3;
+    {PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.user_email_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string user_password = 4;
+    {PROTOBUF_FIELD_OFFSET(Sign_up, _impl_.user_password_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\7\11\14\12\15\0\0\0"
+    "Sign_up"
+    "user_name"
+    "display_name"
+    "user_email"
+    "user_password"
   }},
 };
 
@@ -185,7 +247,10 @@ PROTOBUF_NOINLINE void Sign_up::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.id_ = 0;
+  _impl_.user_name_.ClearToEmpty();
+  _impl_.display_name_.ClearToEmpty();
+  _impl_.user_email_.ClearToEmpty();
+  _impl_.user_password_.ClearToEmpty();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -196,11 +261,36 @@ PROTOBUF_NOINLINE void Sign_up::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt32ToArrayWithField<1>(
-            stream, this->_internal_id(), target);
+  // string user_name = 1;
+  if (!this->_internal_user_name().empty()) {
+    const std::string& _s = this->_internal_user_name();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Sign_up.user_name");
+    target = stream->WriteStringMaybeAliased(1, _s, target);
+  }
+
+  // string display_name = 2;
+  if (!this->_internal_display_name().empty()) {
+    const std::string& _s = this->_internal_display_name();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Sign_up.display_name");
+    target = stream->WriteStringMaybeAliased(2, _s, target);
+  }
+
+  // string user_email = 3;
+  if (!this->_internal_user_email().empty()) {
+    const std::string& _s = this->_internal_user_email();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Sign_up.user_email");
+    target = stream->WriteStringMaybeAliased(3, _s, target);
+  }
+
+  // string user_password = 4;
+  if (!this->_internal_user_password().empty()) {
+    const std::string& _s = this->_internal_user_password();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Sign_up.user_password");
+    target = stream->WriteStringMaybeAliased(4, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -220,10 +310,29 @@ PROTOBUF_NOINLINE void Sign_up::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_id());
+  ::_pbi::Prefetch5LinesFrom7Lines(reinterpret_cast<const void*>(this));
+  // string user_name = 1;
+  if (!this->_internal_user_name().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_user_name());
+  }
+
+  // string display_name = 2;
+  if (!this->_internal_display_name().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_display_name());
+  }
+
+  // string user_email = 3;
+  if (!this->_internal_user_email().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_user_email());
+  }
+
+  // string user_password = 4;
+  if (!this->_internal_user_password().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_user_password());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -238,8 +347,17 @@ void Sign_up::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google:
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_id() != 0) {
-    _this->_impl_.id_ = from._impl_.id_;
+  if (!from._internal_user_name().empty()) {
+    _this->_internal_set_user_name(from._internal_user_name());
+  }
+  if (!from._internal_display_name().empty()) {
+    _this->_internal_set_display_name(from._internal_display_name());
+  }
+  if (!from._internal_user_email().empty()) {
+    _this->_internal_set_user_email(from._internal_user_email());
+  }
+  if (!from._internal_user_password().empty()) {
+    _this->_internal_set_user_password(from._internal_user_password());
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -254,8 +372,13 @@ void Sign_up::CopyFrom(const Sign_up& from) {
 
 void Sign_up::InternalSwap(Sign_up* PROTOBUF_RESTRICT other) {
   using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(_impl_.id_, other->_impl_.id_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.user_name_, &other->_impl_.user_name_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.display_name_, &other->_impl_.display_name_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.user_email_, &other->_impl_.user_email_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.user_password_, &other->_impl_.user_password_, arena);
 }
 
 ::google::protobuf::Metadata Sign_up::GetMetadata() const {

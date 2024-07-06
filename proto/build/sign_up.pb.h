@@ -187,16 +187,73 @@ class Sign_up final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kIdFieldNumber = 1,
+    kUserNameFieldNumber = 1,
+    kDisplayNameFieldNumber = 2,
+    kUserEmailFieldNumber = 3,
+    kUserPasswordFieldNumber = 4,
   };
-  // int32 id = 1;
-  void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
+  // string user_name = 1;
+  void clear_user_name() ;
+  const std::string& user_name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_user_name(Arg_&& arg, Args_... args);
+  std::string* mutable_user_name();
+  PROTOBUF_NODISCARD std::string* release_user_name();
+  void set_allocated_user_name(std::string* value);
 
   private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
+  const std::string& _internal_user_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_name(
+      const std::string& value);
+  std::string* _internal_mutable_user_name();
+
+  public:
+  // string display_name = 2;
+  void clear_display_name() ;
+  const std::string& display_name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_display_name(Arg_&& arg, Args_... args);
+  std::string* mutable_display_name();
+  PROTOBUF_NODISCARD std::string* release_display_name();
+  void set_allocated_display_name(std::string* value);
+
+  private:
+  const std::string& _internal_display_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_display_name(
+      const std::string& value);
+  std::string* _internal_mutable_display_name();
+
+  public:
+  // string user_email = 3;
+  void clear_user_email() ;
+  const std::string& user_email() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_user_email(Arg_&& arg, Args_... args);
+  std::string* mutable_user_email();
+  PROTOBUF_NODISCARD std::string* release_user_email();
+  void set_allocated_user_email(std::string* value);
+
+  private:
+  const std::string& _internal_user_email() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_email(
+      const std::string& value);
+  std::string* _internal_mutable_user_email();
+
+  public:
+  // string user_password = 4;
+  void clear_user_password() ;
+  const std::string& user_password() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_user_password(Arg_&& arg, Args_... args);
+  std::string* mutable_user_password();
+  PROTOBUF_NODISCARD std::string* release_user_password();
+  void set_allocated_user_password(std::string* value);
+
+  private:
+  const std::string& _internal_user_password() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_password(
+      const std::string& value);
+  std::string* _internal_mutable_user_password();
 
   public:
   // @@protoc_insertion_point(class_scope:Sign_up)
@@ -204,8 +261,8 @@ class Sign_up final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      0, 2>
+      2, 4, 0,
+      60, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -225,7 +282,10 @@ class Sign_up final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Sign_up& from_msg);
-    ::int32_t id_;
+    ::google::protobuf::internal::ArenaStringPtr user_name_;
+    ::google::protobuf::internal::ArenaStringPtr display_name_;
+    ::google::protobuf::internal::ArenaStringPtr user_email_;
+    ::google::protobuf::internal::ArenaStringPtr user_password_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -249,26 +309,204 @@ class Sign_up final : public ::google::protobuf::Message
 
 // Sign_up
 
-// int32 id = 1;
-inline void Sign_up::clear_id() {
+// string user_name = 1;
+inline void Sign_up::clear_user_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0;
+  _impl_.user_name_.ClearToEmpty();
 }
-inline ::int32_t Sign_up::id() const {
-  // @@protoc_insertion_point(field_get:Sign_up.id)
-  return _internal_id();
+inline const std::string& Sign_up::user_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Sign_up.user_name)
+  return _internal_user_name();
 }
-inline void Sign_up::set_id(::int32_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Sign_up.id)
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Sign_up::set_user_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Sign_up.user_name)
 }
-inline ::int32_t Sign_up::_internal_id() const {
+inline std::string* Sign_up::mutable_user_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_name();
+  // @@protoc_insertion_point(field_mutable:Sign_up.user_name)
+  return _s;
+}
+inline const std::string& Sign_up::_internal_user_name() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
+  return _impl_.user_name_.Get();
 }
-inline void Sign_up::_internal_set_id(::int32_t value) {
+inline void Sign_up::_internal_set_user_name(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
+  _impl_.user_name_.Set(value, GetArena());
+}
+inline std::string* Sign_up::_internal_mutable_user_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.user_name_.Mutable( GetArena());
+}
+inline std::string* Sign_up::release_user_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Sign_up.user_name)
+  return _impl_.user_name_.Release();
+}
+inline void Sign_up::set_allocated_user_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_name_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.user_name_.IsDefault()) {
+          _impl_.user_name_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Sign_up.user_name)
+}
+
+// string display_name = 2;
+inline void Sign_up::clear_display_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.display_name_.ClearToEmpty();
+}
+inline const std::string& Sign_up::display_name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Sign_up.display_name)
+  return _internal_display_name();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Sign_up::set_display_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.display_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Sign_up.display_name)
+}
+inline std::string* Sign_up::mutable_display_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_display_name();
+  // @@protoc_insertion_point(field_mutable:Sign_up.display_name)
+  return _s;
+}
+inline const std::string& Sign_up::_internal_display_name() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.display_name_.Get();
+}
+inline void Sign_up::_internal_set_display_name(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.display_name_.Set(value, GetArena());
+}
+inline std::string* Sign_up::_internal_mutable_display_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.display_name_.Mutable( GetArena());
+}
+inline std::string* Sign_up::release_display_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Sign_up.display_name)
+  return _impl_.display_name_.Release();
+}
+inline void Sign_up::set_allocated_display_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.display_name_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.display_name_.IsDefault()) {
+          _impl_.display_name_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Sign_up.display_name)
+}
+
+// string user_email = 3;
+inline void Sign_up::clear_user_email() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_email_.ClearToEmpty();
+}
+inline const std::string& Sign_up::user_email() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Sign_up.user_email)
+  return _internal_user_email();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Sign_up::set_user_email(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_email_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Sign_up.user_email)
+}
+inline std::string* Sign_up::mutable_user_email() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_email();
+  // @@protoc_insertion_point(field_mutable:Sign_up.user_email)
+  return _s;
+}
+inline const std::string& Sign_up::_internal_user_email() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.user_email_.Get();
+}
+inline void Sign_up::_internal_set_user_email(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_email_.Set(value, GetArena());
+}
+inline std::string* Sign_up::_internal_mutable_user_email() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.user_email_.Mutable( GetArena());
+}
+inline std::string* Sign_up::release_user_email() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Sign_up.user_email)
+  return _impl_.user_email_.Release();
+}
+inline void Sign_up::set_allocated_user_email(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_email_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.user_email_.IsDefault()) {
+          _impl_.user_email_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Sign_up.user_email)
+}
+
+// string user_password = 4;
+inline void Sign_up::clear_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.ClearToEmpty();
+}
+inline const std::string& Sign_up::user_password() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Sign_up.user_password)
+  return _internal_user_password();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Sign_up::set_user_password(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Sign_up.user_password)
+}
+inline std::string* Sign_up::mutable_user_password() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_user_password();
+  // @@protoc_insertion_point(field_mutable:Sign_up.user_password)
+  return _s;
+}
+inline const std::string& Sign_up::_internal_user_password() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.user_password_.Get();
+}
+inline void Sign_up::_internal_set_user_password(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.Set(value, GetArena());
+}
+inline std::string* Sign_up::_internal_mutable_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.user_password_.Mutable( GetArena());
+}
+inline std::string* Sign_up::release_user_password() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Sign_up.user_password)
+  return _impl_.user_password_.Release();
+}
+inline void Sign_up::set_allocated_user_password(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.user_password_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.user_password_.IsDefault()) {
+          _impl_.user_password_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Sign_up.user_password)
 }
 
 #ifdef __GNUC__

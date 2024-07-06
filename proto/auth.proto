@@ -4,10 +4,8 @@ import "sign_up.proto";
 import "sign_in.proto";
 
 message Auth {
-    int32 id = 1;
-
     oneof payload {
-        Sign_up sign_up = 2;
-        Sign_in sign_in = 3;
+        Sign_up sign_up = 1;
+        Sign_in sign_in = 2;
     }
 }

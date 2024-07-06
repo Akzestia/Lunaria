@@ -117,8 +117,8 @@ class Auth final : public ::google::protobuf::Message
     return *internal_default_instance();
   }
   enum PayloadCase {
-    kSignUp = 2,
-    kSignIn = 3,
+    kSignUp = 1,
+    kSignIn = 2,
     PAYLOAD_NOT_SET = 0,
   };
   static inline const Auth* internal_default_instance() {
@@ -194,21 +194,10 @@ class Auth final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kIdFieldNumber = 1,
-    kSignUpFieldNumber = 2,
-    kSignInFieldNumber = 3,
+    kSignUpFieldNumber = 1,
+    kSignInFieldNumber = 2,
   };
-  // int32 id = 1;
-  void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
-
-  private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
-
-  public:
-  // .Sign_up sign_up = 2;
+  // .Sign_up sign_up = 1;
   bool has_sign_up() const;
   private:
   bool _internal_has_sign_up() const;
@@ -227,7 +216,7 @@ class Auth final : public ::google::protobuf::Message
   ::Sign_up* _internal_mutable_sign_up();
 
   public:
-  // .Sign_in sign_in = 3;
+  // .Sign_in sign_in = 2;
   bool has_sign_in() const;
   private:
   bool _internal_has_sign_in() const;
@@ -257,7 +246,7 @@ class Auth final : public ::google::protobuf::Message
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 3, 2,
+      0, 2, 2,
       0, 2>
       _table_;
 
@@ -278,7 +267,6 @@ class Auth final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Auth& from_msg);
-    ::int32_t id_;
     union PayloadUnion {
       constexpr PayloadUnion() : _constinit_{} {}
       ::google::protobuf::internal::ConstantInitialized _constinit_;
@@ -309,29 +297,7 @@ class Auth final : public ::google::protobuf::Message
 
 // Auth
 
-// int32 id = 1;
-inline void Auth::clear_id() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0;
-}
-inline ::int32_t Auth::id() const {
-  // @@protoc_insertion_point(field_get:Auth.id)
-  return _internal_id();
-}
-inline void Auth::set_id(::int32_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Auth.id)
-}
-inline ::int32_t Auth::_internal_id() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
-}
-inline void Auth::_internal_set_id(::int32_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
-}
-
-// .Sign_up sign_up = 2;
+// .Sign_up sign_up = 1;
 inline bool Auth::has_sign_up() const {
   return payload_case() == kSignUp;
 }
@@ -399,7 +365,7 @@ inline ::Sign_up* Auth::mutable_sign_up() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// .Sign_in sign_in = 3;
+// .Sign_in sign_in = 2;
 inline bool Auth::has_sign_in() const {
   return payload_case() == kSignIn;
 }
