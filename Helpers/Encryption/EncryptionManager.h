@@ -5,6 +5,8 @@
 #include <string>
 #include "../../client/clientRequestManager/RequestManager.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 class EncryptionManager {
     EncryptionManager() = default;
     friend class QuicServer;
@@ -16,3 +18,4 @@ class EncryptionManager {
     static bool generateKey(const char *, char **);
     static bool ToSHA256(const std::string &input, std::string &output);
 };
+#pragma GCC diagnostic 

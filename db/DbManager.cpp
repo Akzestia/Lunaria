@@ -37,7 +37,7 @@ void DbManager::test() {
 }
 
 #pragma region GET
-Lxcode DbManager::getUser(const Auth &auth, User* output) {
+Lxcode DbManager::getUser(const Auth &auth, User *output) {
 
     if (!auth.has_sign_in()) {
         return {false, AUTH_ERROR_INCORRECT_PAYLOAD_FORMAT};
@@ -227,8 +227,10 @@ bool DbManager::addUser(const User &user) {
         txn.exec(query);
 
         txn.commit();
-        return true;
+
         std::cout << "\nUser added successfully." << std::endl;
+
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -263,8 +265,9 @@ bool DbManager::addMessage(const Message &message) {
         txn.exec(query);
 
         txn.commit();
-        return true;
+
         std::cout << "\nMessage added successfully." << std::endl;
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -295,8 +298,9 @@ bool DbManager::addContact(const Contact &contact) {
         txn.exec(query);
 
         txn.commit();
-        return true;
+
         std::cout << "\nContact added successfully." << std::endl;
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -321,8 +325,9 @@ bool DbManager::updateUser(const User &user) {
         }
 
         // Todo
-        return true;
+
         std::cout << "\nUser updated successfully." << std::endl;
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -344,8 +349,9 @@ bool DbManager::updateMessage(const Message &message) {
         }
 
         // Todo
-        return true;
+
         std::cout << "\nMessage updated successfully." << std::endl;
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -367,8 +373,9 @@ bool DbManager::updateContact(const Contact &contact) {
         }
 
         // Todo
-        return true;
+
         std::cout << "\nContact updated successfully." << std::endl;
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -393,8 +400,9 @@ bool DbManager::deleteUser(const User &user) {
         }
 
         // Todo
-        return true;
+
         std::cout << "\nUser deleted successfully." << std::endl;
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
@@ -416,8 +424,9 @@ bool DbManager::deleteMessage(const Message &message) {
         }
 
         // Todo
-        return true;
+
         std::cout << "\nMessage deleted successfully." << std::endl;
+        return true;
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return false;
