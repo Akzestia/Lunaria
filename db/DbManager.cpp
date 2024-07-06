@@ -37,6 +37,51 @@ void DbManager::test() {
 }
 
 #pragma region GET
+Lxcode DbManager::getUser (const Auth &auth){
+
+    if(!auth.has_sign_in()){
+        return {false, AUTH_ERROR_INCORRECT_PAYLOAD_FORMAT};
+    }
+
+    const std::string user_name = auth.sign_in().user_name();
+    const std::string user_password = auth.sign_in().user_password();
+
+    try {
+        const std::string connection_str = DbManager::getConnectionString();
+
+        pqxx::connection connection(connection_str);
+
+        if (connection.is_open()) {
+            std::cout << "Connected to database successfully: " << connection.dbname() << std::endl;
+        } else {
+            std::cerr << "Can't open database" << std::endl;
+            return {false, DB_ERROR_CONNECTION_FAILED};
+        }
+
+        pqxx::nontransaction nontransaction(connection);
+
+        const std::string query = "SELECT FIRST FROM Users WHERE user_password = $1 AND user_name = $2;";
+
+        pqxx::result result = nontransaction.exec_params(query, user_password, user_name);
+
+        pqxx::result::const_iterator row_it = result.begin();
+        pqxx::result::const_iterator row_end = result.end();
+
+        for (; row_it != row_end; ++row_it) {
+            const pqxx::result::const_iterator row = *row_it;
+            std::cout << row[0].c_str() << std::endl;
+            std::cout << row[1].c_str() << std::endl;
+        }
+
+        connection.close();
+        return {true, SUCCESS};
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return {false, DB_ERROR_STD_EXCEPTION};
+    }
+};
+
+
 bool DbManager::getMessages(const User &u, std::vector<uint8_t> *output) {
     try {
         const std::string connection_str = DbManager::getConnectionString();
