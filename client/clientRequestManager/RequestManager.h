@@ -1,7 +1,6 @@
 #include <iostream>
 #include "../../proto/build/auth.pb.h"
 #include "../../db/DbManager.h"
-#include "../../error-manager/ErrorManager.h"
 
 class RequestManager : protected DbManager {
   private:
