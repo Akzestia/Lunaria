@@ -10,7 +10,6 @@
 #include "../proto/build/user.pb.h"
 #include "../proto/build/vpn_graph.pb.h"
 #include "../proto/build/wrapper.pb.h"
-#include "../error-manager/ErrorManager.h"
 #include <functional>
 #include <set>
 #include <unordered_map>

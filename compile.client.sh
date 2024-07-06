@@ -30,6 +30,7 @@ if ! g++ -g -o ./build/client \
     -L/usr/lib -labsl_log_internal_check_op \
     -L/usr/lib -labsl_log_internal_message \
     -L/usr/lib -labsl_cord \
+    -L/usr/lib -lcrypto \
     ./client/client.cpp \
     ./client/QuicClient.cpp \
     ./proto/build/test.pb.cc \

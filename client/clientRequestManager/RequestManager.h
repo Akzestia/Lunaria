@@ -1,10 +1,11 @@
+#pragma once
 #include <iostream>
 #include "../../proto/build/auth.pb.h"
 #include "../../db/DbManager.h"
 
 class RequestManager : protected DbManager {
   private:
-    RequestManager() = delete;
+    RequestManager() : DbManager() {};
     friend class QuicClient;
   protected:
 #pragma region Auth Requests

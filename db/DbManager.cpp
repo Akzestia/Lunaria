@@ -37,7 +37,7 @@ void DbManager::test() {
 }
 
 #pragma region GET
-Lxcode DbManager::getUser(const Auth &auth) {
+Lxcode DbManager::getUser(const Auth &auth, User* output) {
 
     if (!auth.has_sign_in()) {
         return {false, AUTH_ERROR_INCORRECT_PAYLOAD_FORMAT};
@@ -218,7 +218,7 @@ bool DbManager::addUser(const User &user) {
         std::string query =
             "INSERT INTO Users (user_display_name, user_name, user_email, "
             "user_avatar, user_password, online_status) VALUES (" +
-            txn.quote(user.user_display_name()) + ", " +
+            txn.quote(user.display_name()) + ", " +
             txn.quote(user.user_name()) + ", " + txn.quote(user.user_email()) +
             ", " + txn.quote(user.user_avatar()) + ", " +
             txn.quote(user.user_password()) + ", " +

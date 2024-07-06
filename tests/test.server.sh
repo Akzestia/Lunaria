@@ -16,6 +16,7 @@ if ! g++ -g ./test.server.cpp -o./build/server \
     -L/usr/lib -labsl_log_internal_message \
     -L/usr/lib -labsl_cord \
     -L/usr/lib -lpqxx \
+    -L/usr/lib -lcrypto \
     -lstdc++ -lpthread -lprotobuf \
     ../server/QuicServer.cpp \
     ../proto/build/test.pb.cc \

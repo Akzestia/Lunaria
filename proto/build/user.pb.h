@@ -187,27 +187,27 @@ class User final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kUserDisplayNameFieldNumber = 1,
+    kDisplayNameFieldNumber = 1,
     kUserNameFieldNumber = 2,
     kUserEmailFieldNumber = 3,
     kUserPasswordFieldNumber = 4,
     kUserAvatarFieldNumber = 5,
     kOnlineStatusFieldNumber = 6,
   };
-  // string user_display_name = 1;
-  void clear_user_display_name() ;
-  const std::string& user_display_name() const;
+  // string display_name = 1;
+  void clear_display_name() ;
+  const std::string& display_name() const;
   template <typename Arg_ = const std::string&, typename... Args_>
-  void set_user_display_name(Arg_&& arg, Args_... args);
-  std::string* mutable_user_display_name();
-  PROTOBUF_NODISCARD std::string* release_user_display_name();
-  void set_allocated_user_display_name(std::string* value);
+  void set_display_name(Arg_&& arg, Args_... args);
+  std::string* mutable_display_name();
+  PROTOBUF_NODISCARD std::string* release_display_name();
+  void set_allocated_display_name(std::string* value);
 
   private:
-  const std::string& _internal_user_display_name() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_user_display_name(
+  const std::string& _internal_display_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_display_name(
       const std::string& value);
-  std::string* _internal_mutable_user_display_name();
+  std::string* _internal_mutable_display_name();
 
   public:
   // string user_name = 2;
@@ -290,7 +290,7 @@ class User final : public ::google::protobuf::Message
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
       3, 6, 0,
-      62, 2>
+      57, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -310,7 +310,7 @@ class User final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const User& from_msg);
-    ::google::protobuf::internal::ArenaStringPtr user_display_name_;
+    ::google::protobuf::internal::ArenaStringPtr display_name_;
     ::google::protobuf::internal::ArenaStringPtr user_name_;
     ::google::protobuf::internal::ArenaStringPtr user_email_;
     ::google::protobuf::internal::ArenaStringPtr user_password_;
@@ -339,54 +339,54 @@ class User final : public ::google::protobuf::Message
 
 // User
 
-// string user_display_name = 1;
-inline void User::clear_user_display_name() {
+// string display_name = 1;
+inline void User::clear_display_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.user_display_name_.ClearToEmpty();
+  _impl_.display_name_.ClearToEmpty();
 }
-inline const std::string& User::user_display_name() const
+inline const std::string& User::display_name() const
     ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:User.user_display_name)
-  return _internal_user_display_name();
+  // @@protoc_insertion_point(field_get:User.display_name)
+  return _internal_display_name();
 }
 template <typename Arg_, typename... Args_>
-inline PROTOBUF_ALWAYS_INLINE void User::set_user_display_name(Arg_&& arg,
+inline PROTOBUF_ALWAYS_INLINE void User::set_display_name(Arg_&& arg,
                                                      Args_... args) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.user_display_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:User.user_display_name)
+  _impl_.display_name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:User.display_name)
 }
-inline std::string* User::mutable_user_display_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  std::string* _s = _internal_mutable_user_display_name();
-  // @@protoc_insertion_point(field_mutable:User.user_display_name)
+inline std::string* User::mutable_display_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_display_name();
+  // @@protoc_insertion_point(field_mutable:User.display_name)
   return _s;
 }
-inline const std::string& User::_internal_user_display_name() const {
+inline const std::string& User::_internal_display_name() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.user_display_name_.Get();
+  return _impl_.display_name_.Get();
 }
-inline void User::_internal_set_user_display_name(const std::string& value) {
+inline void User::_internal_set_display_name(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.user_display_name_.Set(value, GetArena());
+  _impl_.display_name_.Set(value, GetArena());
 }
-inline std::string* User::_internal_mutable_user_display_name() {
+inline std::string* User::_internal_mutable_display_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.user_display_name_.Mutable( GetArena());
+  return _impl_.display_name_.Mutable( GetArena());
 }
-inline std::string* User::release_user_display_name() {
+inline std::string* User::release_display_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:User.user_display_name)
-  return _impl_.user_display_name_.Release();
+  // @@protoc_insertion_point(field_release:User.display_name)
+  return _impl_.display_name_.Release();
 }
-inline void User::set_allocated_user_display_name(std::string* value) {
+inline void User::set_allocated_display_name(std::string* value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.user_display_name_.SetAllocated(value, GetArena());
+  _impl_.display_name_.SetAllocated(value, GetArena());
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-        if (_impl_.user_display_name_.IsDefault()) {
-          _impl_.user_display_name_.Set("", GetArena());
+        if (_impl_.display_name_.IsDefault()) {
+          _impl_.display_name_.Set("", GetArena());
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:User.user_display_name)
+  // @@protoc_insertion_point(field_set_allocated:User.display_name)
 }
 
 // string user_name = 2;

@@ -16,7 +16,7 @@ class DbManager {
   protected:
 
     #pragma region GET
-    static Lxcode getUser(const Auth &);
+    static Lxcode getUser(const Auth &, User*);
     static bool getMessages(const User &, std::vector<uint8_t>*);
     static bool getContacts(const User &, std::vector<uint8_t>*);
     static bool getGraphs(const User &, std::vector<uint8_t>*);
@@ -45,4 +45,5 @@ class DbManager {
     static std::string getConnectionString();
     DbManager() = default;
     friend class QuicServer;
+    friend class RequestManager;
 };
