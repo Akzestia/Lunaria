@@ -35,6 +35,7 @@ This project utilizes various technologies including:
   - [Protobuf](https://developers.google.com/protocol-buffers) - Protocol Buffers
   - [OpenVPN](https://openvpn.net/) - VPN solution
   - [MsQuic](https://github.com/microsoft/msquic) - Cross-platform QUIC protocol implementation
+  - [Abseil](https://abseil.io/docs/cpp/quickstart-cmake.html) - C++ Common Library by Google, offering essential components for modern C++ development.
 
 - **Database**
   - [PostgreSQL](https://www.postgresql.org/)
