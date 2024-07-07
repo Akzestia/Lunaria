@@ -4,6 +4,8 @@
 
 <h3 align="center">Welcome to Lunaria</h3>
 
+[English](README.md) | [日本語](README_ja.md)
+
 ## About
 
 Lunaria is an open-source chat application built around the QUIC protocol, designed for secure and efficient communication.
