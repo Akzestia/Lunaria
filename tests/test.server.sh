@@ -1,17 +1,25 @@
 #!/bin/bash
 
 # Create a symbolic link if it doesn't exist
-if [ ! -f ../MsQuic/bin/libmsquic.so ]; then
-    ln -s ../MsQuic/bin/libmsquic.so.2.3.5 ../MsQuic/bin/libmsquic.so
+if [ ! -f ../MsQuic/Linux_x64/bin/libmsquic.so ]; then
+    ln -s ../MsQuic/Linux_x64/bin/libmsquic.so.2.3.5 ../MsQuic/Linux_x64/bin/libmsquic.so
+fi
+
+# Set the directory where libmsquic.so.2 resides
+MSQUIC_LIB_DIR=$(pwd)/../MsQuic/Linux_x64/bin
+
+# Check if LD_LIBRARY_PATH already contains MSQUIC_LIB_DIR
+if [[ ":$LD_LIBRARY_PATH:" != *":$MSQUIC_LIB_DIR:"* ]]; then
+    export LD_LIBRARY_PATH=$MSQUIC_LIB_DIR:$LD_LIBRARY_PATH
 fi
 
 # Export the library path
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)../MsQuic/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(pwd)../MsQuic/Linux_x64/bin
 
 # Compile the server
 if ! g++ -g ./test.server.cpp -o./build/server \
     -I../proto \
-    -L../MsQuic/bin -lmsquic \
+    -L../MsQuic/Linux_x64/bin -lmsquic \
     -L/usr/lib -labsl_log_internal_check_op \
     -L/usr/lib -labsl_log_internal_message \
     -L/usr/lib -labsl_cord \
@@ -35,7 +43,8 @@ if ! g++ -g ./test.server.cpp -o./build/server \
     ../Helpers/ConnectionManager/ConnectionManager.cpp \
     ../Helpers/Encryption/EncryptionManager.cpp \
     ../db/DbManager.cpp \
-    ../Helpers/PeerHandler/PeerHandler.cpp; then
+    ../Helpers/PeerHandler/PeerHandler.cpp \
+    -Wl,-rpath,$MSQUIC_LIB_DIR; then
     echo "Error: Compilation failed"
     exit 1
 fi
