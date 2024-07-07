@@ -2,11 +2,11 @@
   <img src="./github-pages/images/tenor-nibutani.gif" alt="Example" width="200" height="200">
 </p>
 
-<h3 align="center">Welcome to Linux-x64-HTTP3</h3>
+<h3 align="center">Welcome to Lunaria</h3>
 
 ## About
 
-Lunnaria is an open-source chat application built around the QUIC protocol, designed for secure and efficient communication.
+Lunaria is an open-source chat application built around the QUIC protocol, designed for secure and efficient communication.
 
 <br/>
 
