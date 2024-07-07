@@ -34,8 +34,9 @@ Lxcode RequestManager::StartSignInRequest(const Auth &auth) {
         code.is_successful = false;
         code.error_code = DB_ERROR_USER_NOT_FOUND;
     }
-
     printf("\nUser was signed up successfully");
+
+    auth.sign_up().user_email();
 
     delete u;
 
