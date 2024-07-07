@@ -6,7 +6,7 @@
 
 ## About
 
-Linux-x64-HTTP3 is an open-source chat application built around the QUIC protocol, designed for secure and efficient communication.
+Lunnaria is an open-source chat application built around the QUIC protocol, designed for secure and efficient communication.
 
 <br/>
 
