@@ -1,16 +1,21 @@
--- Customization settings for the chat application
-
+--[[ Use absolute path for "path" prop ]]
 local customization = {
 
     user = {
+        language = "en", -- en | ja | ua
+        
         avatar = {
-
+            path = "",
+            backgroundColor = ""
         },
         banner = {
-            
+            path = "",
+            backgroundColor = ""
         },
         iconSet = {
-
+            onlineStatusIcons = "",
+            callsIcons = "",
+            sendIcons = ""
         }
     }
 
