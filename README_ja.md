@@ -4,6 +4,8 @@
 
 <h3 align="center">Lunariaへようこそ</h3>
 
+[English](README.md) | [日本語](README_ja.md)
+
 ## について
 
 Lunariaは、安全で効率的な通信のために設計されたQUICプロトコルを中心に構築されたオープンソースのチャットアプリケーションです。
