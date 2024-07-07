@@ -36,8 +36,6 @@ Lxcode RequestManager::StartSignInRequest(const Auth &auth) {
     }
     printf("\nUser was signed up successfully");
 
-    auth.sign_up().user_email();
-
     delete u;
 
     return code;
