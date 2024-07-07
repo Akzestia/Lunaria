@@ -1,5 +1,5 @@
 #pragma once
-#include "../../MsQuic/include/msquic.h"
+#include "../../MsQuic/Linux_x64/include/msquic.h"
 #include "../../proto/build/test.pb.h"
 #include "../../proto/build/user.pb.h"
 #include "../../proto/build/wrapper.pb.h"
