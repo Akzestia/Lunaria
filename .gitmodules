@@ -4,3 +4,6 @@
 [submodule "Lunaria-Client"]
 	path = Lunaria-Client
 	url = https://github.com/Akzestia/Lunaria-Client.git
+[submodule "abseil-cpp"]
+	path = abseil-cpp
+	url = https://github.com/abseil/abseil-cpp.git
