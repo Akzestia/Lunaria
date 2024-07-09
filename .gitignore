@@ -6,7 +6,6 @@ gdk/
 db/config.ini
 --disable-gpu
 --ozone-platform-hint=wayland
-#Windows
 github-pages/pages/Akzestia.html
 docker
 build/
