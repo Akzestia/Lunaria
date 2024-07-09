@@ -9,5 +9,7 @@ db/config.ini
 #Windows
 github-pages/pages/Akzestia.html
 docker
+build/
+bx/
 
 !github-pages/images/
