@@ -10,6 +10,7 @@ db/config.ini
 github-pages/pages/Akzestia.html
 docker
 build/
+**/build/
 bx/
 
 !github-pages/images/
