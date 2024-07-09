@@ -17,7 +17,7 @@ local customization = {
             callsIcons = "",
             sendIcons = ""
         }
-    }
+    },
 
     signUpWindow = {
         font = {
@@ -36,7 +36,7 @@ local customization = {
         },
 
         opacity = 0
-    }
+    },
 
     signInWindow = {
         font = {
@@ -55,7 +55,7 @@ local customization = {
         },
 
         opacity = 0
-    }
+    },
 
     mainWindowDirectMessages = {
         backgroundImage = "",
@@ -79,14 +79,14 @@ local customization = {
 
         },
         chatArea = {
-            opacity = .8
+            opacity = .8,
             backgroundColor = ""
         },
         UserIfnoDisplay = {
-            opacity = .8
-            backgroundColor = ""
+            opacity = .8,
+            backgroundColor = "white"
         }
-    }
+    },
 
     mainWindowServers = {
         backgroundImage = "",
@@ -110,11 +110,11 @@ local customization = {
 
         },
         chatArea = {
-            opacity = .8
+            opacity = .8,
             backgroundColor = ""
         },
         UserIfnoDisplay = {
-            opacity = .8
+            opacity = .8,
             backgroundColor = ""
         }
     }
