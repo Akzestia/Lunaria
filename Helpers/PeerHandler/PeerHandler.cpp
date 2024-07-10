@@ -1,4 +1,5 @@
 #include "PeerHandler.h"
+#include "../../route-manager/Routes.hpp"
 
 std::unordered_map<HQUIC, uint8_t *> *PeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -90,23 +91,81 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
 
     std::cout << "\nRoute: " << wrapper.route() << "\n";
 
-    switch (wrapper.payload_case()) {
-        case Wrapper::kUser: {
-            const User& user = wrapper.user();
-            std::cout << "Received User: " << user.user_name() << ", " << user.user_email() << std::endl;
+    switch (wrapper.route()) {
+      case SIGN_UP: {
+      
             break;
         }
-        case Wrapper::kPerson: {
-            const Person& person = wrapper.person();
-            std::cout << "Received Person: " << reinterpret_cast<HQUIC>(person.connection()) << ", " << person.email() << std::endl;
+        case SIGN_IN: {
+           
             break;
         }
-        case Wrapper::kAuth:{
-            RouteManager::handleAuth(wrapper.auth());
+        case SEND_FRIEND_REQUEST: {
+            
+            break;
+        }
+        case REMOVE_FRIEND: {
+         
+            break;
+        }
+        case SEND_MESSAGE: {
+       
+            break;
+        }
+        case RECEIVE_MESSAGE: {
+           
+            break;
+        }
+        case CREATE_CHAT_GROUP: {
+      
+            break;
+        }
+        case JOIN_CHAT_GROUP: {
+           
+            break;
+        }
+        case LEAVE_CHAT_GROUP: {
+            
+            break;
+        }
+        case ADD_GROUP_MEMBER: {
+          
+            break;
+        }
+        case REMOVE_GROUP_MEMBER: {
+         
+            break;
+        }
+        case TYPING_INDICATOR: {
+          
+            break;
+        }
+        case READ_RECEIPT: {
+        
+            break;
+        }
+        case DELETE_MESSAGE: {
+          
+            break;
+        }
+        case EDIT_MESSAGE: {
+           
+            break;
+        }
+        case FETCH_CHAT_HISTORY: {
+       
+            break;
+        }
+        case USER_ONLINE_STATUS: {
+         
+            break;
+        }
+        case USER_OFFLINE_STATUS: {
+            
             break;
         }
         default:
-            std::cerr << "Error: Unknown payload type" << std::endl;
+            std::cerr << "Error: Unknown route" << std::endl;
             return false;
     }
     return true;
