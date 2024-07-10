@@ -92,12 +92,12 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
     std::cout << "\nRoute: " << wrapper.route() << "\n";
 
     switch (wrapper.route()) {
-      case SIGN_UP: {
-      
+        case SIGN_UP: {
+            RouteManager::handleSignUp(wrapper.auth().sign_up());
             break;
         }
         case SIGN_IN: {
-           
+            RouteManager::handleSignIn(wrapper.auth().sign_in());
             break;
         }
         case SEND_FRIEND_REQUEST: {

@@ -37,8 +37,17 @@ Lxcode RouteManager::handleSignUp(const Payload &payload) {
     Lxcode return_code;
     return_code.error_code = 0x00;
     return_code.is_successful = true;
-    if (std::holds_alternative<Report>(payload)) {
-        const Report &report = std::get<Report>(payload);
+
+    if (std::holds_alternative<Sign_up>(payload)) {
+        const Sign_up &sign_up = std::get<Sign_up>(payload);
+
+        User u;
+        u.set_user_name(sign_up.user_name());
+        u.set_user_email(sign_up.user_email());
+        u.set_user_password(sign_up.user_password());
+
+        if(DbManager::addUser(u))
+            return return_code;
 
         return return_code;
     } else {
@@ -52,8 +61,8 @@ Lxcode RouteManager::handleSignIn(const Payload &payload) {
     Lxcode return_code;
     return_code.error_code = 0x00;
     return_code.is_successful = true;
-    if (std::holds_alternative<Report>(payload)) {
-        const Report &report = std::get<Report>(payload);
+    if (std::holds_alternative<Sign_in>(payload)) {
+        const Sign_in &report = std::get<Sign_in>(payload);
 
         return return_code;
     } else {
