@@ -1,6 +1,3 @@
-[submodule "AzureNexus"]
-	path = AzureNexus
-	url = https://github.com/AzureXSX/AzureNexus.git
 [submodule "Lunaria-Client"]
 	path = Lunaria-Client
 	url = https://github.com/Akzestia/Lunaria-Client.git
