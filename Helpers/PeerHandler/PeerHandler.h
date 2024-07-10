@@ -3,6 +3,7 @@
 #include "../../proto/build/test.pb.h"
 #include "../../proto/build/user.pb.h"
 #include "../../proto/build/wrapper.pb.h"
+#include "../../route-manager/RouteManager.h"
 #include <absl/strings/cord.h>
 #include <cstdint>
 #include <cstring>
@@ -10,14 +11,13 @@
 #include <unordered_map>
 
 // Todo mutex
-class PeerHandler {
+class PeerHandler : protected RouteManager {
 
   private:
     static std::unordered_map<HQUIC, uint8_t *> *peers;
     static std::unordered_map<HQUIC, size_t> *peerDataSizes;
-    PeerHandler() = default;
+    PeerHandler() : RouteManager() {};
     friend class QuicServer;
-
   protected:
     static void HandlePeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static std::unordered_map<HQUIC, uint8_t *> *GetPeers();

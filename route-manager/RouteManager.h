@@ -10,13 +10,15 @@
 #include "../proto/build/user.pb.h"
 #include "../proto/build/vpn_graph.pb.h"
 #include "../proto/build/wrapper.pb.h"
+#include "../proto/build/sign_in.pb.h"
+#include "../proto/build/sign_up.pb.h"
 #include <functional>
 #include <set>
 #include <unordered_map>
 
 
 using Payload = std::variant<User, Message, Contact, Auth, Vpn_graph, Server,
-                             Report, Invite_link, Encrypt_key>;
+                             Report, Invite_link, Encrypt_key, Sign_up, Sign_in>;
 using RouteFunction = std::function<Lxcode(const Payload &)>;
 
 class RouteManager : protected DbManager {
@@ -28,6 +30,7 @@ class RouteManager : protected DbManager {
     static Lxcode handleAuth(const Payload &);
     static Lxcode handleReport(const Payload &);
     static Lxcode handleSignUp(const Payload &);
+    static Lxcode handleSignIn(const Payload &);
 
     static Lxcode getMessages(const Payload &, std::set<Message> &);
     static Lxcode getContacts(const Payload &, std::set<User> &);
@@ -39,4 +42,5 @@ class RouteManager : protected DbManager {
     static std::unordered_map<uint8_t, RouteFunction> *routes;
 
     RouteManager();
+    friend class PeerHandler;
 };

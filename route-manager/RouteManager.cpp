@@ -6,8 +6,11 @@ Lxcode RouteManager::handleAuth(const Payload &payload) {
     return_code.is_successful = true;
     if (std::holds_alternative<Auth>(payload)) {
         const Auth &auth = std::get<Auth>(payload);
+
+        if(auth.has_sign_up())
+            return handleSignUp(auth.sign_up());
+        return handleSignIn(auth.sign_in());
         
-        return return_code;
     } else {
         return_code.error_code = 0x01;
         return_code.is_successful = false;
@@ -31,6 +34,21 @@ Lxcode RouteManager::handleReport(const Payload &payload) {
 }
 
 Lxcode RouteManager::handleSignUp(const Payload &payload) {
+    Lxcode return_code;
+    return_code.error_code = 0x00;
+    return_code.is_successful = true;
+    if (std::holds_alternative<Report>(payload)) {
+        const Report &report = std::get<Report>(payload);
+
+        return return_code;
+    } else {
+        return_code.error_code = 0x01;
+        return_code.is_successful = false;
+        return return_code;
+    }
+}
+
+Lxcode RouteManager::handleSignIn(const Payload &payload) {
     Lxcode return_code;
     return_code.error_code = 0x00;
     return_code.is_successful = true;

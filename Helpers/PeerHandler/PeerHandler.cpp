@@ -101,6 +101,10 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
             std::cout << "Received Person: " << reinterpret_cast<HQUIC>(person.connection()) << ", " << person.email() << std::endl;
             break;
         }
+        case Wrapper::kAuth:{
+            RouteManager::handleAuth(wrapper.auth());
+            break;
+        }
         default:
             std::cerr << "Error: Unknown payload type" << std::endl;
             return false;
