@@ -5,7 +5,7 @@ project(MyServerProject)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Set directories
+# Set the correct directory for the MsQuic library
 set(MSQUIC_LIB_DIR ${CMAKE_SOURCE_DIR}/../MsQuic/Linux_x64/bin)
 set(PROTOBUF_LIB_DIR ${CMAKE_SOURCE_DIR}/../protobuf)
 set(PROTO_BUILD_DIR ${CMAKE_SOURCE_DIR}/../proto/build)
@@ -14,7 +14,7 @@ set(DB_DIR ${CMAKE_SOURCE_DIR}/../db)
 set(PROTO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../proto)
 set(ABSL_LIB_DIR ${CMAKE_SOURCE_DIR}/../absl-libs)
 
-# Add symbolic links if they don't exist (optional)
+# Add symbolic links if they don't exist
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${MSQUIC_LIB_DIR}/libmsquic.so.2.3.5 ${MSQUIC_LIB_DIR}/libmsquic.so)
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROTOBUF_LIB_DIR}/libprotobuf.so ${PROTOBUF_LIB_DIR}/libprotobuf.so.27)
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libabsl_log_internal_check_op.so ${ABSL_LIB_DIR}/libabsl_log_internal_check_op.so.2401.0.0)
@@ -49,9 +49,9 @@ add_executable(server
     ${HELPERS_DIR}/PeerHandler/PeerHandler.cpp
 )
 
-# Link libraries dynamically
+# Link libraries
 target_link_libraries(server
-    ${MSQUIC_LIB_DIR}/libmsquic.so.2  # Link against the specific version of libmsquic.so.2
+    ${MSQUIC_LIB_DIR}/libmsquic.so
     ${PROTOBUF_LIB_DIR}/libprotobuf.so
     ${ABSL_LIB_DIR}/libabsl_log_internal_check_op.so
     ${ABSL_LIB_DIR}/libabsl_log_internal_message.so
@@ -62,12 +62,6 @@ target_link_libraries(server
     pthread
 )
 
-# Set RPATH to include directories where shared libraries are located
-set_target_properties(server PROPERTIES
-    INSTALL_RPATH "$ORIGIN/../MsQuic/Linux_x64/bin:$ORIGIN/../protobuf:$ORIGIN/../absl-libs"
-)
-
-# Copy config.ini to build directory
 set(SOURCE_INI ${CMAKE_SOURCE_DIR}/../db/config.ini)
 set(DESTINATION_INI ${CMAKE_BINARY_DIR}/config.ini)
 
@@ -75,6 +69,11 @@ add_custom_command(
     TARGET server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_INI} ${DESTINATION_INI}
     COMMENT "Copying config.ini to ${DESTINATION_INI}"
+)
+
+# Set RPATH
+set_target_properties(server PROPERTIES
+    BUILD_RPATH ${MSQUIC_LIB_DIR}
 )
 
 # Print the library search path for debugging
