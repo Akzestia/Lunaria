@@ -22,7 +22,11 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libab
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libabsl_cord.so ${ABSL_LIB_DIR}/libabsl_cord.so.2401.0.0)
 
 # Include directories
-include_directories(${PROTO_INCLUDE_DIR} ${PROTO_BUILD_DIR})
+include_directories(
+    ${PROTO_INCLUDE_DIR} 
+    ${PROTO_BUILD_DIR} 
+    /usr/include/google/protobuf  # Add this line to include protobuf headers
+)
 
 # Add executable
 add_executable(server
