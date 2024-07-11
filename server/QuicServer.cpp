@@ -59,7 +59,8 @@ void QuicServer::ServerLoadConfiguration(const char *cert, const char *key) {
     Settings.IdleTimeoutMs = 0;
     Settings.IsSet.IdleTimeoutMs = TRUE;
 
-    Settings.ServerResumptionLevel = QUIC_SERVER_RESUME_AND_ZERORTT; // QUIC_SERVER_RESUME_AND_ZERORTT
+    Settings.ServerResumptionLevel =
+        QUIC_SERVER_RESUME_AND_ZERORTT; // QUIC_SERVER_RESUME_AND_ZERORTT
     Settings.IsSet.ServerResumptionLevel = TRUE;
 
     Settings.PeerBidiStreamCount = 100;
@@ -382,14 +383,16 @@ void QuicServer::Start() {
 void QuicServer::Close() {
     if (this->isRunning.load()) {
         this->isRunning.store(false);
-        
+
         this->server_status.notify_all();
 
         if (this->serverThread.joinable()) {
             this->serverThread.join();
-            std::cout << "Server thread has terminated successfully." << std::endl;
+            std::cout << "Server thread has terminated successfully."
+                      << std::endl;
         } else {
-            std::cout << "Server thread is not joinable or already joined." << std::endl;
+            std::cout << "Server thread is not joinable or already joined."
+                      << std::endl;
         }
     } else {
         std::cout << "Server is not running." << std::endl;
@@ -399,11 +402,14 @@ void QuicServer::Close() {
 }
 #pragma endregion
 
-
 bool QuicServer::getIsRunning() { return this->isRunning.load(); }
 
-QuicServer::QuicServer(const char *Host, const uint16_t UdpPort, const char* Alpn,
-                       const char *cert, const char *key) : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn} {
+QuicServer::QuicServer(const char *Host, const uint16_t UdpPort,
+                       const size_t ThreadNumber, const char *Alpn,
+                       const char *cert, const char *key)
+    : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn},
+      threadPool(ThreadNumber) {
+
     this->Host = (char *)Host;
     this->UdpPort = UdpPort;
     this->cert = (char *)cert;
@@ -436,11 +442,13 @@ QuicServer::~QuicServer() {
     auto begin = ConnectionManager::getUsers()->begin();
     auto end = ConnectionManager::getUsers()->end();
 
-    std::cout << "Closing existing connections: " << ConnectionManager::getUsers()->size() << std::endl;
+    std::cout << "Closing existing connections: "
+              << ConnectionManager::getUsers()->size() << std::endl;
 
-    for(;begin != end; begin++){
+    for (; begin != end; begin++) {
         printf("\n[conn][%p] Closing\n", begin->first);
-        MsQuic->ConnectionShutdown(begin->first, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        MsQuic->ConnectionShutdown(begin->first,
+                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
         MsQuic->ConnectionClose(begin->first);
     }
 

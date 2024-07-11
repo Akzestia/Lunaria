@@ -13,9 +13,9 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
+#include "../tokio-cpp/ThreadPool.h"
 
 class QuicServer : protected ConnectionManager,
-                   protected DbManager,
                    protected PeerHandler {
   public:
     void Start();
@@ -24,7 +24,7 @@ class QuicServer : protected ConnectionManager,
 
     bool getIsRunning();
 
-    QuicServer(const char *Host, const uint16_t UdpPort, const char* Alpn, const char *cert,
+    QuicServer(const char *Host, const uint16_t UdpPort, const size_t ThreadNumber, const char* Alpn, const char *cert,
                const char *key = nullptr);
 
     ~QuicServer();
@@ -111,6 +111,8 @@ class QuicServer : protected ConnectionManager,
                                  uint8_t *OutBuffer);
 
     uint8_t DecodeHexChar(_In_ char c);
+
+    ThreadPool threadPool;
 
     QuicServer();
 };
