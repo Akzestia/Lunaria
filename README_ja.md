@@ -69,6 +69,8 @@ Lunariaがサポートしている：
 
 以下は、グラフィカル・ユーザー・インターフェース（GUI）のスナップショットである：
 
+<img src="./GUI/Server.png" alt="Example">
+<br/>
 <img src="./GUI/Frame 1.png" alt="Example">
 <br/>
 <img src="./GUI/Frame 65.png" alt="Example">
