@@ -12,10 +12,14 @@ set(PROTO_BUILD_DIR ${CMAKE_SOURCE_DIR}/../proto/build)
 set(HELPERS_DIR ${CMAKE_SOURCE_DIR}/../Helpers)
 set(DB_DIR ${CMAKE_SOURCE_DIR}/../db)
 set(PROTO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../proto)
+set(ABSL_LIB_DIR ${CMAKE_SOURCE_DIR}/../absl-libs)
 
 # Add symbolic links if they don't exist
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${MSQUIC_LIB_DIR}/libmsquic.so.2.3.5 ${MSQUIC_LIB_DIR}/libmsquic.so)
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${PROTOBUF_LIB_DIR}/libprotobuf.so ${PROTOBUF_LIB_DIR}/libprotobuf.so.27)
+execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libabsl_log_internal_check_op.so ${ABSL_LIB_DIR}/libabsl_log_internal_check_op.so.2401.0.0)
+execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libabsl_log_internal_message.so ${ABSL_LIB_DIR}/libabsl_log_internal_message.so.2401.0.0)
+execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libabsl_cord.so ${ABSL_LIB_DIR}/libabsl_cord.so.2401.0.0)
 
 # Include directories
 include_directories(${PROTO_INCLUDE_DIR} ${PROTO_BUILD_DIR})
@@ -24,6 +28,8 @@ include_directories(${PROTO_INCLUDE_DIR} ${PROTO_BUILD_DIR})
 add_executable(server
     ./test.server.cpp
     ${CMAKE_SOURCE_DIR}/../server/QuicServer.cpp
+    ${CMAKE_SOURCE_DIR}/../route-manager/RouteManager.cpp
+    ${CMAKE_SOURCE_DIR}/../tokio-cpp/ThreadPool.cpp
     ${PROTO_BUILD_DIR}/test.pb.cc
     ${PROTO_BUILD_DIR}/user.pb.cc
     ${PROTO_BUILD_DIR}/message.pb.cc
@@ -47,9 +53,9 @@ add_executable(server
 target_link_libraries(server
     ${MSQUIC_LIB_DIR}/libmsquic.so
     ${PROTOBUF_LIB_DIR}/libprotobuf.so
-    absl_log_internal_check_op
-    absl_log_internal_message
-    absl_cord
+    ${ABSL_LIB_DIR}/libabsl_log_internal_check_op.so
+    ${ABSL_LIB_DIR}/libabsl_log_internal_message.so
+    ${ABSL_LIB_DIR}/libabsl_cord.so
     pqxx
     crypto
     stdc++
