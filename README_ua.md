@@ -71,23 +71,7 @@ Lunaria підтримує:
 
 <img src="./GUI/Server.png" alt="Example">
 <br/>
-<img src="./GUI/Frame 1.png" alt="Example">
+<img src="./GUI/Group 56.png" alt="Example">
 <br/>
-<img src="./GUI/Frame 65.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 54.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 55.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 57.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 59.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 60.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 62.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 63.png" alt="Example">
-<br/>
-<img src="./GUI/Frame 64.png" alt="Example">
+<img src="./GUI/Group 57.png" alt="Example">
 <br/>
