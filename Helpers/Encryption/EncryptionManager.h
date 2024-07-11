@@ -1,3 +1,6 @@
+#ifndef ENCRYPTION_MANAGER_H
+#define ENCRYPTION_MANAGER_H
+
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <cstdio>
@@ -19,3 +22,5 @@ class EncryptionManager {
     static bool ToSHA256(const std::string &input, std::string &output);
 };
 #pragma GCC diagnostic pop
+
+#endif

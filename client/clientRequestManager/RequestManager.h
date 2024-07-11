@@ -1,4 +1,5 @@
-#pragma once
+#ifndef REQUEST_MANAGER_H
+#define REQUEST_MANAGER_H
 #include <iostream>
 #include "../../proto/build/auth.pb.h"
 #include "../../db/DbManager.h"
@@ -19,3 +20,5 @@ class RequestManager : protected DbManager {
 #pragma endregion
     virtual ~RequestManager();
 };
+
+#endif

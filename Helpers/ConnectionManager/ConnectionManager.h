@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONNECTION_MANAGER_H
+#define CONNECTION_MANAGER_H
 #include "../../MsQuic/Linux_x64/include/msquic.h"
 #include "../../proto/build/user.pb.h"
 #include <condition_variable>
@@ -23,3 +24,4 @@ class ConnectionManager {
     ConnectionManager() = default;
     friend class QuicServer;
 };
+#endif

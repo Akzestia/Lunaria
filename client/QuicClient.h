@@ -1,4 +1,5 @@
-#pragma once
+#ifndef QUIC_CLIENT_H
+#define QUIC_CLIENT_H
 #include "../MsQuic/Linux_x64/include/msquic.h"
 #include "../proto/build/user.pb.h"
 #include "../proto/build/wrapper.pb.h"
@@ -79,3 +80,5 @@ class QuicClient : protected RequestManager {
 
     uint8_t DecodeHexChar(_In_ char c);
 };
+
+#endif

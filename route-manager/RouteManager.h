@@ -1,4 +1,7 @@
-#pragma once
+
+#ifndef ROUTE_MANAGER_H
+#define ROUTE_MANAGER_H
+
 #include "../db/DbManager.h"
 #include "../proto/build/auth.pb.h"
 #include "../proto/build/contact.pb.h"
@@ -15,7 +18,6 @@
 #include <functional>
 #include <set>
 #include <unordered_map>
-
 
 using Payload = std::variant<User, Message, Contact, Auth, Vpn_graph, Server,
                              Report, Invite_link, Encrypt_key, Sign_up, Sign_in>;
@@ -45,3 +47,5 @@ class RouteManager : protected DbManager {
 
     friend class PeerHandler;
 };
+
+#endif

@@ -1,3 +1,7 @@
+
+#ifndef TOKIO_CPP_H
+#define TOKIO_CPP_H
+
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -23,3 +27,5 @@ private:
     std::condition_variable condition;
     bool stop;
 };
+
+#endif

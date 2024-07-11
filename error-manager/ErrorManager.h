@@ -1,3 +1,5 @@
+#ifndef ERROR_MANAGER_H
+#define ERROR_MANAGER_H
 #include <cstdint>
 
 typedef struct Lxcode{
@@ -24,3 +26,5 @@ enum Lxcodes : uint8_t {
 class ErrorManager{
     public:
 };
+
+#endif

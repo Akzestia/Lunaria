@@ -188,7 +188,9 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
         printf("[strm][%p] Peer shut down\n", Stream);
-        threadPool.enqueueTask(onPeerShutdown(Stream));
+        threadPool.enqueueTask([Stream](HQUIC) -> bool {
+            return onPeerShutdown(static_cast<HQUIC>(Stream));
+        });
         // QuicServer::send(Stream, Context);
     } break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:

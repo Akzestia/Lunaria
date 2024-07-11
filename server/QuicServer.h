@@ -1,4 +1,8 @@
-#pragma once
+
+
+#ifndef QUIC_SERVER_H
+#define QUIC_SERVER_H
+
 #include "../Helpers/ConnectionManager/ConnectionManager.h"
 #include "../Helpers/PeerHandler/PeerHandler.h"
 #include "../MsQuic/Linux_x64/include/msquic.h"
@@ -116,3 +120,5 @@ class QuicServer : protected ConnectionManager,
 
     QuicServer();
 };
+
+#endif

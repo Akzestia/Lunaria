@@ -1,4 +1,5 @@
-#pragma once
+#ifndef DB_MANAGER_H
+#define DB_MANAGER_H
 #include "../proto/build/user.pb.h"
 #include "../proto/build/message.pb.h"
 #include "../proto/build/contact.pb.h"
@@ -48,3 +49,5 @@ class DbManager {
     friend class RequestManager;
     friend class RouteManager;
 };
+
+#endif
