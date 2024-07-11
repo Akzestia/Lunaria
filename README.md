@@ -73,4 +73,7 @@ Here are some snapshots of the graphical user interface (GUI):
 <br/>
 <img src="./GUI/Group 56.png" alt="Example">
 <br/>
+<img src="./GUI/Group 58.png" alt="Example">
+<br/>
 <img src="./GUI/Group 57.png" alt="Example">
+<br/>

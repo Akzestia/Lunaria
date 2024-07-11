@@ -73,5 +73,7 @@ Lunariaがサポートしている：
 <br/>
 <img src="./GUI/Group 56.png" alt="Example">
 <br/>
+<img src="./GUI/Group 58.png" alt="Example">
+<br/>
 <img src="./GUI/Group 57.png" alt="Example">
 <br/>
