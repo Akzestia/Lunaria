@@ -62,6 +62,15 @@ target_link_libraries(server
     pthread
 )
 
+set(SOURCE_INI ${CMAKE_SOURCE_DIR}/../db/config.ini)
+set(DESTINATION_INI ${CMAKE_BINARY_DIR}/config.ini)
+
+add_custom_command(
+    TARGET server POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_INI} ${DESTINATION_INI}
+    COMMENT "Copying config.ini to ${DESTINATION_INI}"
+)
+
 # Set RPATH
 set_target_properties(server PROPERTIES
     BUILD_RPATH ${MSQUIC_LIB_DIR}

@@ -27,6 +27,8 @@ if ! g++ -g ./test.server.cpp -o./build/server \
     -L/usr/lib -lcrypto \
     -lstdc++ -lpthread -lprotobuf \
     ../server/QuicServer.cpp \
+    ../route-manager/RouteManager.cpp \
+    ../tokio-cpp/ThreadPool.cpp
     ../proto/build/test.pb.cc \
     ../proto/build/user.pb.cc \
     ../proto/build/message.pb.cc \
