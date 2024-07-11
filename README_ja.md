@@ -71,8 +71,11 @@ Lunariaがサポートしている：
 
 <img src="./GUI/Server.png" alt="Example">
 <br/>
-<img src="./GUI/Sign in(1).png" alt="Example">
-<img src="./GUI/Sign up(1).png" alt="Example">
+<div align="center">
+    <img width=390 src="./GUI/Sign in(1).png" alt="Example">
+    &nbsp; &nbsp; &nbsp; &nbsp;
+    <img width=390 src="./GUI/Sign up(1).png" alt="Example">
+</div>
 <br/>
 <img src="./GUI/Group 56.png" alt="Example">
 <br/>
@@ -80,6 +83,9 @@ Lunariaがサポートしている：
 <br/>
 <img src="./GUI/Group 57.png" alt="Example">
 <br/>
-<img src="./GUI/Sign in.png" alt="Example">
-<img src="./GUI/Sign up.png" alt="Example">
+<div align="center">
+    <img width=390 src="./GUI/Sign in.png" alt="Example">
+    &nbsp; &nbsp; &nbsp; &nbsp;
+    <img width=390 src="./GUI/Sign up.png" alt="Example">
+</div>
 <br/>
