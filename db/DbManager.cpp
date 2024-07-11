@@ -459,8 +459,11 @@ bool DbManager::deleteContact(const Contact &contact) {
 #pragma endregion
 
 std::string DbManager::getConnectionString() {
+
+    std::cout << "Current working directory: " << std::filesystem::current_path().string() << std::endl;
+
     boost::property_tree::ptree pt;
-    boost::property_tree::ini_parser::read_ini("./db/config.ini", pt);
+    boost::property_tree::ini_parser::read_ini("./config.ini", pt);
 
     try {
         std::string db_host = pt.get<std::string>("DB_HOST");
