@@ -97,7 +97,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
             break;
         }
         case SIGN_IN: {
-            RouteManager::handleSignIn(wrapper.auth().sign_in());
+            auto response = RouteManager::handleSignIn(wrapper.auth().sign_in());
             break;
         }
         case SEND_FRIEND_REQUEST: {
