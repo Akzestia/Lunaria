@@ -41,6 +41,7 @@ class RouteManager : protected DbManager {
 
     static std::unordered_map<uint8_t, RouteFunction> *routes;
 
-    RouteManager();
+    RouteManager() : DbManager() {};
+
     friend class PeerHandler;
 };

@@ -46,4 +46,5 @@ class DbManager {
     DbManager() = default;
     friend class QuicServer;
     friend class RequestManager;
+    friend class RouteManager;
 };
