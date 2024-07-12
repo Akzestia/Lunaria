@@ -11,5 +11,6 @@ docker
 build/
 **/build/
 bx/
+lunaria-server.tar
 
 !github-pages/images/
