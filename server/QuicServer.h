@@ -8,6 +8,7 @@
 #include "../MsQuic/Linux_x64/include/msquic.h"
 #include "../db/DbManager.h"
 #include "../proto/build/user.pb.h"
+#include "../tokio-cpp/ThreadPool.h"
 #include <absl/strings/cord.h>
 #include <atomic>
 #include <condition_variable>
@@ -17,10 +18,8 @@
 #include <thread>
 #include <unordered_map>
 #include <vector>
-#include "../tokio-cpp/ThreadPool.h"
 
-class QuicServer : protected ConnectionManager,
-                   protected PeerHandler {
+class QuicServer : protected ConnectionManager, protected PeerHandler {
   public:
     void Start();
 
@@ -28,7 +27,8 @@ class QuicServer : protected ConnectionManager,
 
     bool getIsRunning();
 
-    QuicServer(const char *Host, const uint16_t UdpPort, const size_t ThreadNumber, const char* Alpn, const char *cert,
+    QuicServer(const char *Host, const uint16_t UdpPort,
+               const size_t ThreadNumber, const char *Alpn, const char *cert,
                const char *key = nullptr);
 
     ~QuicServer();
@@ -53,7 +53,7 @@ class QuicServer : protected ConnectionManager,
     static std::mutex server_status_m;
     static bool disconnected;
 
-    static bool getUserCreds(HQUIC, void*);
+    static bool getUserCreds(HQUIC, void *);
 
     bool getUserCreds(HQUIC);
 
@@ -105,7 +105,7 @@ class QuicServer : protected ConnectionManager,
     char *key = nullptr;
     const QUIC_REGISTRATION_CONFIG RegConfig = {
         "Server", QUIC_EXECUTION_PROFILE_TYPE_REAL_TIME};
-    const QUIC_BUFFER Alpn; // wq-vvv-01 
+    const QUIC_BUFFER Alpn; // wq-vvv-01
     std::atomic<bool> isRunning = false;
     std::thread serverThread;
 
