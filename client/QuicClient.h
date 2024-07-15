@@ -31,7 +31,7 @@ class QuicClient : protected RequestManager {
 
   private:
     const QUIC_API_TABLE *MsQuic = nullptr;
-    ClientListener cListener;
+    //ClientListener cListener;
     static std::condition_variable cv;
     static std::mutex cv_m;
     static bool disconnected;

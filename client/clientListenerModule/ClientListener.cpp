@@ -8,6 +8,11 @@ ClientListener::ClientListener(const QUIC_API_TABLE *MsQuic) : MsQuic(MsQuic) {
 ClientListener::~ClientListener() {
     printf("ClientListener destructor\n");
 
+    if(MsQuic != nullptr) {
+        MsQuicClose(MsQuic);
+        MsQuic = nullptr;
+    }
+
 };
 
 //Write alll the functions here
