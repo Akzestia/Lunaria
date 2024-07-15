@@ -6,7 +6,7 @@ class ClientListener {
   public:
     ClientListener(const QUIC_API_TABLE *MsQuic);
     ~ClientListener();
-
+    ClientListener() = default;
   private:
     const QUIC_API_TABLE *MsQuic = nullptr;
     QUIC_STATUS Status;

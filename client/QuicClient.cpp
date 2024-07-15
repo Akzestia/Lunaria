@@ -191,7 +191,7 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
         printf("MsQuicOpen2 failed, 0x%x!\n", Status);
         exit(-1);
     }
-    Listener = ClientListener((MsQuic));
+    cListener = ClientListener((MsQuic));
 
     if (QUIC_FAILED(Status =
                         MsQuic->RegistrationOpen(&RegConfig, &Registration))) {

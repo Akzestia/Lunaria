@@ -14,7 +14,7 @@
 #include "clientListenerModule/ClientListener.h"
 #include "clientRequestManager/RequestManager.h"
 
-class QuicClient : protected RequestManager, protected ClientListener {
+class QuicClient : protected RequestManager {
   public:
     void Connect();
 
@@ -31,7 +31,7 @@ class QuicClient : protected RequestManager, protected ClientListener {
 
   private:
     const QUIC_API_TABLE *MsQuic = nullptr;
-    ClientListener Listener;
+    ClientListener cListener;
     static std::condition_variable cv;
     static std::mutex cv_m;
     static bool disconnected;
