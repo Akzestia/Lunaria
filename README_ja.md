@@ -35,7 +35,7 @@ Lunariaは、安全で効率的な通信のために設計されたQUICプロト
   - [Qt](https://www.qt.io/) - C++GUIフレームワーク
   - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ライブラリ
   - [Protobuf](https://developers.google.com/protocol-buffers) - プロトコル・バッファ
-  - [OpenVPN](https://openvpn.net/) - VPNソリューション
+  - [NetBird](https://netbird.io/) - VPNソリューション
   - [MsQuic](https://github.com/microsoft/msquic) - クロスプラットフォームQUICプロトコル実装
   - [Abseil](https://abseil.io/docs/cpp/quickstart-cmake.html) - GoogleによるC++コモン・ライブラリは、最新のC++開発に不可欠なコンポーネントを提供する。
   - [OpenSSL](https://www.openssl.org/) - SSL/TLSプロトコルを実装し、暗号アルゴリズムを提供するオープンソースの暗号ライブラリ。
