@@ -40,3 +40,6 @@ EXPOSE 6121
 
 # Set the default command to run your server
 CMD ["./server"]
+
+#To run docker container on your VPS, you can use the following command:
+#docker run -d --network host <image_name>
