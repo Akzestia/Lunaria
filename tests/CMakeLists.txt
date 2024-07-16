@@ -56,7 +56,7 @@ add_executable(server
 # Link libraries
 target_link_libraries(server
     ${MSQUIC_LIB_DIR}/libmsquic.so
-    ${PROTOBUF_LIB_DIR}/libprotobuf.so
+    ${PROTOBUF_LIBRARIES}
     ${ABSL_LIB_DIR}/libabsl_log_internal_check_op.so
     ${ABSL_LIB_DIR}/libabsl_log_internal_message.so
     ${ABSL_LIB_DIR}/libabsl_cord.so
