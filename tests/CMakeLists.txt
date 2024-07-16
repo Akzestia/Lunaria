@@ -5,6 +5,8 @@ project(MyServerProject)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_package(Protobuf REQUIRED)
+
 # Set the correct directory for the MsQuic library
 set(MSQUIC_LIB_DIR ${CMAKE_SOURCE_DIR}/../MsQuic/Linux_x64/bin)
 set(PROTOBUF_LIB_DIR ${CMAKE_SOURCE_DIR}/../protobuf)
@@ -24,7 +26,7 @@ execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libab
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${ABSL_LIB_DIR}/libabsl_cord.so ${ABSL_LIB_DIR}/libabsl_cord.so.2401.0.0)
 
 # Include directories
-include_directories(${PROTO_INCLUDE_DIR} ${PROTO_BUILD_DIR} /usr/include/openssl-1.1)
+include_directories(${PROTO_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIRS} ${PROTO_BUILD_DIR} /usr/include/openssl-1.1)
 
 # Add executable
 add_executable(server
