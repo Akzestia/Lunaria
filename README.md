@@ -35,7 +35,7 @@ This project utilizes various technologies including:
   - [Qt](https://www.qt.io/) - C++ GUI Framework
   - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ Library
   - [Protobuf](https://developers.google.com/protocol-buffers) - Protocol Buffers
-  - [OpenVPN](https://openvpn.net/) - VPN solution
+  - [NetBird](https://netbird.io/) - VPN solution
   - [MsQuic](https://github.com/microsoft/msquic) - Cross-platform QUIC protocol implementation
   - [Abseil](https://abseil.io/docs/cpp/quickstart-cmake.html) - C++ Common Library by Google, offering essential components for modern C++ development.
   - [OpenSSL](https://www.openssl.org/) - Open Source cryptographic library that implements SSL/TLS protocols and provides cryptographic algorithms.
