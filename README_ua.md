@@ -35,7 +35,7 @@ Lunaria - це чат-додаток з відкритим вихідним ко
   - [Qt](https://www.qt.io/) - фреймворк графічного інтерфейсу C++
   - [libpqxx](https://libpqxx.readthedocs.io/) - бібліотека C++ для PostgreSQL
   - [Protobuf](https://developers.google.com/protocol-buffers) - протокольні буфери
-  - [OpenVPN](https://openvpn.net/) -  VPN рішення
+  - [NetBird](https://netbird.io/) -  VPN рішення
   - [MsQuic](https://github.com/microsoft/msquic) - Крос-платформна реалізація протоколу QUIC
   - [Abseil](https://abseil.io/docs/cpp/quickstart-cmake.html) - CЗагальна бібліотека C++ від Google, що пропонує необхідні компоненти для сучасної розробки на C++.
   - [OpenSSL](https://www.openssl.org/) - Oкриптографічна бібліотека з відкритим вихідним кодом, що реалізує протоколи SSL/TLS та надає криптографічні алгоритми.
