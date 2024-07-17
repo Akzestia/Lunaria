@@ -5,6 +5,7 @@
 typedef struct Lxcode{
   bool is_successful;
   uint8_t error_code;
+  const char* response;
 } Lxcode;
 
 enum Lxcodes : uint8_t {
@@ -25,6 +26,7 @@ enum Lxcodes : uint8_t {
 
 class ErrorManager{
     public:
+      operator bool() const;
 };
 
 #endif

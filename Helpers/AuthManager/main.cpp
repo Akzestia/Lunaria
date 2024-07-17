@@ -9,6 +9,8 @@ int main(){
 
     const char* token = authManager.generateToken(username, password);
 
+    std::cout << "Generated token: " << token << std::endl;
+
     if (authManager.verifyToken(username, password, token)) {
         std::cout << "Token is valid" << std::endl;
     } else {

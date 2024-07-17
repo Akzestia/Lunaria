@@ -13,6 +13,7 @@
 #include "../proto/build/auth.pb.h"
 #include "clientListenerModule/ClientListener.h"
 #include "clientRequestManager/RequestManager.h"
+#include "../error-manager/ErrorManager.h"
 
 class QuicClient : protected RequestManager {
   public:
@@ -21,6 +22,9 @@ class QuicClient : protected RequestManager {
     void Disconnect();
 
     HQUIC getConnection();
+
+    Lxcode SignUp(const Auth &);
+    Lxcode SignIn(const Auth &);
 
     void send(const absl::Cord &message);
 

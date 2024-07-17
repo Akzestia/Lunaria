@@ -1,6 +1,8 @@
 #include "QuicClient.h"
 #include "clientListenerModule/ClientListener.h"
 #include <cstdint>
+#include "../route-manager/Routes.hpp"
+
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
 #endif
@@ -422,4 +424,40 @@ Error:
     }
     return false;
 }
+#pragma endregion
+
+
+#pragma region SignUp()
+
+Lxcode QuicClient::SignUp(const Auth &auth) {
+    absl::Cord auth_request;
+
+    Wrapper wrapper;
+    *wrapper.mutable_auth() = auth;
+    wrapper.set_route(SIGN_UP);
+    wrapper.SerializePartialToCord(&auth_request);
+    if (AuthRequest(auth_request)) {
+        return {true, SUCCESS, "Success"};
+    }
+    return {false, DB_ERROR_CONNECTION_FAILED, "Failed to connect"};
+}
+
+#pragma endregion
+
+
+#pragma region SignIn()
+
+Lxcode QuicClient::SignIn(const Auth &auth) {
+    absl::Cord auth_request;
+
+    Wrapper wrapper;
+    *wrapper.mutable_auth() = auth;
+    wrapper.set_route(SIGN_IN);
+    wrapper.SerializePartialToCord(&auth_request);
+    if (AuthRequest(auth_request)) {
+        return {true, SUCCESS, "Success"};
+    }
+    return {false, DB_ERROR_CONNECTION_FAILED, "Failed to connect"};
+}
+
 #pragma endregion

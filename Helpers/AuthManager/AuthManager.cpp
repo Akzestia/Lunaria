@@ -17,8 +17,7 @@ const char* AuthManager::generateToken(const char* username, const char* passwor
     std::string data = std::string(username) + password;
 
     unsigned char* digest;
-    digest = HMAC(EVP_sha256(), secretKey, strlen(secretKey), 
-                  reinterpret_cast<const unsigned char*>(data.c_str()), data.length(), NULL, NULL);
+    digest = HMAC(EVP_sha256(), secretKey, strlen(secretKey), reinterpret_cast<const unsigned char*>(data.c_str()), data.length(), NULL, NULL);
 
     char* hexDigest = new char[SHA256_DIGEST_LENGTH*2 + 1];
     for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
