@@ -1,14 +1,26 @@
 #ifndef CLIENT_LISTENER_H
 #define CLIENT_LISTENER_H
 #include "../../MsQuic/Linux_x64/include/msquic.h"
+#include <atomic>
+#include <cstdio>
+#include <iostream>
+#include <thread>
 
 class ClientListener {
   public:
     ClientListener(const QUIC_API_TABLE *MsQuic);
     ~ClientListener();
     ClientListener() = default;
+
+    void Start(HQUIC Registration, uint16_t UdpPort, const QUIC_BUFFER &Alpn);
+    void Close();
+
   private:
+    std::atomic<bool> isRunning = false;
+    std::thread serverThread;
+
     const QUIC_API_TABLE *MsQuic = nullptr;
+    HQUIC Listener = nullptr;
     QUIC_STATUS Status;
 
     void LoadConfiguration(const char *cert, const char *key);

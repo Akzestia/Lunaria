@@ -97,6 +97,9 @@ void QuicClient::Disconnect() {
                                    QUIC_CONNECTION_SHUTDOWN_FLAG_NONE,
                                    0); // QUIC_CONNECTION_SHUTDOWN_FLAG_NONE
     }
+    if(cListener) {
+        cListener->Close();
+    }
 }
 
 #pragma region ClientStreamCallback
@@ -193,7 +196,6 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
         printf("MsQuicOpen2 failed, 0x%x!\n", Status);
         exit(-1);
     }
-    //cListener = ClientListener((MsQuic));
 
     if (QUIC_FAILED(Status =
                         MsQuic->RegistrationOpen(&RegConfig, &Registration))) {
@@ -202,6 +204,10 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
     }
 
     ClientLoadConfiguration(cert, key);
+
+    cListener = new ClientListener(MsQuic);
+    cListener->Start(this->Registration, 6122, this->Alpn);
+
     HQUIC Connection = NULL;
 }
 
@@ -351,9 +357,12 @@ bool QuicClient::openTunnel() {
 #pragma endregion
 
 QuicClient::~QuicClient() {
-    if (ResumptionTicket != nullptr) {
+    if (ResumptionTicket) {
         delete[] ResumptionTicket;
         ResumptionTicket = nullptr;
+    }
+    if(cListener) {
+        delete cListener;
     }
     if (MsQuic) {
         if (Configuration) {

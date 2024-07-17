@@ -40,6 +40,8 @@ class QuicClient {
     static bool disconnected;
     HQUIC TunnelStream;
 
+    ClientListener *cListener = nullptr;
+
     bool openTunnel();
 
     bool AuthRequest(const absl::Cord &);
