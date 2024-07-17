@@ -206,7 +206,7 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
     ClientLoadConfiguration(cert, key);
 
     cListener = new ClientListener(MsQuic);
-    cListener->Start(this->Registration, 6122, this->Alpn);
+    cListener->Start(this->Registration, 6123, this->Alpn);
 
     HQUIC Connection = NULL;
 }
@@ -470,3 +470,39 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
 }
 
 #pragma endregion
+
+
+#pragma region openPeer()
+
+void QuicClient::openPeer(const char* PeerIp, uint16_t UdpPort) {
+    HQUIC p2pConnection = NULL;
+    if (QUIC_FAILED(Status = MsQuic->ConnectionOpen(
+                        Registration,
+                        QuicClient::StaticClientConnectionCallback, this,
+                        &p2pConnection))) {
+        printf("ConnectionOpen failed, 0x%x!\n", Status);
+    }
+    printf("\n[conn][%p] Connecting...\n", p2pConnection);
+    printf("\nPort: %u\n", UdpPort);
+
+    if (QUIC_FAILED(Status = MsQuic->ConnectionStart(
+                        p2pConnection, Configuration, QUIC_ADDRESS_FAMILY_UNSPEC,
+                        PeerIp, UdpPort))) {
+        printf("ConnectionStart failed, 0x%x!\n", Status);
+        goto Error;
+    }
+Error:
+    if (QUIC_FAILED(Status) && p2pConnection != NULL) {
+        MsQuic->ConnectionClose(p2pConnection);
+    }
+}
+
+
+#pragma endregion
+
+
+#pragma region sendToPeer()
+
+#pragma endregion
+
+#pragma region closePeer()

@@ -27,7 +27,7 @@ class QuicClient {
 
     void send(const absl::Cord &message);
 
-    void openPeer();
+    void openPeer(const char* PeerIp, uint16_t UdpPort);
     void sendToPeer();
     void closePeer();
 
@@ -38,7 +38,6 @@ class QuicClient {
 
   private:
     const QUIC_API_TABLE *MsQuic = nullptr;
-    //ClientListener cListener;
     static std::condition_variable cv;
     static std::mutex cv_m;
     static bool disconnected;

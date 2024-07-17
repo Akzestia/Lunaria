@@ -6,6 +6,8 @@ int main(){
     client.Connect();
 
     getchar();
+    client.openPeer("localhost", 6122);
+    getchar();
 
     client.Disconnect();
 
