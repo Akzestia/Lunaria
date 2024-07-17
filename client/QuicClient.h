@@ -12,10 +12,9 @@
 #include <sys/stat.h>
 #include "../proto/build/auth.pb.h"
 #include "clientListenerModule/ClientListener.h"
-#include "clientRequestManager/RequestManager.h"
 #include "../error-manager/ErrorManager.h"
 
-class QuicClient : protected RequestManager {
+class QuicClient {
   public:
     void Connect();
 
