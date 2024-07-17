@@ -13,6 +13,7 @@
 #include "../proto/build/auth.pb.h"
 #include "clientListenerModule/ClientListener.h"
 #include "../error-manager/ErrorManager.h"
+#include "../NetBird/VpnManager.h"
 
 class QuicClient {
   public:

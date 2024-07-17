@@ -17,6 +17,7 @@ set(PROTO_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/../../proto)
 set(ABSL_LIB_DIR ${CMAKE_SOURCE_DIR}/../../absl-libs)
 set(ROUTE_MANAGER_DIR ${CMAKE_SOURCE_DIR}/../../route-manager)
 set(TOKIO_CPP_DIR ${CMAKE_SOURCE_DIR}/../../tokio-cpp)
+set(VPN_MANAGER_DIR ${CMAKE_SOURCE_DIR}/../../NetBird)
 
 # Add symbolic links if they don't exist
 execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink ${MSQUIC_LIB_DIR}/libmsquic.so.2.3.5 ${MSQUIC_LIB_DIR}/libmsquic.so)
@@ -31,6 +32,7 @@ include_directories(${PROTO_INCLUDE_DIR} ${PROTOBUF_INCLUDE_DIRS} ${PROTO_BUILD_
 # Add executable
 add_executable(client
     ./test.cpp
+    ${VPN_MANAGER_DIR}/VpnManager.cpp
     ${CMAKE_SOURCE_DIR}/../QuicClient.cpp
     ${CMAKE_SOURCE_DIR}/ClientListener.cpp
     ${ROUTE_MANAGER_DIR}/RouteManager.cpp
