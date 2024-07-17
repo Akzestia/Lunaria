@@ -27,6 +27,10 @@ class QuicClient {
 
     void send(const absl::Cord &message);
 
+    void openPeer();
+    void sendToPeer();
+    void closePeer();
+
     QuicClient(const char *Host, const uint16_t UdpPort, const char* Alpn, const char *cert,
                const char *key = nullptr);
 
