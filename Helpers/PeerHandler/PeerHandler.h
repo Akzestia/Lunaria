@@ -20,6 +20,7 @@ class PeerHandler : protected RouteManager {
     static std::unordered_map<HQUIC, size_t> *peerDataSizes;
     PeerHandler() : RouteManager() {};
     friend class QuicServer;
+    friend class QuicClient;
   protected:
     static void HandlePeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static std::unordered_map<HQUIC, uint8_t *> *GetPeers();

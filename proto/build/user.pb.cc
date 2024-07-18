@@ -41,7 +41,7 @@ inline constexpr User::Impl_::Impl_(
         user_avatar_(
             &::google::protobuf::internal::fixed_address_empty_string,
             ::_pbi::ConstantInitialized()),
-        online_status_{false},
+        online_status_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -92,7 +92,7 @@ const char descriptor_table_protodef_user_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIA
     "\n\nuser.proto\"\206\001\n\004User\022\024\n\014display_name\030\001 "
     "\001(\t\022\021\n\tuser_name\030\002 \001(\t\022\022\n\nuser_email\030\003 \001"
     "(\t\022\025\n\ruser_password\030\004 \001(\t\022\023\n\013user_avatar"
-    "\030\005 \001(\014\022\025\n\ronline_status\030\006 \001(\010b\006proto3"
+    "\030\005 \001(\014\022\025\n\ronline_status\030\006 \001(\021b\006proto3"
 };
 static ::absl::once_flag descriptor_table_user_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_user_2eproto = {
@@ -229,8 +229,8 @@ const ::_pbi::TcParseTable<3, 6, 0, 57, 2> User::_table_ = {
     // bytes user_avatar = 5;
     {::_pbi::TcParser::FastBS1,
      {42, 63, 0, PROTOBUF_FIELD_OFFSET(User, _impl_.user_avatar_)}},
-    // bool online_status = 6;
-    {::_pbi::TcParser::SingularVarintNoZag1<bool, offsetof(User, _impl_.online_status_), 63>(),
+    // sint32 online_status = 6;
+    {::_pbi::TcParser::FastZ32S1,
      {48, 63, 0, PROTOBUF_FIELD_OFFSET(User, _impl_.online_status_)}},
     {::_pbi::TcParser::MiniParse, {}},
   }}, {{
@@ -251,9 +251,9 @@ const ::_pbi::TcParseTable<3, 6, 0, 57, 2> User::_table_ = {
     // bytes user_avatar = 5;
     {PROTOBUF_FIELD_OFFSET(User, _impl_.user_avatar_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
-    // bool online_status = 6;
+    // sint32 online_status = 6;
     {PROTOBUF_FIELD_OFFSET(User, _impl_.online_status_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kBool)},
+    (0 | ::_fl::kFcSingular | ::_fl::kSInt32)},
   }},
   // no aux_entries
   {{
@@ -278,7 +278,7 @@ PROTOBUF_NOINLINE void User::Clear() {
   _impl_.user_email_.ClearToEmpty();
   _impl_.user_password_.ClearToEmpty();
   _impl_.user_avatar_.ClearToEmpty();
-  _impl_.online_status_ = false;
+  _impl_.online_status_ = 0;
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -327,10 +327,10 @@ PROTOBUF_NOINLINE void User::Clear() {
     target = stream->WriteBytesMaybeAliased(5, _s, target);
   }
 
-  // bool online_status = 6;
+  // sint32 online_status = 6;
   if (this->_internal_online_status() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteBoolToArray(
+    target = ::_pbi::WireFormatLite::WriteSInt32ToArray(
         6, this->_internal_online_status(), target);
   }
 
@@ -382,9 +382,10 @@ PROTOBUF_NOINLINE void User::Clear() {
                                     this->_internal_user_avatar());
   }
 
-  // bool online_status = 6;
+  // sint32 online_status = 6;
   if (this->_internal_online_status() != 0) {
-    total_size += 2;
+    total_size += ::_pbi::WireFormatLite::SInt32SizePlusOne(
+        this->_internal_online_status());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);

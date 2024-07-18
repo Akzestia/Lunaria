@@ -274,14 +274,14 @@ class User final : public ::google::protobuf::Message
   std::string* _internal_mutable_user_avatar();
 
   public:
-  // bool online_status = 6;
+  // sint32 online_status = 6;
   void clear_online_status() ;
-  bool online_status() const;
-  void set_online_status(bool value);
+  ::int32_t online_status() const;
+  void set_online_status(::int32_t value);
 
   private:
-  bool _internal_online_status() const;
-  void _internal_set_online_status(bool value);
+  ::int32_t _internal_online_status() const;
+  void _internal_set_online_status(::int32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:User)
@@ -315,7 +315,7 @@ class User final : public ::google::protobuf::Message
     ::google::protobuf::internal::ArenaStringPtr user_email_;
     ::google::protobuf::internal::ArenaStringPtr user_password_;
     ::google::protobuf::internal::ArenaStringPtr user_avatar_;
-    bool online_status_;
+    ::int32_t online_status_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -589,24 +589,24 @@ inline void User::set_allocated_user_avatar(std::string* value) {
   // @@protoc_insertion_point(field_set_allocated:User.user_avatar)
 }
 
-// bool online_status = 6;
+// sint32 online_status = 6;
 inline void User::clear_online_status() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.online_status_ = false;
+  _impl_.online_status_ = 0;
 }
-inline bool User::online_status() const {
+inline ::int32_t User::online_status() const {
   // @@protoc_insertion_point(field_get:User.online_status)
   return _internal_online_status();
 }
-inline void User::set_online_status(bool value) {
+inline void User::set_online_status(::int32_t value) {
   _internal_set_online_status(value);
   // @@protoc_insertion_point(field_set:User.online_status)
 }
-inline bool User::_internal_online_status() const {
+inline ::int32_t User::_internal_online_status() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.online_status_;
 }
-inline void User::_internal_set_online_status(bool value) {
+inline void User::_internal_set_online_status(::int32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.online_status_ = value;
 }

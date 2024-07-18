@@ -46,9 +46,11 @@ Lxcode RouteManager::handleSignUp(const Payload &payload) {
         u.set_user_email(sign_up.user_email());
         u.set_user_password(sign_up.user_password());
 
-        if(DbManager::addUser(u))
+        if(DbManager::addUser(u)){
+            return_code.response = "hdwqd632131dhsdwqfgqwfqg9fgq";
             return return_code;
-
+        }
+            
         return return_code;
     } else {
         return_code.error_code = 0x01;

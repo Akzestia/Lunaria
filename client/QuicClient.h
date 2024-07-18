@@ -14,8 +14,9 @@
 #include "clientListenerModule/ClientListener.h"
 #include "../error-manager/ErrorManager.h"
 #include "../NetBird/VpnManager.h"
+#include "../Helpers/PeerHandler/PeerHandler.h"
 
-class QuicClient {
+class QuicClient : protected PeerHandler {
   public:
     void Connect();
 
@@ -38,6 +39,8 @@ class QuicClient {
     ~QuicClient();
 
   private:
+    using PeerHandler::HandlePeer;
+    using PeerHandler::onPeerShutdown;
     const QUIC_API_TABLE *MsQuic = nullptr;
     static std::condition_variable cv;
     static std::mutex cv_m;

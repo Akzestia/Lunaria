@@ -99,11 +99,15 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     case SIGN_UP: {
         Lxcode response = RouteManager::handleSignUp(wrapper.auth().sign_up());
         Wrapper responseWrapper;
+
+        responseWrapper.set_route(AUTH_RESPONSE);
+
         AuthResponse authResponse;
         if (response.is_successful) {
             std::cout << "Sign up successful\n";
 
             authResponse.set_is_successful(true);
+            authResponse.set_token(response.response);
 
             *responseWrapper.mutable_authresponse() = authResponse;
 
@@ -127,6 +131,14 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         if (response.is_successful)
             std::cout << "Sign in successful\n";
+
+        break;
+    }
+    case AUTH_RESPONSE: {
+        printf("Auth response\n");
+
+        printf("Is successful: %d\n", wrapper.authresponse().is_successful());
+        printf("Token: %s\n", wrapper.authresponse().token().c_str());
 
         break;
     }

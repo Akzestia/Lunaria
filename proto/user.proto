@@ -6,5 +6,5 @@ message User {
     string user_email = 3;
     string user_password = 4; 
     bytes user_avatar = 5;
-    bool online_status = 6;
+    sint32 online_status = 6;
 }

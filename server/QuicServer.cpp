@@ -1,15 +1,11 @@
 #include "QuicServer.h"
 #include <absl/strings/cord.h>
 #include <cstdio>
+#include "../Helpers/fileChecks.hpp"
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
 #endif
-
-bool fileExists(const char *file) {
-    struct stat buffer;
-    return (stat(file, &buffer) == 0);
-}
 
 std::condition_variable QuicServer::cv;
 std::mutex QuicServer::cv_m;

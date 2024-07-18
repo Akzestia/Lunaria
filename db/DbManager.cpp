@@ -216,7 +216,7 @@ bool DbManager::addUser(const User &user) {
         pqxx::work txn(connection);
 
         std::string query =
-            "INSERT INTO Users (user_display_name, user_name, user_email, "
+            "INSERT INTO Users (display_name, user_name, user_email, "
             "user_avatar, user_password, online_status) VALUES (" +
             txn.quote(user.display_name()) + ", " +
             txn.quote(user.user_name()) + ", " + txn.quote(user.user_email()) +

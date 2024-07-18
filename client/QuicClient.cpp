@@ -1,7 +1,8 @@
 #include "QuicClient.h"
+#include "../route-manager/Routes.hpp"
 #include "clientListenerModule/ClientListener.h"
 #include <cstdint>
-#include "../route-manager/Routes.hpp"
+#include "../Helpers/fileChecks.hpp"
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
@@ -11,10 +12,6 @@ std::condition_variable QuicClient::cv;
 std::mutex QuicClient::cv_m;
 bool QuicClient::disconnected = false;
 
-bool fileExists(const char *file) {
-    struct stat buffer;
-    return (stat(file, &buffer) == 0);
-}
 // Test
 typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
     QUIC_CREDENTIAL_CONFIG CredConfig;
@@ -52,7 +49,6 @@ uint32_t QuicClient::DecodeHexBuffer(_In_z_ const char *HexBuffer,
 
     return HexBufferLen;
 }
-
 
 #pragma region Connect()
 void QuicClient::Connect() {
@@ -97,7 +93,7 @@ void QuicClient::Disconnect() {
                                    QUIC_CONNECTION_SHUTDOWN_FLAG_NONE,
                                    0); // QUIC_CONNECTION_SHUTDOWN_FLAG_NONE
     }
-    if(cListener) {
+    if (cListener) {
         cListener->Close();
     }
 }
@@ -113,14 +109,27 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         free(Event->SEND_COMPLETE.ClientContext);
         printf("[strm][%p] Data sent\n", Stream);
         break;
-    case QUIC_STREAM_EVENT_RECEIVE:
+    case QUIC_STREAM_EVENT_RECEIVE: {
         printf("[strm][%p] Data received\n", Stream);
-        break;
+
+        QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
+
+        auto data = Event->RECEIVE.Buffers->Buffer;
+        size_t dataSize = Event->RECEIVE.TotalBufferLength;
+
+        std::printf("\n\nReceived Cord from [%p]", Stream);
+
+        HandlePeer(Stream, (*data), dataSize);
+
+        MsQuic->StreamReceiveComplete(Stream, Event->RECEIVE.TotalBufferLength);
+
+    } break;
     case QUIC_STREAM_EVENT_PEER_SEND_ABORTED:
         printf("[strm][%p] Peer aborted\n", Stream);
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN:
         printf("[strm][%p] Peer shut down\n", Stream);
+        onPeerShutdown(Stream, this);
         break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
         printf("[strm][%p] All done\n", Stream);
@@ -261,7 +270,7 @@ _IRQL_requires_max_(PASSIVE_LEVEL)
             printf("Failed to allocate memory for ResumptionTicket\n");
             break;
         }
-        
+
         memcpy(ResumptionTicket,
                Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket,
                ResumptionTicketLength);
@@ -282,7 +291,6 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientConnectionCallback(
     return reinterpret_cast<QuicClient *>(Context)->ClientConnectionCallback(
         Connection, Context, Event);
 }
-
 
 #pragma region send(const absl::Cord &message)
 void QuicClient::send(const absl::Cord &message) {
@@ -361,7 +369,7 @@ QuicClient::~QuicClient() {
         delete[] ResumptionTicket;
         ResumptionTicket = nullptr;
     }
-    if(cListener) {
+    if (cListener) {
         delete cListener;
     }
     if (MsQuic) {
@@ -378,7 +386,6 @@ QuicClient::~QuicClient() {
         MsQuic = nullptr;
     }
 }
-
 
 #pragma region AuthRequest()
 bool QuicClient::AuthRequest(const absl::Cord &auth_request) {
@@ -435,7 +442,6 @@ Error:
 }
 #pragma endregion
 
-
 #pragma region SignUp()
 
 Lxcode QuicClient::SignUp(const Auth &auth) {
@@ -452,7 +458,6 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
 }
 
 #pragma endregion
-
 
 #pragma region SignIn()
 
@@ -471,10 +476,9 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
 
 #pragma endregion
 
-
 #pragma region openPeer()
 
-void QuicClient::openPeer(const char* PeerIp, uint16_t UdpPort) {
+void QuicClient::openPeer(const char *PeerIp, uint16_t UdpPort) {
     HQUIC p2pConnection = NULL;
     if (QUIC_FAILED(Status = MsQuic->ConnectionOpen(
                         Registration,
@@ -486,8 +490,8 @@ void QuicClient::openPeer(const char* PeerIp, uint16_t UdpPort) {
     printf("\nPort: %u\n", UdpPort);
 
     if (QUIC_FAILED(Status = MsQuic->ConnectionStart(
-                        p2pConnection, Configuration, QUIC_ADDRESS_FAMILY_UNSPEC,
-                        PeerIp, UdpPort))) {
+                        p2pConnection, Configuration,
+                        QUIC_ADDRESS_FAMILY_UNSPEC, PeerIp, UdpPort))) {
         printf("ConnectionStart failed, 0x%x!\n", Status);
         goto Error;
     }
@@ -497,9 +501,7 @@ Error:
     }
 }
 
-
 #pragma endregion
-
 
 #pragma region sendToPeer()
 
