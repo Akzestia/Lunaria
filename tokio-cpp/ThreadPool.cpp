@@ -17,7 +17,7 @@ ThreadPool::~ThreadPool() {
     }
 }
 
-void ThreadPool::enqueueTask(std::function<bool(HQUIC)> task) {
+void ThreadPool::enqueueTask(std::function<bool(HQUIC, void*)> task) {
     {
         std::unique_lock<std::mutex> lock(tasksMutex);
         tasks.push(task);
@@ -27,7 +27,7 @@ void ThreadPool::enqueueTask(std::function<bool(HQUIC)> task) {
 
 void ThreadPool::workerThread() {
     while(true) {
-        std::function<bool(HQUIC)> task;
+        std::function<bool(HQUIC, void*)> task;
         {
             std::unique_lock<std::mutex> lock(tasksMutex);
             condition.wait(lock, [this]{ return stop || !tasks.empty(); });
@@ -35,6 +35,6 @@ void ThreadPool::workerThread() {
             task = std::move(tasks.front());
             tasks.pop();
         }
-        task(nullptr);
+        task(nullptr, nullptr);
     }
 }

@@ -69,5 +69,10 @@ if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/sign_up.pr
     exit 1
 fi
 
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/authResponse.proto; then
+    echo "Error: Proto failed \`auth response\`";
+    exit 1
+fi
+
 
 echo "Proto files were successfully compiled";

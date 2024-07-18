@@ -188,10 +188,10 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
         printf("[strm][%p] Peer shut down\n", Stream);
-        threadPool.enqueueTask([Stream](HQUIC) -> bool {
-            return onPeerShutdown(static_cast<HQUIC>(Stream));
+
+        threadPool.enqueueTask([Stream, this](HQUIC, void*) -> bool {
+            return onPeerShutdown(static_cast<HQUIC>(Stream), static_cast<void*>(this));
         });
-        // QuicServer::send(Stream, Context);
     } break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
         printf("[strm][%p] All done\n", Stream);
@@ -208,6 +208,35 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     }
     return QUIC_STATUS_SUCCESS;
 }
+
+#pragma region SendResponse(HQUIC Stream,const Wrapper& wrapper)
+
+void QuicServer::SendResponse(HQUIC Stream, const Wrapper &wrapper) {
+    absl::Cord response;
+    wrapper.SerializePartialToCord(&response);
+    QUIC_BUFFER *SendBuffer;
+    absl::Cord::ChunkIterator start = response.chunk_begin();
+    absl::Cord::ChunkIterator end = response.chunk_end();
+    std::vector<uint8_t> buffer;
+    for (auto it = start; it != end; ++it) {
+        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
+    }
+
+    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    SendBuffer->Length = buffer.size();
+    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+
+    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
+    if (QUIC_FAILED(Status =
+                        MsQuic->StreamSend(Stream, SendBuffer, 1,
+                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
+        printf("Response failed, 0x%x!\n", Status);
+        MsQuic->StreamShutdown(Stream, QUIC_STREAM_SHUTDOWN_FLAG_ABORT, 0);
+    }
+}
+
+#pragma endregion
+
 
 void QuicServer::send(HQUIC Stream, void *Context) {
     return reinterpret_cast<QuicServer *>(Context)->send(Stream);

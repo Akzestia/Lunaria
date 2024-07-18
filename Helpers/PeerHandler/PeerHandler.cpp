@@ -1,5 +1,6 @@
 #include "PeerHandler.h"
 #include "../../route-manager/Routes.hpp"
+#include "../../server/QuicServer.h"
 
 std::unordered_map<HQUIC, uint8_t *> *PeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -76,7 +77,9 @@ std::string getFileExtension(const std::vector<uint8_t> &fileData) {
     return ""; // Unknown file type
 }
 
-bool PeerHandler::onPeerShutdown(HQUIC Stream) {
+//
+
+bool PeerHandler::onPeerShutdown(HQUIC Stream, void* context) {
 
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
@@ -93,11 +96,23 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream) {
 
     switch (wrapper.route()) {
         case SIGN_UP: {
-            RouteManager::handleSignUp(wrapper.auth().sign_up());
+            Lxcode response = RouteManager::handleSignUp(wrapper.auth().sign_up());
+            if(response.is_successful)
+                std::cout << "Sign up successful\n";
+
+            Wrapper responseWrapper;
+
+            
+            reinterpret_cast<QuicServer*>(context)->SendResponse (Stream, responseWrapper);
             break;
         }
         case SIGN_IN: {
-            auto response = RouteManager::handleSignIn(wrapper.auth().sign_in());
+            Lxcode response = RouteManager::handleSignIn(wrapper.auth().sign_in());
+
+            if(response.is_successful)
+                std::cout << "Sign in successful\n";
+            
+
             break;
         }
         case SEND_FRIEND_REQUEST: {

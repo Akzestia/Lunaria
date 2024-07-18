@@ -8,17 +8,20 @@ import "report.proto";
 import "invite_link.proto";
 import "server.proto";
 import "vpn_graph.proto";
+import "authResponse.proto";
 
 message Wrapper {
+    uint32 route = 1;
     oneof payload {
-        User user = 1;
-        Person person = 2;
-        Message message = 3;
-        Auth auth = 4;
-        Report report = 5;
-        Server serevr = 6;
-        Invite_link invite_link = 7;
-        Vpn_graph vpn_graph = 8;
+        User user = 2;
+        Person person = 3;
+        Message message = 4;
+        Auth auth = 5;
+        Report report = 6;
+        Server serevr = 7;
+        Invite_link invite_link = 8;
+        Vpn_graph vpn_graph = 9;
+        AuthResponse authResponse = 10;
     }
-    uint32 route = 9;
+
 }

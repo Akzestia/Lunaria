@@ -16,13 +16,13 @@ class ThreadPool {
 public:
     ThreadPool(size_t numThreads);
     ~ThreadPool();
-    void enqueueTask(std::function<bool(HQUIC)> task);
+    void enqueueTask(std::function<bool(HQUIC, void*)> task);
 
 private:
     void workerThread();
 
     std::vector<std::thread> workers;
-    std::queue<std::function<bool(HQUIC)>> tasks;
+    std::queue<std::function<bool(HQUIC, void*)>> tasks;
     std::mutex tasksMutex;
     std::condition_variable condition;
     bool stop;
