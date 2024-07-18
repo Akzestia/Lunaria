@@ -36,6 +36,7 @@
 #include "invite_link.pb.h"
 #include "server.pb.h"
 #include "vpn_graph.pb.h"
+#include "authResponse.pb.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
@@ -123,14 +124,15 @@ class Wrapper final : public ::google::protobuf::Message
     return *internal_default_instance();
   }
   enum PayloadCase {
-    kUser = 1,
-    kPerson = 2,
-    kMessage = 3,
-    kAuth = 4,
-    kReport = 5,
-    kSerevr = 6,
-    kInviteLink = 7,
-    kVpnGraph = 8,
+    kUser = 2,
+    kPerson = 3,
+    kMessage = 4,
+    kAuth = 5,
+    kReport = 6,
+    kSerevr = 7,
+    kInviteLink = 8,
+    kVpnGraph = 9,
+    kAuthResponse = 10,
     PAYLOAD_NOT_SET = 0,
   };
   static inline const Wrapper* internal_default_instance() {
@@ -206,17 +208,18 @@ class Wrapper final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kRouteFieldNumber = 9,
-    kUserFieldNumber = 1,
-    kPersonFieldNumber = 2,
-    kMessageFieldNumber = 3,
-    kAuthFieldNumber = 4,
-    kReportFieldNumber = 5,
-    kSerevrFieldNumber = 6,
-    kInviteLinkFieldNumber = 7,
-    kVpnGraphFieldNumber = 8,
+    kRouteFieldNumber = 1,
+    kUserFieldNumber = 2,
+    kPersonFieldNumber = 3,
+    kMessageFieldNumber = 4,
+    kAuthFieldNumber = 5,
+    kReportFieldNumber = 6,
+    kSerevrFieldNumber = 7,
+    kInviteLinkFieldNumber = 8,
+    kVpnGraphFieldNumber = 9,
+    kAuthResponseFieldNumber = 10,
   };
-  // uint32 route = 9;
+  // uint32 route = 1;
   void clear_route() ;
   ::uint32_t route() const;
   void set_route(::uint32_t value);
@@ -226,7 +229,7 @@ class Wrapper final : public ::google::protobuf::Message
   void _internal_set_route(::uint32_t value);
 
   public:
-  // .User user = 1;
+  // .User user = 2;
   bool has_user() const;
   private:
   bool _internal_has_user() const;
@@ -245,7 +248,7 @@ class Wrapper final : public ::google::protobuf::Message
   ::User* _internal_mutable_user();
 
   public:
-  // .Person person = 2;
+  // .Person person = 3;
   bool has_person() const;
   private:
   bool _internal_has_person() const;
@@ -264,7 +267,7 @@ class Wrapper final : public ::google::protobuf::Message
   ::Person* _internal_mutable_person();
 
   public:
-  // .Message message = 3;
+  // .Message message = 4;
   bool has_message() const;
   private:
   bool _internal_has_message() const;
@@ -283,7 +286,7 @@ class Wrapper final : public ::google::protobuf::Message
   ::Message* _internal_mutable_message();
 
   public:
-  // .Auth auth = 4;
+  // .Auth auth = 5;
   bool has_auth() const;
   private:
   bool _internal_has_auth() const;
@@ -302,7 +305,7 @@ class Wrapper final : public ::google::protobuf::Message
   ::Auth* _internal_mutable_auth();
 
   public:
-  // .Report report = 5;
+  // .Report report = 6;
   bool has_report() const;
   private:
   bool _internal_has_report() const;
@@ -321,7 +324,7 @@ class Wrapper final : public ::google::protobuf::Message
   ::Report* _internal_mutable_report();
 
   public:
-  // .Server serevr = 6;
+  // .Server serevr = 7;
   bool has_serevr() const;
   private:
   bool _internal_has_serevr() const;
@@ -340,7 +343,7 @@ class Wrapper final : public ::google::protobuf::Message
   ::Server* _internal_mutable_serevr();
 
   public:
-  // .Invite_link invite_link = 7;
+  // .Invite_link invite_link = 8;
   bool has_invite_link() const;
   private:
   bool _internal_has_invite_link() const;
@@ -359,7 +362,7 @@ class Wrapper final : public ::google::protobuf::Message
   ::Invite_link* _internal_mutable_invite_link();
 
   public:
-  // .Vpn_graph vpn_graph = 8;
+  // .Vpn_graph vpn_graph = 9;
   bool has_vpn_graph() const;
   private:
   bool _internal_has_vpn_graph() const;
@@ -378,6 +381,25 @@ class Wrapper final : public ::google::protobuf::Message
   ::Vpn_graph* _internal_mutable_vpn_graph();
 
   public:
+  // .AuthResponse authResponse = 10;
+  bool has_authresponse() const;
+  private:
+  bool _internal_has_authresponse() const;
+
+  public:
+  void clear_authresponse() ;
+  const ::AuthResponse& authresponse() const;
+  PROTOBUF_NODISCARD ::AuthResponse* release_authresponse();
+  ::AuthResponse* mutable_authresponse();
+  void set_allocated_authresponse(::AuthResponse* value);
+  void unsafe_arena_set_allocated_authresponse(::AuthResponse* value);
+  ::AuthResponse* unsafe_arena_release_authresponse();
+
+  private:
+  const ::AuthResponse& _internal_authresponse() const;
+  ::AuthResponse* _internal_mutable_authresponse();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:Wrapper)
@@ -391,11 +413,12 @@ class Wrapper final : public ::google::protobuf::Message
   void set_has_serevr();
   void set_has_invite_link();
   void set_has_vpn_graph();
+  void set_has_authresponse();
   inline bool has_payload() const;
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 9, 8,
+      0, 10, 9,
       0, 2>
       _table_;
 
@@ -428,6 +451,7 @@ class Wrapper final : public ::google::protobuf::Message
       ::Server* serevr_;
       ::Invite_link* invite_link_;
       ::Vpn_graph* vpn_graph_;
+      ::AuthResponse* authresponse_;
     } payload_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     ::uint32_t _oneof_case_[1];
@@ -453,7 +477,29 @@ class Wrapper final : public ::google::protobuf::Message
 
 // Wrapper
 
-// .User user = 1;
+// uint32 route = 1;
+inline void Wrapper::clear_route() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.route_ = 0u;
+}
+inline ::uint32_t Wrapper::route() const {
+  // @@protoc_insertion_point(field_get:Wrapper.route)
+  return _internal_route();
+}
+inline void Wrapper::set_route(::uint32_t value) {
+  _internal_set_route(value);
+  // @@protoc_insertion_point(field_set:Wrapper.route)
+}
+inline ::uint32_t Wrapper::_internal_route() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.route_;
+}
+inline void Wrapper::_internal_set_route(::uint32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.route_ = value;
+}
+
+// .User user = 2;
 inline bool Wrapper::has_user() const {
   return payload_case() == kUser;
 }
@@ -521,7 +567,7 @@ inline ::User* Wrapper::mutable_user() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// .Person person = 2;
+// .Person person = 3;
 inline bool Wrapper::has_person() const {
   return payload_case() == kPerson;
 }
@@ -589,7 +635,7 @@ inline ::Person* Wrapper::mutable_person() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// .Message message = 3;
+// .Message message = 4;
 inline bool Wrapper::has_message() const {
   return payload_case() == kMessage;
 }
@@ -657,7 +703,7 @@ inline ::Message* Wrapper::mutable_message() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// .Auth auth = 4;
+// .Auth auth = 5;
 inline bool Wrapper::has_auth() const {
   return payload_case() == kAuth;
 }
@@ -725,7 +771,7 @@ inline ::Auth* Wrapper::mutable_auth() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// .Report report = 5;
+// .Report report = 6;
 inline bool Wrapper::has_report() const {
   return payload_case() == kReport;
 }
@@ -793,7 +839,7 @@ inline ::Report* Wrapper::mutable_report() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// .Server serevr = 6;
+// .Server serevr = 7;
 inline bool Wrapper::has_serevr() const {
   return payload_case() == kSerevr;
 }
@@ -861,7 +907,7 @@ inline ::Server* Wrapper::mutable_serevr() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// .Invite_link invite_link = 7;
+// .Invite_link invite_link = 8;
 inline bool Wrapper::has_invite_link() const {
   return payload_case() == kInviteLink;
 }
@@ -929,7 +975,7 @@ inline ::Invite_link* Wrapper::mutable_invite_link() ABSL_ATTRIBUTE_LIFETIME_BOU
   return _msg;
 }
 
-// .Vpn_graph vpn_graph = 8;
+// .Vpn_graph vpn_graph = 9;
 inline bool Wrapper::has_vpn_graph() const {
   return payload_case() == kVpnGraph;
 }
@@ -997,26 +1043,72 @@ inline ::Vpn_graph* Wrapper::mutable_vpn_graph() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   return _msg;
 }
 
-// uint32 route = 9;
-inline void Wrapper::clear_route() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.route_ = 0u;
+// .AuthResponse authResponse = 10;
+inline bool Wrapper::has_authresponse() const {
+  return payload_case() == kAuthResponse;
 }
-inline ::uint32_t Wrapper::route() const {
-  // @@protoc_insertion_point(field_get:Wrapper.route)
-  return _internal_route();
+inline bool Wrapper::_internal_has_authresponse() const {
+  return payload_case() == kAuthResponse;
 }
-inline void Wrapper::set_route(::uint32_t value) {
-  _internal_set_route(value);
-  // @@protoc_insertion_point(field_set:Wrapper.route)
+inline void Wrapper::set_has_authresponse() {
+  _impl_._oneof_case_[0] = kAuthResponse;
 }
-inline ::uint32_t Wrapper::_internal_route() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.route_;
+inline ::AuthResponse* Wrapper::release_authresponse() {
+  // @@protoc_insertion_point(field_release:Wrapper.authResponse)
+  if (payload_case() == kAuthResponse) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.authresponse_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.authresponse_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
 }
-inline void Wrapper::_internal_set_route(::uint32_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.route_ = value;
+inline const ::AuthResponse& Wrapper::_internal_authresponse() const {
+  return payload_case() == kAuthResponse ? *_impl_.payload_.authresponse_ : reinterpret_cast<::AuthResponse&>(::_AuthResponse_default_instance_);
+}
+inline const ::AuthResponse& Wrapper::authresponse() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.authResponse)
+  return _internal_authresponse();
+}
+inline ::AuthResponse* Wrapper::unsafe_arena_release_authresponse() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.authResponse)
+  if (payload_case() == kAuthResponse) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.authresponse_;
+    _impl_.payload_.authresponse_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_authresponse(::AuthResponse* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_authresponse();
+    _impl_.payload_.authresponse_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.authResponse)
+}
+inline ::AuthResponse* Wrapper::_internal_mutable_authresponse() {
+  if (payload_case() != kAuthResponse) {
+    clear_payload();
+    set_has_authresponse();
+    _impl_.payload_.authresponse_ =
+        ::google::protobuf::Message::DefaultConstruct<::AuthResponse>(GetArena());
+  }
+  return _impl_.payload_.authresponse_;
+}
+inline ::AuthResponse* Wrapper::mutable_authresponse() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::AuthResponse* _msg = _internal_mutable_authresponse();
+  // @@protoc_insertion_point(field_mutable:Wrapper.authResponse)
+  return _msg;
 }
 
 inline bool Wrapper::has_payload() const {

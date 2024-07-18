@@ -3,4 +3,5 @@ syntax = "proto3";
 message AuthResponse {
     string token = 1;
     string refreshToken = 2;
+    bool is_successful = 3;
 }

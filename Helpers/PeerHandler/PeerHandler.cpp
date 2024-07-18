@@ -79,7 +79,7 @@ std::string getFileExtension(const std::vector<uint8_t> &fileData) {
 
 //
 
-bool PeerHandler::onPeerShutdown(HQUIC Stream, void* context) {
+bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
@@ -88,106 +88,123 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void* context) {
 
     Wrapper wrapper;
     if (!wrapper.ParsePartialFromCord(receivedCord)) {
-        std::cerr << "Error: Failed to parse the Cord into a Wrapper" << std::endl;
+        std::cerr << "Error: Failed to parse the Cord into a Wrapper"
+                  << std::endl;
         return false;
     }
 
     std::cout << "\nRoute: " << wrapper.route() << "\n";
 
     switch (wrapper.route()) {
-        case SIGN_UP: {
-            Lxcode response = RouteManager::handleSignUp(wrapper.auth().sign_up());
-            if(response.is_successful)
-                std::cout << "Sign up successful\n";
+    case SIGN_UP: {
+        Lxcode response = RouteManager::handleSignUp(wrapper.auth().sign_up());
+        Wrapper responseWrapper;
+        AuthResponse authResponse;
+        if (response.is_successful) {
+            std::cout << "Sign up successful\n";
 
-            Wrapper responseWrapper;
+            authResponse.set_is_successful(true);
 
-            
-            reinterpret_cast<QuicServer*>(context)->SendResponse (Stream, responseWrapper);
-            break;
-        }
-        case SIGN_IN: {
-            Lxcode response = RouteManager::handleSignIn(wrapper.auth().sign_in());
+            *responseWrapper.mutable_authresponse() = authResponse;
 
-            if(response.is_successful)
-                std::cout << "Sign in successful\n";
-            
+            reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, responseWrapper);
 
-            break;
+            return true;
         }
-        case SEND_FRIEND_REQUEST: {
-            
-            break;
-        }
-        case REMOVE_FRIEND: {
-         
-            break;
-        }
-        case SEND_MESSAGE: {
-       
-            break;
-        }
-        case RECEIVE_MESSAGE: {
-           
-            break;
-        }
-        case CREATE_CHAT_GROUP: {
-      
-            break;
-        }
-        case JOIN_CHAT_GROUP: {
-           
-            break;
-        }
-        case LEAVE_CHAT_GROUP: {
-            
-            break;
-        }
-        case ADD_GROUP_MEMBER: {
-          
-            break;
-        }
-        case REMOVE_GROUP_MEMBER: {
-         
-            break;
-        }
-        case TYPING_INDICATOR: {
-          
-            break;
-        }
-        case READ_RECEIPT: {
-        
-            break;
-        }
-        case DELETE_MESSAGE: {
-          
-            break;
-        }
-        case EDIT_MESSAGE: {
-           
-            break;
-        }
-        case FETCH_CHAT_HISTORY: {
-       
-            break;
-        }
-        case USER_ONLINE_STATUS: {
-         
-            break;
-        }
-        case USER_OFFLINE_STATUS: {
-            
-            break;
-        }
-        default:
-            std::cerr << "Error: Unknown route" << std::endl;
-            return false;
+
+        std::cout << "Sign up failed\n";
+
+        authResponse.set_is_successful(false);
+
+        *responseWrapper.mutable_authresponse() = authResponse;
+
+        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, responseWrapper);
+
+        break;
+    }
+    case SIGN_IN: {
+        Lxcode response = RouteManager::handleSignIn(wrapper.auth().sign_in());
+
+        if (response.is_successful)
+            std::cout << "Sign in successful\n";
+
+        break;
+    }
+    case SEND_FRIEND_REQUEST: {
+
+        break;
+    }
+    case REMOVE_FRIEND: {
+
+        break;
+    }
+    case SEND_MESSAGE: {
+
+        break;
+    }
+    case RECEIVE_MESSAGE: {
+
+        break;
+    }
+    case CREATE_CHAT_GROUP: {
+
+        break;
+    }
+    case JOIN_CHAT_GROUP: {
+
+        break;
+    }
+    case LEAVE_CHAT_GROUP: {
+
+        break;
+    }
+    case ADD_GROUP_MEMBER: {
+
+        break;
+    }
+    case REMOVE_GROUP_MEMBER: {
+
+        break;
+    }
+    case TYPING_INDICATOR: {
+
+        break;
+    }
+    case READ_RECEIPT: {
+
+        break;
+    }
+    case DELETE_MESSAGE: {
+
+        break;
+    }
+    case EDIT_MESSAGE: {
+
+        break;
+    }
+    case FETCH_CHAT_HISTORY: {
+
+        break;
+    }
+    case USER_ONLINE_STATUS: {
+
+        break;
+    }
+    case USER_OFFLINE_STATUS: {
+
+        break;
+    }
+    default:
+        std::cerr << "Error: Unknown route" << std::endl;
+        return false;
     }
     return true;
 }
 
-PeerHandler::~PeerHandler(){
+PeerHandler::~PeerHandler() {
     std::cout << "\nPeers ~\n";
-    if(peers) delete peers;
-    if(peerDataSizes) delete peerDataSizes;
+    if (peers)
+        delete peers;
+    if (peerDataSizes)
+        delete peerDataSizes;
 }
