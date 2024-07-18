@@ -2,4 +2,4 @@ CREATE TABLE
     Server (
         id SERIAL NOT NULL PRIMARY KEY,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
+    );

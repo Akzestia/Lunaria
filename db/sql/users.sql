@@ -8,7 +8,7 @@ CREATE TABLE
         user_password VARCHAR(200) NOT NULL,
         online_status INT NOT NULL DEFAULT 0,
         joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
+    );
 
 CREATE INDEX idx_users_user_name ON Users(user_name);
 CREATE INDEX idx_users_user_email ON Users(user_email);

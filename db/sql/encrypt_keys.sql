@@ -5,6 +5,6 @@ CREATE TABLE
         _user_id INT NOT NULL,
         FOREIGN KEY (_user_id) REFERENCES Users (id),
         CONSTRAINT unique_user_id UNIQUE (_user_id)
-    )
+    );
 
 CREATE INDEX idx_user_id ON Encrypt_keys(_user_id);

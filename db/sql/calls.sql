@@ -10,7 +10,7 @@ CREATE TABLE
         FOREIGN KEY (_receiver_id) REFERENCES Users(id),
 
         made_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
+    );
 
 CREATE INDEX idx_calls_sender_id ON Calls(_sender_id);
 CREATE INDEX idx_calls_receiver_id ON Calls(_receiver_id);
