@@ -51,7 +51,7 @@ This project utilizes various technologies including:
 <br/>
 
 ## Supported Platforms
-Linux-x64-HTTP3 supports:
+Lunaria supports:
 - Linux (x11 | Wayland)
 - Windows
 
