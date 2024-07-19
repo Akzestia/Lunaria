@@ -65,7 +65,15 @@ Lxcode RouteManager::handleSignIn(const Payload &payload) {
     return_code.is_successful = true;
     if (std::holds_alternative<Sign_in>(payload)) {
         const Sign_in &si = std::get<Sign_in>(payload);
+        User *u = new User();
 
+        if(DbManager::getUser(si, u).is_successful){
+            return_code.response = AuthManager::generateToken(u->user_name().c_str(), u->user_password().c_str());
+            delete u;
+            return return_code;
+        }
+
+        delete u;
         return return_code;
     } else {
         return_code.error_code = 0x01;

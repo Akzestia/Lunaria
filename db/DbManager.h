@@ -5,6 +5,7 @@
 #include "../proto/build/contact.pb.h"
 #include "../error-manager/ErrorManager.h"
 #include "../proto/build/auth.pb.h"
+#include "../proto/build/sign_in.pb.h"
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <condition_variable>
@@ -17,7 +18,7 @@ class DbManager {
   protected:
 
     #pragma region GET
-    static Lxcode getUser(const Auth &, User*);
+    static Lxcode getUser(const Sign_in &, User*);
     static bool getMessages(const User &, std::vector<uint8_t>*);
     static bool getContacts(const User &, std::vector<uint8_t>*);
     static bool getGraphs(const User &, std::vector<uint8_t>*);

@@ -12,8 +12,8 @@ public:
     AuthManager();
     ~AuthManager();
     bool verifyToken(const char*, const char*, const char*);
-    const char* generateToken(const char*, const char*);
-    const char* getSecretKey();
+    static const char* generateToken(const char*, const char*);
+    static const char* getSecretKey();
 };
 
 #endif // AUTH_MANAGER_H 

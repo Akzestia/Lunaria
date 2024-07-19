@@ -37,14 +37,10 @@ void DbManager::test() {
 }
 
 #pragma region GET
-Lxcode DbManager::getUser(const Auth &auth, User *output) {
+Lxcode DbManager::getUser(const Sign_in &auth, User *output) {
 
-    if (!auth.has_sign_in()) {
-        return {false, AUTH_ERROR_INCORRECT_PAYLOAD_FORMAT};
-    }
-
-    const std::string user_name = auth.sign_in().user_name();
-    const std::string user_password = auth.sign_in().user_password();
+    const std::string user_name = auth.user_name();
+    const std::string user_password = auth.user_password();
 
     try {
         const std::string connection_str = DbManager::getConnectionString();

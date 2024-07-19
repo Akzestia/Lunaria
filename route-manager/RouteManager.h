@@ -15,6 +15,7 @@
 #include "../proto/build/wrapper.pb.h"
 #include "../proto/build/sign_in.pb.h"
 #include "../proto/build/sign_up.pb.h"
+#include "../Helpers/AuthManager/AuthManager.h"
 #include <functional>
 #include <set>
 #include <unordered_map>
@@ -29,6 +30,7 @@ class RouteManager : protected DbManager {
     static Lxcode proccesRoute(const Wrapper &);
     virtual ~RouteManager();
   private:
+
     static Lxcode handleAuth(const Payload &);
     static Lxcode handleReport(const Payload &);
     static Lxcode handleSignUp(const Payload &);
