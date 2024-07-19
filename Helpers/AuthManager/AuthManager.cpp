@@ -9,7 +9,6 @@ AuthManager::~AuthManager() {
 bool AuthManager::verifyToken(const char* username, const char* password, const char* token) {
     const char* generatedToken = generateToken(username, password);
     bool result = strcmp(generatedToken, token) == 0;
-    delete[] generatedToken;
     return result;
 }
 

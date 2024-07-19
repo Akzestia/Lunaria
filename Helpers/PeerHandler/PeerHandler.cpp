@@ -111,7 +111,8 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             *responseWrapper.mutable_authresponse() = authResponse;
 
-            reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, responseWrapper);
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, responseWrapper);
 
             return true;
         }
@@ -123,16 +124,39 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         *responseWrapper.mutable_authresponse() = authResponse;
 
         reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, responseWrapper);
-
-        break;
+                                            
+        return false;
     }
     case SIGN_IN: {
         Lxcode response = RouteManager::handleSignIn(wrapper.auth().sign_in());
 
-        if (response.is_successful)
+        Wrapper responseWrapper;
+
+        responseWrapper.set_route(AUTH_RESPONSE);
+
+        AuthResponse authResponse;
+        if (response.is_successful) {
+
             std::cout << "Sign in successful\n";
 
-        break;
+            authResponse.set_is_successful(true);
+            authResponse.set_token(response.response);
+
+            *responseWrapper.mutable_authresponse() = authResponse;
+
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, responseWrapper);
+
+            return true;
+        }
+
+        authResponse.set_is_successful(false);
+
+        *responseWrapper.mutable_authresponse() = authResponse;
+
+        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, responseWrapper);
+
+        return false;
     }
     case AUTH_RESPONSE: {
         printf("Auth response\n");

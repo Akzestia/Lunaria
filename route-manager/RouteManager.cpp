@@ -64,7 +64,7 @@ Lxcode RouteManager::handleSignIn(const Payload &payload) {
     return_code.error_code = 0x00;
     return_code.is_successful = true;
     if (std::holds_alternative<Sign_in>(payload)) {
-        const Sign_in &report = std::get<Sign_in>(payload);
+        const Sign_in &si = std::get<Sign_in>(payload);
 
         return return_code;
     } else {
