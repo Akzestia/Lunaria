@@ -7,7 +7,7 @@
 
 class AuthManager {
 private:
-    const char* secretKey = "my_secret";
+    static const char* secretKey;
 public:
     AuthManager();
     ~AuthManager();

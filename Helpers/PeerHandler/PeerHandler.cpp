@@ -123,8 +123,9 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         *responseWrapper.mutable_authresponse() = authResponse;
 
-        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, responseWrapper);
-                                            
+        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
+                                                              responseWrapper);
+
         return false;
     }
     case SIGN_IN: {
@@ -150,11 +151,14 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
             return true;
         }
 
+        std::cout << "Sign in failed\n";
+
         authResponse.set_is_successful(false);
 
         *responseWrapper.mutable_authresponse() = authResponse;
 
-        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, responseWrapper);
+        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
+                                                              responseWrapper);
 
         return false;
     }

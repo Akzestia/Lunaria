@@ -1,5 +1,7 @@
 #include "AuthManager.h"
 
+const char* AuthManager::secretKey = "my_secret";
+
 AuthManager::AuthManager() {
 }
 
@@ -27,5 +29,5 @@ const char* AuthManager::generateToken(const char* username, const char* passwor
 }
 
 const char* AuthManager::getSecretKey() {
-    return this->secretKey;
+    return secretKey;
 }
