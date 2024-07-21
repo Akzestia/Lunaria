@@ -574,13 +574,11 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
 #pragma region SignIn()
 
 Lxcode QuicClient::SignIn(const Auth &auth) {
-    absl::Cord auth_request;
 
     Wrapper wrapper;
     *wrapper.mutable_auth() = auth;
     wrapper.set_route(SIGN_IN);
-    wrapper.SerializePartialToCord(&auth_request);
-    if (AuthRequest(auth_request)) {
+    if (AuthRequest(wrapper)) {
         return {true, SUCCESS, "Success"};
     }
     return {false, DB_ERROR_CONNECTION_FAILED, "Failed to connect"};
