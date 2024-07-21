@@ -83,11 +83,11 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
-    absl::string_view dataView(reinterpret_cast<const char *>(data), dataSize);
-    absl::Cord receivedCord(dataView);
+    // absl::string_view dataView(reinterpret_cast<const char *>(data), dataSize);
+    // absl::Cord receivedCord(dataView);
 
     Wrapper wrapper;
-    if (!wrapper.ParsePartialFromCord(receivedCord)) {
+    if (!wrapper.ParseFromArray(data, dataSize)) {
         std::cerr << "Error: Failed to parse the Cord into a Wrapper"
                   << std::endl;
         return false;
