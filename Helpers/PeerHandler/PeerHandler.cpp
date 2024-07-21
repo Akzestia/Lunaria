@@ -83,24 +83,24 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
-    // absl::string_view dataView(reinterpret_cast<const char *>(data), dataSize);
-    // absl::Cord receivedCord(dataView);
+    // absl::string_view dataView(reinterpret_cast<const char *>(data),
+    // dataSize); absl::Cord receivedCord(dataView);
 
-    Wrapper wrapper;
-    if (!wrapper.ParseFromArray(data, dataSize)) {
+    std::unique_ptr<Wrapper> wrapper = std::make_unique<Wrapper>();
+    if (!wrapper->ParseFromArray(data, dataSize)) {
         std::cerr << "Error: Failed to parse the Cord into a Wrapper"
                   << std::endl;
         return false;
     }
 
-    std::cout << "\nRoute: " << wrapper.route() << "\n";
+    std::cout << "\nRoute: " << wrapper->route() << "\n";
 
-    switch (wrapper.route()) {
+    switch (wrapper->route()) {
     case SIGN_UP: {
-        Lxcode response = RouteManager::handleSignUp(wrapper.auth().sign_up());
-        Wrapper responseWrapper;
+        Lxcode response = RouteManager::handleSignUp(wrapper->auth().sign_up());
+        std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
 
-        responseWrapper.set_route(AUTH_RESPONSE);
+        responseWrapper->set_route(AUTH_RESPONSE);
 
         AuthResponse authResponse;
         if (response.is_successful) {
@@ -109,10 +109,10 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
             authResponse.set_is_successful(true);
             authResponse.set_token(response.response);
 
-            *responseWrapper.mutable_authresponse() = authResponse;
+            *responseWrapper->mutable_authresponse() = authResponse;
 
             reinterpret_cast<QuicServer *>(context)->SendResponse(
-                Stream, responseWrapper);
+                Stream, *responseWrapper);
 
             return true;
         }
@@ -121,19 +121,19 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         authResponse.set_is_successful(false);
 
-        *responseWrapper.mutable_authresponse() = authResponse;
+        *responseWrapper->mutable_authresponse() = authResponse;
 
         reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
-                                                              responseWrapper);
+                                                              *responseWrapper);
 
         return false;
     }
     case SIGN_IN: {
-        Lxcode response = RouteManager::handleSignIn(wrapper.auth().sign_in());
+        Lxcode response = RouteManager::handleSignIn(wrapper->auth().sign_in());
 
-        Wrapper responseWrapper;
+        std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
 
-        responseWrapper.set_route(AUTH_RESPONSE);
+        responseWrapper->set_route(AUTH_RESPONSE);
 
         AuthResponse authResponse;
         if (response.is_successful) {
@@ -143,10 +143,10 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
             authResponse.set_is_successful(true);
             authResponse.set_token(response.response);
 
-            *responseWrapper.mutable_authresponse() = authResponse;
+            *responseWrapper->mutable_authresponse() = authResponse;
 
             reinterpret_cast<QuicServer *>(context)->SendResponse(
-                Stream, responseWrapper);
+                Stream, *responseWrapper);
 
             return true;
         }
@@ -155,18 +155,18 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         authResponse.set_is_successful(false);
 
-        *responseWrapper.mutable_authresponse() = authResponse;
+        *responseWrapper->mutable_authresponse() = authResponse;
 
         reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
-                                                              responseWrapper);
+                                                              *responseWrapper);
 
         return false;
     }
     case AUTH_RESPONSE: {
         printf("Auth response\n");
 
-        printf("Is successful: %d\n", wrapper.authresponse().is_successful());
-        printf("Token: %s\n", wrapper.authresponse().token().c_str());
+        printf("Is successful: %d\n", wrapper->authresponse().is_successful());
+        printf("Token: %s\n", wrapper->authresponse().token().c_str());
 
         break;
     }
