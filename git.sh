@@ -8,7 +8,6 @@ fi
 
 commit_message="$1"
 
-git submodule update --remote AzureNexus
 git submodule update --remote Lunaria-Client
 
 git add .
