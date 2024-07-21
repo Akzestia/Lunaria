@@ -443,23 +443,23 @@ QuicClient::~QuicClient() {
 }
 
 #pragma region AuthRequest()
-bool QuicClient::AuthRequest(const absl::Cord &auth_request) {
+bool QuicClient::AuthRequest(const Wrapper &auth_request) {
 
     QUIC_BUFFER *SendBuffer;
     HQUIC Stream = NULL;
 
-    absl::Cord::ChunkIterator start = auth_request.chunk_begin();
-    absl::Cord::ChunkIterator end = auth_request.chunk_end();
-    std::vector<uint8_t> buffer;
-    for (auto it = start; it != end; ++it) {
-        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
+    size_t size = auth_request.ByteSizeLong();
+    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
+    if (!auth_request.SerializeToArray(buffer->data(), buffer->size())) {
+        std::cerr << "Failed to serialize Wrapper\n";
+        goto Error;
     }
 
     SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer.size();
+    SendBuffer->Length = buffer->size();
     SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
 
-    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
+    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
 
     if (QUIC_FAILED(
             Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
@@ -487,26 +487,83 @@ bool QuicClient::AuthRequest(const absl::Cord &auth_request) {
         goto Error;
     }
 
+    delete buffer;
 Error:
     if (QUIC_FAILED(Status)) {
         MsQuic->ConnectionShutdown(Connection,
                                    QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
         free(SendBuffer);
+        delete buffer;
     }
     return false;
 }
+
+/*
+
+         HQUIC Stream = NULL;
+    QUIC_BUFFER *SendBuffer;
+
+    size_t size = w.ByteSizeLong();
+    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
+    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
+        std::cerr << "Failed to serialize Wrapper\n";
+        goto Error;
+    }
+
+    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    SendBuffer->Length = buffer->size();
+    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+
+    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
+
+    if (QUIC_FAILED(
+            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
+                                        QuicClient::StaticClientStreamCallback,
+                                        this, &Stream))) {
+        printf("StreamOpen failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    printf("[strm][%p] Starting...\n", Stream);
+
+    if (QUIC_FAILED(Status = MsQuic->StreamStart(
+                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
+        printf("StreamStart failed, 0x%x!\n", Status);
+        MsQuic->StreamClose(Stream);
+        goto Error;
+    }
+
+    printf("[strm][%p] Sending data...\n", Stream);
+
+    if (QUIC_FAILED(Status =
+                        MsQuic->StreamSend(Stream, SendBuffer, 1,
+                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
+        printf("StreamSend failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    std::cout << "\nSuccess" << "\n";
+
+    delete buffer;
+
+Error:
+    if (QUIC_FAILED(Status)) {
+        MsQuic->ConnectionShutdown(Connection,
+                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        free(SendBuffer);
+        delete buffer;
+    }
+ */
 #pragma endregion
 
 #pragma region SignUp()
 
 Lxcode QuicClient::SignUp(const Auth &auth) {
-    absl::Cord auth_request;
-
     Wrapper wrapper;
     *wrapper.mutable_auth() = auth;
     wrapper.set_route(SIGN_UP);
-    wrapper.SerializePartialToCord(&auth_request);
-    if (AuthRequest(auth_request)) {
+
+    if (AuthRequest(wrapper)) {
         return {true, SUCCESS, "Success"};
     }
     return {false, DB_ERROR_CONNECTION_FAILED, "Failed to connect"};

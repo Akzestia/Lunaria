@@ -52,7 +52,7 @@ class QuicClient : protected PeerHandler {
 
     bool openTunnel();
 
-    bool AuthRequest(const absl::Cord &);
+    bool AuthRequest(const Wrapper &);
 
     void ClientLoadConfiguration(const char *cert, const char *key);
 
