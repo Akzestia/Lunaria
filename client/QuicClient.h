@@ -27,7 +27,8 @@ class QuicClient : protected PeerHandler {
     Lxcode SignUp(const Auth &);
     Lxcode SignIn(const Auth &);
 
-    void send(const absl::Cord &message);
+    void send(const absl::Cord &);
+    void send(const Wrapper &);
 
     void openPeer(const char* PeerIp, uint16_t UdpPort);
     void sendToPeer();
