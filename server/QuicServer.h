@@ -63,7 +63,7 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
 
     bool getUserCreds(HQUIC);
 
-    void openPeer(const char* PeerIp, uint16_t UdpPort);
+    HQUIC openPeer(const char* PeerIp, uint16_t UdpPort);
 
     static void send(HQUIC, void *);
 

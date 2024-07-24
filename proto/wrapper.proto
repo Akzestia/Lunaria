@@ -12,16 +12,17 @@ import "authResponse.proto";
 
 message Wrapper {
     uint32 route = 1;
+    optional string AuthToken = 2; 
     oneof payload {
-        User user = 2;
-        Person person = 3;
-        Message message = 4;
-        Auth auth = 5;
-        Report report = 6;
-        Server serevr = 7;
-        Invite_link invite_link = 8;
-        Vpn_graph vpn_graph = 9;
-        AuthResponse authResponse = 10;
+        User user = 3;
+        Person person = 4;
+        Message message = 5;
+        Auth auth = 6;
+        Report report = 7;
+        Server serevr = 8;
+        Invite_link invite_link = 9;
+        Vpn_graph vpn_graph = 10;
+        AuthResponse authResponse = 11;
     }
 
 }

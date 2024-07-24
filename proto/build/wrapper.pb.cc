@@ -26,9 +26,12 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Wrapper::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : route_{0u},
+      : _cached_size_{0},
+        authtoken_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        route_{0u},
         payload_{},
-        _cached_size_{0},
         _oneof_case_{} {}
 
 template <typename>
@@ -51,7 +54,7 @@ static constexpr const ::_pb::ServiceDescriptor**
 const ::uint32_t
     TableStruct_wrapper_2eproto::offsets[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
         protodesc_cold) = {
-        ~0u,  // no _has_bits_
+        PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_._has_bits_),
         PROTOBUF_FIELD_OFFSET(::Wrapper, _internal_metadata_),
         ~0u,  // no _extensions_
         PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_._oneof_case_[0]),
@@ -60,6 +63,7 @@ const ::uint32_t
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
         PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.route_),
+        PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.authtoken_),
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
@@ -70,11 +74,22 @@ const ::uint32_t
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.payload_),
+        ~0u,
+        0,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
+        ~0u,
 };
 
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-        {0, -1, -1, sizeof(::Wrapper)},
+        {0, 20, -1, sizeof(::Wrapper)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::_Wrapper_default_instance_._instance,
@@ -84,15 +99,16 @@ const char descriptor_table_protodef_wrapper_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "\n\rwrapper.proto\032\nuser.proto\032\ntest.proto\032"
     "\rmessage.proto\032\nauth.proto\032\014report.proto"
     "\032\021invite_link.proto\032\014server.proto\032\017vpn_g"
-    "raph.proto\032\022authResponse.proto\"\254\002\n\007Wrapp"
-    "er\022\r\n\005route\030\001 \001(\r\022\025\n\004user\030\002 \001(\0132\005.UserH\000"
-    "\022\031\n\006person\030\003 \001(\0132\007.PersonH\000\022\033\n\007message\030\004"
-    " \001(\0132\010.MessageH\000\022\025\n\004auth\030\005 \001(\0132\005.AuthH\000\022"
-    "\031\n\006report\030\006 \001(\0132\007.ReportH\000\022\031\n\006serevr\030\007 \001"
-    "(\0132\007.ServerH\000\022#\n\013invite_link\030\010 \001(\0132\014.Inv"
-    "ite_linkH\000\022\037\n\tvpn_graph\030\t \001(\0132\n.Vpn_grap"
-    "hH\000\022%\n\014authResponse\030\n \001(\0132\r.AuthResponse"
-    "H\000B\t\n\007payloadb\006proto3"
+    "raph.proto\032\022authResponse.proto\"\322\002\n\007Wrapp"
+    "er\022\r\n\005route\030\001 \001(\r\022\026\n\tAuthToken\030\002 \001(\tH\001\210\001"
+    "\001\022\025\n\004user\030\003 \001(\0132\005.UserH\000\022\031\n\006person\030\004 \001(\013"
+    "2\007.PersonH\000\022\033\n\007message\030\005 \001(\0132\010.MessageH\000"
+    "\022\025\n\004auth\030\006 \001(\0132\005.AuthH\000\022\031\n\006report\030\007 \001(\0132"
+    "\007.ReportH\000\022\031\n\006serevr\030\010 \001(\0132\007.ServerH\000\022#\n"
+    "\013invite_link\030\t \001(\0132\014.Invite_linkH\000\022\037\n\tvp"
+    "n_graph\030\n \001(\0132\n.Vpn_graphH\000\022%\n\014authRespo"
+    "nse\030\013 \001(\0132\r.AuthResponseH\000B\t\n\007payloadB\014\n"
+    "\n_AuthTokenb\006proto3"
 };
 static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[9] =
     {
@@ -110,7 +126,7 @@ static ::absl::once_flag descriptor_table_wrapper_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_wrapper_2eproto = {
     false,
     false,
-    461,
+    499,
     descriptor_table_protodef_wrapper_2eproto,
     "wrapper.proto",
     &descriptor_table_wrapper_2eproto_once,
@@ -127,6 +143,10 @@ PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_wrapper_2eprot
 
 class Wrapper::_Internal {
  public:
+  using HasBits =
+      decltype(std::declval<Wrapper>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+      8 * PROTOBUF_FIELD_OFFSET(Wrapper, _impl_._has_bits_);
   static constexpr ::int32_t kOneofCaseOffset =
       PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_._oneof_case_);
 };
@@ -355,8 +375,10 @@ Wrapper::Wrapper(::google::protobuf::Arena* arena)
 inline PROTOBUF_NDEBUG_INLINE Wrapper::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
     const Impl_& from, const ::Wrapper& from_msg)
-      : payload_{},
+      : _has_bits_{from._has_bits_},
         _cached_size_{0},
+        authtoken_(arena, from.authtoken_),
+        payload_{},
         _oneof_case_{from._oneof_case_[0]} {}
 
 Wrapper::Wrapper(
@@ -406,8 +428,9 @@ Wrapper::Wrapper(
 inline PROTOBUF_NDEBUG_INLINE Wrapper::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : payload_{},
-        _cached_size_{0},
+      : _cached_size_{0},
+        authtoken_(arena),
+        payload_{},
         _oneof_case_{} {}
 
 inline void Wrapper::SharedCtor(::_pb::Arena* arena) {
@@ -421,6 +444,7 @@ Wrapper::~Wrapper() {
 }
 inline void Wrapper::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.authtoken_.Destroy();
   if (has_payload()) {
     clear_payload();
   }
@@ -532,15 +556,15 @@ Wrapper::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 10, 9, 0, 2> Wrapper::_table_ = {
+const ::_pbi::TcParseTable<1, 11, 9, 33, 2> Wrapper::_table_ = {
   {
-    0,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(Wrapper, _impl_._has_bits_),
     0, // no _extensions_
-    10, 0,  // max_field_number, fast_idx_mask
+    11, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294966272,  // skipmap
+    4294965248,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    10,  // num_field_entries
+    11,  // num_field_entries
     9,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_Wrapper_default_instance_._instance,
@@ -550,6 +574,9 @@ const ::_pbi::TcParseTable<0, 10, 9, 0, 2> Wrapper::_table_ = {
     ::_pbi::TcParser::GetTable<::Wrapper>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
+    // optional string AuthToken = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 0, 0, PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.authtoken_)}},
     // uint32 route = 1;
     {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Wrapper, _impl_.route_), 63>(),
      {8, 63, 0, PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_)}},
@@ -557,33 +584,36 @@ const ::_pbi::TcParseTable<0, 10, 9, 0, 2> Wrapper::_table_ = {
     65535, 65535
   }}, {{
     // uint32 route = 1;
-    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_), 0, 0,
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.route_), -1, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kUInt32)},
-    // .User user = 2;
+    // optional string AuthToken = 2;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.authtoken_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // .User user = 3;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.user_), _Internal::kOneofCaseOffset + 0, 0,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Person person = 3;
+    // .Person person = 4;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.person_), _Internal::kOneofCaseOffset + 0, 1,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Message message = 4;
+    // .Message message = 5;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.message_), _Internal::kOneofCaseOffset + 0, 2,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Auth auth = 5;
+    // .Auth auth = 6;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.auth_), _Internal::kOneofCaseOffset + 0, 3,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Report report = 6;
+    // .Report report = 7;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.report_), _Internal::kOneofCaseOffset + 0, 4,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Server serevr = 7;
+    // .Server serevr = 8;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.serevr_), _Internal::kOneofCaseOffset + 0, 5,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Invite_link invite_link = 8;
+    // .Invite_link invite_link = 9;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.invite_link_), _Internal::kOneofCaseOffset + 0, 6,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .Vpn_graph vpn_graph = 9;
+    // .Vpn_graph vpn_graph = 10;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.vpn_graph_), _Internal::kOneofCaseOffset + 0, 7,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
-    // .AuthResponse authResponse = 10;
+    // .AuthResponse authResponse = 11;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.authresponse_), _Internal::kOneofCaseOffset + 0, 8,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
@@ -597,6 +627,9 @@ const ::_pbi::TcParseTable<0, 10, 9, 0, 2> Wrapper::_table_ = {
     {::_pbi::TcParser::GetTable<::Vpn_graph>()},
     {::_pbi::TcParser::GetTable<::AuthResponse>()},
   }}, {{
+    "\7\0\11\0\0\0\0\0\0\0\0\0\0\0\0\0"
+    "Wrapper"
+    "AuthToken"
   }},
 };
 
@@ -607,8 +640,13 @@ PROTOBUF_NOINLINE void Wrapper::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    _impl_.authtoken_.ClearNonDefaultToEmpty();
+  }
   _impl_.route_ = 0u;
   clear_payload();
+  _impl_._has_bits_.Clear();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -626,50 +664,59 @@ PROTOBUF_NOINLINE void Wrapper::Clear() {
         1, this->_internal_route(), target);
   }
 
+  cached_has_bits = _impl_._has_bits_[0];
+  // optional string AuthToken = 2;
+  if (cached_has_bits & 0x00000001u) {
+    const std::string& _s = this->_internal_authtoken();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Wrapper.AuthToken");
+    target = stream->WriteStringMaybeAliased(2, _s, target);
+  }
+
   switch (payload_case()) {
     case kUser: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          2, *_impl_.payload_.user_, _impl_.payload_.user_->GetCachedSize(), target, stream);
+          3, *_impl_.payload_.user_, _impl_.payload_.user_->GetCachedSize(), target, stream);
       break;
     }
     case kPerson: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          3, *_impl_.payload_.person_, _impl_.payload_.person_->GetCachedSize(), target, stream);
+          4, *_impl_.payload_.person_, _impl_.payload_.person_->GetCachedSize(), target, stream);
       break;
     }
     case kMessage: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          4, *_impl_.payload_.message_, _impl_.payload_.message_->GetCachedSize(), target, stream);
+          5, *_impl_.payload_.message_, _impl_.payload_.message_->GetCachedSize(), target, stream);
       break;
     }
     case kAuth: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          5, *_impl_.payload_.auth_, _impl_.payload_.auth_->GetCachedSize(), target, stream);
+          6, *_impl_.payload_.auth_, _impl_.payload_.auth_->GetCachedSize(), target, stream);
       break;
     }
     case kReport: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          6, *_impl_.payload_.report_, _impl_.payload_.report_->GetCachedSize(), target, stream);
+          7, *_impl_.payload_.report_, _impl_.payload_.report_->GetCachedSize(), target, stream);
       break;
     }
     case kSerevr: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          7, *_impl_.payload_.serevr_, _impl_.payload_.serevr_->GetCachedSize(), target, stream);
+          8, *_impl_.payload_.serevr_, _impl_.payload_.serevr_->GetCachedSize(), target, stream);
       break;
     }
     case kInviteLink: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          8, *_impl_.payload_.invite_link_, _impl_.payload_.invite_link_->GetCachedSize(), target, stream);
+          9, *_impl_.payload_.invite_link_, _impl_.payload_.invite_link_->GetCachedSize(), target, stream);
       break;
     }
     case kVpnGraph: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          9, *_impl_.payload_.vpn_graph_, _impl_.payload_.vpn_graph_->GetCachedSize(), target, stream);
+          10, *_impl_.payload_.vpn_graph_, _impl_.payload_.vpn_graph_->GetCachedSize(), target, stream);
       break;
     }
     case kAuthResponse: {
       target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
-          10, *_impl_.payload_.authresponse_, _impl_.payload_.authresponse_->GetCachedSize(), target, stream);
+          11, *_impl_.payload_.authresponse_, _impl_.payload_.authresponse_->GetCachedSize(), target, stream);
       break;
     }
     default:
@@ -692,6 +739,14 @@ PROTOBUF_NOINLINE void Wrapper::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  ::_pbi::Prefetch5LinesFrom7Lines(reinterpret_cast<const void*>(this));
+  // optional string AuthToken = 2;
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_authtoken());
+  }
+
   // uint32 route = 1;
   if (this->_internal_route() != 0) {
     total_size += ::_pbi::WireFormatLite::UInt32SizePlusOne(
@@ -699,55 +754,55 @@ PROTOBUF_NOINLINE void Wrapper::Clear() {
   }
 
   switch (payload_case()) {
-    // .User user = 2;
+    // .User user = 3;
     case kUser: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.user_);
       break;
     }
-    // .Person person = 3;
+    // .Person person = 4;
     case kPerson: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.person_);
       break;
     }
-    // .Message message = 4;
+    // .Message message = 5;
     case kMessage: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.message_);
       break;
     }
-    // .Auth auth = 5;
+    // .Auth auth = 6;
     case kAuth: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.auth_);
       break;
     }
-    // .Report report = 6;
+    // .Report report = 7;
     case kReport: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.report_);
       break;
     }
-    // .Server serevr = 7;
+    // .Server serevr = 8;
     case kSerevr: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.serevr_);
       break;
     }
-    // .Invite_link invite_link = 8;
+    // .Invite_link invite_link = 9;
     case kInviteLink: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.invite_link_);
       break;
     }
-    // .Vpn_graph vpn_graph = 9;
+    // .Vpn_graph vpn_graph = 10;
     case kVpnGraph: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.vpn_graph_);
       break;
     }
-    // .AuthResponse authResponse = 10;
+    // .AuthResponse authResponse = 11;
     case kAuthResponse: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.authresponse_);
@@ -770,9 +825,14 @@ void Wrapper::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google:
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  cached_has_bits = from._impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    _this->_internal_set_authtoken(from._internal_authtoken());
+  }
   if (from._internal_route() != 0) {
     _this->_impl_.route_ = from._impl_.route_;
   }
+  _this->_impl_._has_bits_[0] |= cached_has_bits;
   if (const uint32_t oneof_from_case = from._impl_._oneof_case_[0]) {
     const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
     const bool oneof_needs_init = oneof_to_case != oneof_from_case;
@@ -882,7 +942,11 @@ void Wrapper::CopyFrom(const Wrapper& from) {
 
 void Wrapper::InternalSwap(Wrapper* PROTOBUF_RESTRICT other) {
   using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.authtoken_, &other->_impl_.authtoken_, arena);
         swap(_impl_.route_, other->_impl_.route_);
   swap(_impl_.payload_, other->_impl_.payload_);
   swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
