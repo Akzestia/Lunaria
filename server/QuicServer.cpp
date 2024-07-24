@@ -1,7 +1,8 @@
 #include "QuicServer.h"
+#include "../Helpers/fileChecks.hpp"
+#include "../route-manager/Routes.hpp"
 #include <absl/strings/cord.h>
 #include <cstdio>
-#include "../Helpers/fileChecks.hpp"
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
@@ -185,8 +186,9 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
         printf("[strm][%p] Peer shut down\n", Stream);
 
-        threadPool.enqueueTask([Stream, this](HQUIC, void*) -> bool {
-            return onPeerShutdown(static_cast<HQUIC>(Stream), static_cast<void*>(this));
+        threadPool.enqueueTask([Stream, this](HQUIC, void *) -> bool {
+            return onPeerShutdown(static_cast<HQUIC>(Stream),
+                                  static_cast<void *>(this));
         });
     } break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
@@ -233,10 +235,100 @@ void QuicServer::SendResponse(HQUIC Stream, const Wrapper &wrapper) {
 
 #pragma endregion
 
-
 void QuicServer::send(HQUIC Stream, void *Context) {
     return reinterpret_cast<QuicServer *>(Context)->send(Stream);
 }
+
+std::string QuicAddrToIpString(const QUIC_ADDR &addr) {
+    char ipStr[INET6_ADDRSTRLEN];       // Buffer to hold the IP string
+    if (addr.Ip.sa_family == AF_INET) { // IPv4
+        inet_ntop(AF_INET, &addr.Ipv4.sin_addr, ipStr, sizeof(ipStr));
+    } else if (addr.Ip.sa_family == AF_INET6) { // IPv6
+        inet_ntop(AF_INET6, &addr.Ipv6.sin6_addr, ipStr, sizeof(ipStr));
+    } else {
+        return "Unknown AF";
+    }
+    return std::string(ipStr);
+}
+
+// Function to extract port from QUIC_ADDR
+uint16_t QuicAddrToPort(const QUIC_ADDR &addr) {
+    if (addr.Ip.sa_family == AF_INET) { // IPv4
+        return ntohs(addr.Ipv4.sin_port);
+    } else if (addr.Ip.sa_family == AF_INET6) { // IPv6
+        return ntohs(addr.Ipv6.sin6_port);
+    } else {
+        return 0; // Unknown AF
+    }
+}
+
+void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
+    HQUIC Stream = NULL;
+    QUIC_BUFFER *SendBuffer;
+
+    QUIC_ADDR clientAddr = {};
+    uint32_t clientAddrSize = sizeof(clientAddr);
+    QUIC_STATUS status =
+        MsQuic->GetParam(Connection, QUIC_PARAM_CONN_REMOTE_ADDRESS,
+                         &clientAddrSize, &clientAddr);
+    if (QUIC_SUCCEEDED(status)) {
+        std::cout << "Client IP: " << QuicAddrToIpString(clientAddr) << "\n";
+        std::cout << "Client Port: " << QuicAddrToPort(clientAddr) << "\n";
+    } else {
+        std::cerr << "Failed to get client address\n";
+    }
+
+    size_t size = w.ByteSizeLong();
+    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
+    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
+        std::cerr << "Failed to serialize Wrapper\n";
+        goto Error;
+    }
+
+    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    SendBuffer->Length = buffer->size();
+    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+
+    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
+
+    if (QUIC_FAILED(
+            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
+                                        QuicServer::StaticClientStreamCallback,
+                                        this, &Stream))) {
+        printf("StreamOpen failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    printf("[strm][%p] Starting...\n", Stream);
+
+    if (QUIC_FAILED(Status = MsQuic->StreamStart(
+                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
+        printf("StreamStart failed, 0x%x!\n", Status);
+        MsQuic->StreamClose(Stream);
+        goto Error;
+    }
+
+    printf("[strm][%p] Sending data...\n", Stream);
+
+    if (QUIC_FAILED(Status =
+                        MsQuic->StreamSend(Stream, SendBuffer, 1,
+                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
+        printf("StreamSend failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    std::cout << "\nSuccess" << "\n";
+
+    delete buffer;
+
+Error:
+    if (QUIC_FAILED(Status)) {
+        MsQuic->ConnectionShutdown(Connection,
+                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        free(SendBuffer);
+        delete buffer;
+    }
+};
 
 void QuicServer::send(HQUIC Stream) {
     User u;
@@ -293,7 +385,13 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     case QUIC_CONNECTION_EVENT_CONNECTED: {
 
         printf("[conn][%p] Connected\n", Connection);
-        QuicServer::getUserCreds(Connection, Context);
+
+        Wrapper w;
+        w.set_route(SERVER_BINDING_REQUEST);
+
+        QuicServer::SendResponse(w, Connection);
+
+        // QuicServer::getUserCreds(Connection, Context);
 
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
@@ -401,7 +499,6 @@ void QuicServer::Start() {
             }
 
             std::cout << "Server is running..." << std::endl;
-            
         });
     }
 }

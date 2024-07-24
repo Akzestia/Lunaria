@@ -21,4 +21,5 @@ enum Routes : uint8_t {
     USER_ONLINE_STATUS = 0x11,
     USER_OFFLINE_STATUS = 0x12,
     AUTH_RESPONSE = 0x13,
+    SERVER_BINDING_REQUEST = 0x14,
 };

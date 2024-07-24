@@ -33,9 +33,11 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
 
     ~QuicServer();
 
-    static void SendResponse(HQUIC, const Wrapper &, void *);
+    void SendResponse(HQUIC, const Wrapper &, void *);
 
     void SendResponse(HQUIC, const Wrapper &);
+
+    void SendResponse(const Wrapper &, const HQUIC &);
 
   private:
     using ConnectionManager::addUser;
