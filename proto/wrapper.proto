@@ -24,5 +24,4 @@ message Wrapper {
         Vpn_graph vpn_graph = 10;
         AuthResponse authResponse = 11;
     }
-
 }
