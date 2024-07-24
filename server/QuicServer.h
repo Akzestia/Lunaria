@@ -63,6 +63,8 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
 
     bool getUserCreds(HQUIC);
 
+    void openPeer(const char* PeerIp, uint16_t UdpPort);
+
     static void send(HQUIC, void *);
 
     void send(HQUIC);
@@ -97,6 +99,15 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
     static QUIC_STATUS QUIC_API
     StaticClientStreamCallback(_In_ HQUIC Stream, _In_opt_ void *Context,
                                _Inout_ QUIC_STREAM_EVENT *Event);
+
+    _IRQL_requires_max_(PASSIVE_LEVEL)
+        _Function_class_(QUIC_CONNECTION_CALLBACK) QUIC_STATUS QUIC_API
+        ClientConnectionCallback(_In_ HQUIC Connection, _In_opt_ void *Context,
+                                 _Inout_ QUIC_CONNECTION_EVENT *Event);
+
+    static QUIC_STATUS QUIC_API StaticClientConnectionCallback(
+        _In_ HQUIC Connection, _In_opt_ void *Context,
+        _Inout_ QUIC_CONNECTION_EVENT *Event);
 
     QUIC_CREDENTIAL_CONFIG CredConfig;
     QUIC_ADDR Address = {0};

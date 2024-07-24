@@ -8,11 +8,13 @@
 
 class ClientListener {
   public:
-    ClientListener(const QUIC_API_TABLE *MsQuic);
+    ClientListener(const QUIC_API_TABLE *MsQuic, HQUIC Registration,
+                   const QUIC_BUFFER Alpn, uint16_t UdpPort, const char *cert,
+                   const char *key);
     ~ClientListener();
-    ClientListener() = default;
+    ClientListener() = delete;
 
-    void Start(HQUIC Registration, uint16_t UdpPort, const QUIC_BUFFER &Alpn);
+    void Start();
     void Close();
 
   private:
@@ -21,6 +23,10 @@ class ClientListener {
 
     const QUIC_API_TABLE *MsQuic = nullptr;
     HQUIC Listener = nullptr;
+    HQUIC Registration = nullptr;
+    HQUIC Configuration = nullptr;
+    const QUIC_BUFFER Alpn;
+    uint16_t UdpPort;
     QUIC_STATUS Status;
 
     void LoadConfiguration(const char *cert, const char *key);

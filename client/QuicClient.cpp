@@ -154,8 +154,11 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientStreamCallback(
 void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
     QUIC_SETTINGS Settings = {0};
 
-    Settings.IdleTimeoutMs = 0;
-    Settings.IsSet.IdleTimeoutMs = TRUE;
+    // Settings.PeerBidiStreamCount = 10;
+    // Settings.IsSet.PeerBidiStreamCount = TRUE;
+
+    // Settings.IdleTimeoutMs = 0;
+    // Settings.IsSet.IdleTimeoutMs = TRUE;
 
     QUIC_CREDENTIAL_CONFIG CredConfig;
     memset(&CredConfig, 0, sizeof(CredConfig));
@@ -214,8 +217,8 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
 
     ClientLoadConfiguration(cert, key);
 
-    cListener = new ClientListener(MsQuic);
-    cListener->Start(this->Registration, 6123, this->Alpn);
+    cListener = new ClientListener(MsQuic, Registration, this->Alpn, 6122, cert, key);
+    cListener->Start();
 
     HQUIC Connection = NULL;
 }

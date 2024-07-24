@@ -262,12 +262,36 @@ uint16_t QuicAddrToPort(const QUIC_ADDR &addr) {
     }
 }
 
+void QuicServer::openPeer(const char *PeerIp, uint16_t UdpPort) {
+    HQUIC p2pConnection = NULL;
+    if (QUIC_FAILED(Status = MsQuic->ConnectionOpen(
+                        Registration,
+                        QuicServer::StaticClientConnectionCallback, this,
+                        &p2pConnection))) {
+        printf("ConnectionOpen failed, 0x%x!\n", Status);
+    }
+    printf("\n[conn][%p] Connecting...\n", p2pConnection);
+    printf("\nPort: %u\n", UdpPort);
+
+    if (QUIC_FAILED(Status = MsQuic->ConnectionStart(
+                        p2pConnection, Configuration,
+                        QUIC_ADDRESS_FAMILY_UNSPEC, PeerIp, UdpPort))) {
+        printf("ConnectionStart failed, 0x%x!\n", Status);
+        goto Error;
+    }
+Error:
+    if (QUIC_FAILED(Status) && p2pConnection != NULL) {
+        MsQuic->ConnectionClose(p2pConnection);
+    }
+}
+
 void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
     HQUIC Stream = NULL;
     QUIC_BUFFER *SendBuffer;
 
     QUIC_ADDR clientAddr = {};
     uint32_t clientAddrSize = sizeof(clientAddr);
+
     QUIC_STATUS status =
         MsQuic->GetParam(Connection, QUIC_PARAM_CONN_REMOTE_ADDRESS,
                          &clientAddrSize, &clientAddr);
@@ -278,57 +302,133 @@ void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
         std::cerr << "Failed to get client address\n";
     }
 
-    size_t size = w.ByteSizeLong();
-    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
-    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
-        std::cerr << "Failed to serialize Wrapper\n";
-        goto Error;
-    }
+    QuicServer::openPeer("localhost", 6122);
 
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer->size();
-    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+    // size_t size = w.ByteSizeLong();
+    // std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
+    // if (!w.SerializeToArray(buffer->data(), buffer->size())) {
+    //     std::cerr << "Failed to serialize Wrapper\n";
+    //     goto Error;
+    // }
 
-    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
+    // SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    // SendBuffer->Length = buffer->size();
+    // SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
 
-    if (QUIC_FAILED(
-            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
-                                        QuicServer::StaticClientStreamCallback,
-                                        this, &Stream))) {
-        printf("StreamOpen failed, 0x%x!\n", Status);
-        goto Error;
-    }
+    // std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
 
-    printf("[strm][%p] Starting...\n", Stream);
+    // if (QUIC_FAILED(
+    //         Status = MsQuic->StreamOpen(Connection,
+    //         QUIC_STREAM_OPEN_FLAG_NONE,
+    //                                     QuicServer::StaticClientStreamCallback,
+    //                                     this, &Stream))) {
+    //     printf("StreamOpen failed, 0x%x!\n", Status);
+    //     goto Error;
+    // }
 
-    if (QUIC_FAILED(Status = MsQuic->StreamStart(
-                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
-        printf("StreamStart failed, 0x%x!\n", Status);
-        MsQuic->StreamClose(Stream);
-        goto Error;
-    }
+    // printf("[strm][%p] Starting...\n", Stream);
 
-    printf("[strm][%p] Sending data...\n", Stream);
+    // if (QUIC_FAILED(Status = MsQuic->StreamStart(
+    //                     Stream, QUIC_STREAM_START_FLAG_NONE))) {
+    //     printf("StreamStart failed, 0x%x!\n", Status);
+    //     MsQuic->StreamClose(Stream);
+    //     goto Error;
+    // }
 
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("StreamSend failed, 0x%x!\n", Status);
-        goto Error;
-    }
+    // printf("[strm][%p] Sending data...\n", Stream);
 
-    std::cout << "\nSuccess" << "\n";
+    // if (QUIC_FAILED(Status =
+    //                     MsQuic->StreamSend(Stream, SendBuffer, 1,
+    //                                        QUIC_SEND_FLAG_FIN, SendBuffer)))
+    //                                        {
+    //     printf("StreamSend failed, 0x%x!\n", Status);
+    //     goto Error;
+    // }
 
-    delete buffer;
+    // std::cout << "\nSuccess" << "\n";
+
+    // delete buffer;
 
 Error:
     if (QUIC_FAILED(Status)) {
         MsQuic->ConnectionShutdown(Connection,
                                    QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
         free(SendBuffer);
-        delete buffer;
+        // delete buffer;
     }
 };
+
+#pragma region ClientConnectionCallback
+_IRQL_requires_max_(PASSIVE_LEVEL)
+    _Function_class_(QUIC_CONNECTION_CALLBACK) QUIC_STATUS QUIC_API
+    QuicServer::ClientConnectionCallback(_In_ HQUIC Connection,
+                                         _In_opt_ void *Context,
+                                         _Inout_ QUIC_CONNECTION_EVENT *Event) {
+    UNREFERENCED_PARAMETER(Context);
+    switch (Event->Type) {
+    case QUIC_CONNECTION_EVENT_CONNECTED:
+        printf("[conn][%p] Connected\n", Connection);
+        break;
+    case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_TRANSPORT:
+        if (Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status ==
+            QUIC_STATUS_CONNECTION_IDLE) {
+            printf("[conn][%p] Successfully shut down on idle.\n", Connection);
+        } else {
+            printf("[conn][%p] Shut down by transport, 0x%x\n", Connection,
+                   Event->SHUTDOWN_INITIATED_BY_TRANSPORT.Status);
+        }
+        break;
+    case QUIC_CONNECTION_EVENT_SHUTDOWN_INITIATED_BY_PEER:
+        printf("[conn][%p] Shut down by peer, 0x%llu\n", Connection,
+               (unsigned long long)Event->SHUTDOWN_INITIATED_BY_PEER.ErrorCode);
+        break;
+    case QUIC_CONNECTION_EVENT_SHUTDOWN_COMPLETE:
+        printf("[conn][%p] All done\n", Connection);
+        if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
+            MsQuic->ConnectionClose(Connection);
+        }
+        break;
+    case QUIC_CONNECTION_EVENT_RESUMPTION_TICKET_RECEIVED:
+        printf("[conn][%p] Resumption ticket received (%u bytes):\n",
+               Connection,
+               Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength);
+
+        // Free previous ticket if any
+        // if (ResumptionTicket) {
+        //     free(ResumptionTicket);
+        //     ResumptionTicket = nullptr;
+        //     ResumptionTicketLength = 0;
+        // }
+
+        // // Allocate memory for the new ticket
+        // ResumptionTicketLength =
+        //     Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicketLength;
+        // ResumptionTicket = (uint8_t *)malloc(ResumptionTicketLength);
+        // if (ResumptionTicket == nullptr) {
+        //     printf("Failed to allocate memory for ResumptionTicket\n");
+        //     break;
+        // }
+
+        // memcpy(ResumptionTicket,
+        //        Event->RESUMPTION_TICKET_RECEIVED.ResumptionTicket,
+        //        ResumptionTicketLength);
+
+        printf("Resumption ticket stored.\n");
+
+        break;
+    default:
+        break;
+    }
+    return QUIC_STATUS_SUCCESS;
+}
+#pragma endregion
+
+QUIC_STATUS QUIC_API QuicServer::StaticClientConnectionCallback(
+    _In_ HQUIC Connection, _In_opt_ void *Context,
+    _Inout_ QUIC_CONNECTION_EVENT *Event) {
+    return reinterpret_cast<QuicServer *>(Context)->ClientConnectionCallback(
+        Connection, Context, Event);
+}
 
 void QuicServer::send(HQUIC Stream) {
     User u;
@@ -386,12 +486,11 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
 
         printf("[conn][%p] Connected\n", Connection);
 
-        Wrapper w;
-        w.set_route(SERVER_BINDING_REQUEST);
+        // Wrapper w;
+        // w.set_route(SERVER_BINDING_REQUEST);
+        // QuicServer::SendResponse(w, Connection);
 
-        QuicServer::SendResponse(w, Connection);
-
-        // QuicServer::getUserCreds(Connection, Context);
+        openPeer("localhost", 6122);
 
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
