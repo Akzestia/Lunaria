@@ -630,8 +630,7 @@ QuicServer::~QuicServer() {
 
     for (; begin != end; begin++) {
         printf("\n[conn][%p] Closing\n", begin->first);
-        MsQuic->ConnectionShutdown(begin->first,
-                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        MsQuic->ConnectionShutdown(begin->first, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
         MsQuic->ConnectionClose(begin->first);
     }
 
