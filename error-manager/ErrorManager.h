@@ -5,11 +5,13 @@
 #include "../proto/build/user.pb.h"
 #include "../proto/build/contact.pb.h"
 
+using LxPayload = std::variant<User*, Contact*>;
+
 typedef struct Lxcode{
   bool is_successful;
   uint8_t error_code;
   const char* response;
-  std::variant<User, Contact>* payload;
+  std::variant<User*, Contact*> payload;
 } Lxcode;
 
 enum Lxcodes : uint8_t {
