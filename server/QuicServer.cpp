@@ -1,6 +1,6 @@
 #include "QuicServer.h"
-//Used for fileExists
-// #include "../Helpers/fileChecks.hpp"
+// Used for fileExists
+//  #include "../Helpers/fileChecks.hpp"
 #include "../route-manager/Routes.hpp"
 #include <absl/strings/cord.h>
 #include <cstdio>
@@ -47,7 +47,6 @@ uint16_t QuicAddrToPort(const QUIC_ADDR &addr) {
         return 0; // Unknown AF
     }
 }
-
 
 uint8_t QuicServer::DecodeHexChar(_In_ char c) {
     if (c >= '0' && c <= '9')
@@ -186,10 +185,10 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
                    Event->START_COMPLETE.Status);
         }
         break;
-    case QUIC_STREAM_EVENT_SEND_COMPLETE:
+    case QUIC_STREAM_EVENT_SEND_COMPLETE: {
         free(Event->SEND_COMPLETE.ClientContext);
         printf("[strm][%p] Data sent\n", Stream);
-        break;
+    } break;
     case QUIC_STREAM_EVENT_RECEIVE: {
         QUIC_STATUS Status = QUIC_STATUS_SUCCESS;
 
@@ -212,7 +211,8 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         printf("[strm][%p] Peer shut down\n", Stream);
 
         threadPool.enqueueTask([Stream, this](HQUIC, void *) -> bool {
-            return onPeerShutdown(static_cast<HQUIC>(Stream), static_cast<void *>(this));
+            return onPeerShutdown(static_cast<HQUIC>(Stream),
+                                  static_cast<void *>(this));
         });
     } break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
@@ -221,9 +221,11 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
             MsQuic->StreamClose(Stream);
         }
         break;
-    case QUIC_STREAM_EVENT_SEND_SHUTDOWN_COMPLETE:
+    case QUIC_STREAM_EVENT_SEND_SHUTDOWN_COMPLETE: {
         printf("[strm][%p] Send shutdown complete\n", Stream);
-        break;
+
+        ConnectionManager::closeConnection(Stream, *MsQuic);
+    } break;
     default:
         printf("Stream Event: %d\n", Event->Type);
         break;
@@ -296,6 +298,8 @@ void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
     QUIC_ADDR clientAddr = {};
     uint32_t clientAddrSize = sizeof(clientAddr);
 
+    HQUIC xcon = QuicServer::openPeer("localhost", 6122);
+
     QUIC_STATUS status =
         MsQuic->GetParam(Connection, QUIC_PARAM_CONN_REMOTE_ADDRESS,
                          &clientAddrSize, &clientAddr);
@@ -306,14 +310,57 @@ void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
         std::cerr << "Failed to get client address\n";
     }
 
-    QuicServer::openPeer("localhost", 6122);
+    size_t size = w.ByteSizeLong();
+    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
+    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
+        std::cerr << "Failed to serialize Wrapper\n";
+        goto Error;
+    }
+
+    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    SendBuffer->Length = buffer->size();
+    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+
+    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
+
+    if (QUIC_FAILED(
+            Status = MsQuic->StreamOpen(xcon, QUIC_STREAM_OPEN_FLAG_NONE,
+                                        QuicServer::StaticClientStreamCallback,
+                                        this, &Stream))) {
+        printf("StreamOpen failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    printf("[strm][%p] Starting...\n", Stream);
+
+    if (QUIC_FAILED(Status = MsQuic->StreamStart(
+                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
+        printf("StreamStart failed, 0x%x!\n", Status);
+        MsQuic->StreamClose(Stream);
+        goto Error;
+    }
+
+    printf("[strm][%p] Sending data...\n", Stream);
+
+    if (QUIC_FAILED(Status =
+                        MsQuic->StreamSend(Stream, SendBuffer, 1,
+                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
+        printf("StreamSend failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    std::cout << "\nSuccess" << "\n";
+    ConnectionManager::addConnection(xcon, Stream);
+
+    // MsQuic->ConnectionClose(xcon);
+    delete buffer;
 
 Error:
     if (QUIC_FAILED(Status)) {
-        MsQuic->ConnectionShutdown(Connection,
-                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        MsQuic->ConnectionShutdown(xcon, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+
         free(SendBuffer);
-        // delete buffer;
+        delete buffer;
     }
 };
 
@@ -445,11 +492,10 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
 
         printf("[conn][%p] Connected\n", Connection);
 
-        // Wrapper w;
-        // w.set_route(SERVER_BINDING_REQUEST);
-        // QuicServer::SendResponse(w, Connection);
+        Wrapper w;
+        w.set_route(SERVER_BINDING_REQUEST);
 
-        openPeer("localhost", 6122);
+        SendResponse(w, Connection);
 
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
@@ -630,7 +676,8 @@ QuicServer::~QuicServer() {
 
     for (; begin != end; begin++) {
         printf("\n[conn][%p] Closing\n", begin->first);
-        MsQuic->ConnectionShutdown(begin->first, QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
+        MsQuic->ConnectionShutdown(begin->first,
+                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
         MsQuic->ConnectionClose(begin->first);
     }
 
