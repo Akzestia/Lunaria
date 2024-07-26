@@ -1,7 +1,10 @@
 syntax = "proto3";
 
+import "user.proto";
+
 message AuthResponse {
     string token = 1;
     string refreshToken = 2;
-    bool is_successful = 3;
+    optional User user = 3;
+    bool is_successful = 4;
 }

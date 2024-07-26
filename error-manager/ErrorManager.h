@@ -1,11 +1,15 @@
 #ifndef ERROR_MANAGER_H
 #define ERROR_MANAGER_H
 #include <cstdint>
+#include <variant>
+#include "../proto/build/user.pb.h"
+#include "../proto/build/contact.pb.h"
 
 typedef struct Lxcode{
   bool is_successful;
   uint8_t error_code;
   const char* response;
+  std::variant<User, Contact>* payload;
 } Lxcode;
 
 enum Lxcodes : uint8_t {
