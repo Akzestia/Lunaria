@@ -108,6 +108,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             authResponse.set_is_successful(true);
             authResponse.set_token(response.response);
+            authResponse.set_allocated_user(std::get<User *>(response.payload));
 
             *responseWrapper->mutable_authresponse() = authResponse;
 
@@ -142,6 +143,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             authResponse.set_is_successful(true);
             authResponse.set_token(response.response);
+            authResponse.set_allocated_user(std::get<User *>(response.payload));
 
             *responseWrapper->mutable_authresponse() = authResponse;
 
