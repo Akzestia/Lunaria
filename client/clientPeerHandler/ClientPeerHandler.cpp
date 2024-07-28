@@ -1,4 +1,5 @@
 #include "ClientPeerHandler.h"
+#include "../../route-manager/Routes.hpp"
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -36,6 +37,26 @@ void ClientPeerHandler::SetPeer(HQUIC Stream, const uint8_t &data, size_t dataSi
         (*peerDataSizes)[Stream] = dataSize;
     }
 }
+
+bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
+    uint8_t *data = (*peers)[Stream];
+    size_t dataSize = (*peerDataSizes)[Stream];
+
+    std::unique_ptr<Wrapper> wrapper = std::make_unique<Wrapper>();
+    if (!wrapper->ParseFromArray(data, dataSize)) {
+        std::cerr << "Error: Failed to parse the Cord into a Wrapper"
+                  << std::endl;
+        return false;
+    }
+
+    std::cout << "\nRoute: " << wrapper->route() << "\n";
+
+    switch (wrapper->route()) {
+        
+    }
+
+    return true;
+} 
 
 // TODO proper handling
 void ClientPeerHandler::HandlePeer(HQUIC Stream, const uint8_t &data,
