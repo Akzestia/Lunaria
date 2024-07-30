@@ -1,301 +1,178 @@
-#include "test.h"
-#include <cstring>
-#include <fcntl.h>
-#include <fstream>
-#include <iomanip>
 #include <iostream>
-#include <png.h>
-#include <sys/mman.h>
-#include <unistd.h>
-#include <unordered_map>
-#include <vector>
-#include <wayland-client-protocol.h>
+#include <cstring>
 #include <wayland-client.h>
+#include <wayland-client-protocol.h>
+#include <linux/input-event-codes.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <png.h>
+#include "wlr-screencopy-unstable-v1-client-protocol.h"
 
-class WaylandOutputListener {
-  public:
-    static void handleGeometry(void *data, wl_output *output, int x, int y,
-                               int physical_width, int physical_height,
-                               int subpixel, const char *make,
-                               const char *model, int transform) {
-        auto *listener = static_cast<WaylandOutputListener *>(data);
-        std::cout << "Output Geometry: x=" << x << ", y=" << y
-                  << ", physical_width=" << physical_width
-                  << ", physical_height=" << physical_height << std::endl;
-    }
+struct wl_display *display = NULL;
+struct wl_registry *registry = NULL;
+struct wl_shm *shm = NULL;
+struct wl_output *output = NULL;
+struct zwlr_screencopy_manager_v1 *screencopy_manager = NULL;
 
-    static void handleMode(void *data, wl_output *output, uint32_t flags,
-                           int width, int height, int refresh) {
-        auto *listener = static_cast<WaylandOutputListener *>(data);
-        std::cout << "Output Mode: width=" << width << ", height=" << height
-                  << ", refresh=" << refresh << std::endl;
-    }
+struct ScreencopyFrameListener {
+    struct zwlr_screencopy_frame_v1 *frame;
+    int width, height, stride;
+    enum wl_shm_format format;
+    void *data;
+    bool done;
 };
 
-class WaylandConnection {
-  public:
-    WaylandConnection()
-        : display(nullptr), registry(nullptr), shm(nullptr),
-          screencopy_manager(nullptr), output(nullptr) {}
+static void registry_global(void *data, struct wl_registry *registry,
+                            uint32_t name, const char *interface, uint32_t version) {
+    if (strcmp(interface, wl_shm_interface.name) == 0) {
+        shm = (struct wl_shm*)wl_registry_bind(registry, name, &wl_shm_interface, 1);
+    } else if (strcmp(interface, wl_output_interface.name) == 0) {
+        output = (struct wl_output*)wl_registry_bind(registry, name, &wl_output_interface, 1);
+    } else if (strcmp(interface, zwlr_screencopy_manager_v1_interface.name) == 0) {
+        screencopy_manager = (struct zwlr_screencopy_manager_v1*)wl_registry_bind(
+            registry, name, &zwlr_screencopy_manager_v1_interface, 1);
+    }
+}
 
-    void init() {
-        display = wl_display_connect(nullptr);
-        if (!display) {
-            std::cerr << "Failed to connect to Wayland display." << std::endl;
-            return;
-        }
+static void registry_global_remove(void *data, struct wl_registry *registry, uint32_t name) {
+    // Handle removal of global objects
+}
 
-        std::cout << "Successfully connected to Wayland display." << std::endl;
+static const struct wl_registry_listener registry_listener = {
+    .global = registry_global,
+    .global_remove = registry_global_remove,
+};
 
-        registry = wl_display_get_registry(display);
-        if (!registry) {
-            std::cerr << "Failed to get Wayland registry." << std::endl;
-            wl_display_disconnect(display);
-            return;
-        }
+static int create_shm_file() {
+    char filename[] = "/tmp/wayland-screenshot-XXXXXX";
+    int fd = mkstemp(filename);
+    if (fd < 0) {
+        return -1;
+    }
+    unlink(filename);
+    return fd;
+}
 
-        static const wl_registry_listener registryListener = {
-            registryHandleGlobal, registryHandleGlobalRemove};
-        wl_registry_add_listener(registry, &registryListener, this);
-
-        wl_display_roundtrip(display);
+static void write_png(const char *filename, int width, int height, void *data) {
+    FILE *fp = fopen(filename, "wb");
+    if (!fp) {
+        std::cerr << "Failed to open file for writing" << std::endl;
+        return;
     }
 
-    void cleanup() {
-        if (display) {
-            wl_display_disconnect(display);
-            display = nullptr;
-            std::cout << "Disconnected from Wayland display." << std::endl;
-        }
+    png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+    if (!png) {
+        std::cerr << "Failed to create PNG write struct" << std::endl;
+        fclose(fp);
+        return;
     }
 
-    void print() {
-        auto iter_b = globalObjects.begin();
-        auto iter_e = globalObjects.end();
-        int count = 0;
-        for (; iter_b != iter_e; iter_b++) {
-            // std::cout << iter_b->second << "  Count: " << ++count << "\n";
-            if (iter_b->second == "wl_output") {
-                output = reinterpret_cast<wl_output *>(wl_registry_bind(
-                    registry, iter_b->first, &wl_output_interface, 1));
-                if (!output) {
-                    std::cerr << "Failed to bind wl_output." << std::endl;
-                }
-            }
-        }
+    png_infop info = png_create_info_struct(png);
+    if (!info) {
+        std::cerr << "Failed to create PNG info struct" << std::endl;
+        png_destroy_write_struct(&png, NULL);
+        fclose(fp);
+        return;
     }
 
-    wl_output *getOutput() { return output; }
-
-    void setupListeners() {
-        if (!output) {
-            std::cerr << "No wl_output object available." << std::endl;
-            return;
-        }
-
-        static const wl_output_listener outputListener = {
-            WaylandOutputListener::handleGeometry,
-            WaylandOutputListener::handleMode,
-        };
-        wl_output_add_listener(output, &outputListener, this);
-    }
-
-    void captureScreen() {
-        if (!screencopy_manager) {
-            std::cerr << "Screencopy manager is not available." << std::endl;
-            return;
-        }
-
-        if (!output) {
-            std::cerr << "No output available to capture." << std::endl;
-            return;
-        }
-
-        zwlr_screencopy_frame_v1 *frame =
-            zwlr_screencopy_manager_v1_capture_output(screencopy_manager, 0,
-                                                      output);
-        zwlr_screencopy_frame_v1_add_listener(frame, &frameListener, this);
-
-        wl_display_roundtrip(display);
-    }
-
-  private:
-    static void registryHandleGlobal(void *data, wl_registry *registry,
-                                     uint32_t id, const char *interface,
-                                     uint32_t version) {
-        auto *connection = static_cast<WaylandConnection *>(data);
-        connection->globalObjects[id] = interface;
-
-        if (strcmp(interface, wl_shm_interface.name) == 0) {
-            connection->shm = reinterpret_cast<wl_shm *>(
-                wl_registry_bind(registry, id, &wl_shm_interface, 1));
-        } else if (strcmp(interface,
-                          zwlr_screencopy_manager_v1_interface.name) == 0) {
-            connection->screencopy_manager =
-                reinterpret_cast<zwlr_screencopy_manager_v1 *>(wl_registry_bind(
-                    registry, id, &zwlr_screencopy_manager_v1_interface, 1));
-        }
-    }
-
-    static void registryHandleGlobalRemove(void *, wl_registry *, uint32_t) {}
-
-    static void shmFormat(void *data, wl_shm *shm, uint32_t format) {
-        // Handle supported SHM formats here
-    }
-
-    static void frameBuffer(void *data, zwlr_screencopy_frame_v1 *frame,
-                            uint32_t format, uint32_t width, uint32_t height,
-                            uint32_t stride) {
-        std::cout << "Frame properties: format=" << format
-                  << ", width=" << width << ", height=" << height
-                  << ", stride=" << stride << std::endl;
-
-        int fd = shm_open("/example_shm", O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-        if (fd < 0) {
-            std::cout << "XXXX\n";
-        }
-        WaylandConnection *connection = static_cast<WaylandConnection *>(data);
-        wl_buffer *buffer = connection->createOrObtainBuffer(
-            connection->shm, width, height, stride, fd, 1024 * 1024 * 4);
-
-        if (!buffer) {
-            std::cerr << "Failed to create or obtain buffer." << std::endl;
-            close(fd);
-            return;
-        }
-
-        zwlr_screencopy_frame_v1_copy(frame, buffer);
-
-        uint8_t *datax = static_cast<uint8_t *>(mmap(nullptr, stride * height,
-                                                     PROT_READ | PROT_WRITE,
-                                                     MAP_SHARED, fd, 0));
-
-        if (datax == MAP_FAILED) {
-            std::cerr << "Failed to map shared memory into process."
-                      << std::endl;
-            close(fd);
-            wl_buffer_destroy(buffer);
-            return;
-        }
-
-        connection->savePngImage("output.png", datax, width, height, stride);
-
-        close(fd);
-        wl_buffer_destroy(buffer);
-    }
-    void copyFrameToBuffer(zwlr_screencopy_frame_v1 *frame, wl_buffer *buffer) {
-        zwlr_screencopy_frame_v1_copy(frame, buffer);
-    }
-
-    static void frameReady(void *data, zwlr_screencopy_frame_v1 *frame,
-                           uint32_t tv_sec_hi, uint32_t tv_sec_lo,
-                           uint32_t tv_nsec) {
-        std::cout << "Frame ready." << std::endl;
-    }
-
-    wl_buffer *createOrObtainBuffer(wl_shm *shm, int width, int height,
-                                    int stride, int fd, int size) {
-        // Create a shared memory pool
-        wl_shm_pool *pool = wl_shm_create_pool(shm, fd, size);
-        if (!pool) {
-            std::cerr << "Failed to create shared memory pool." << std::endl;
-            return nullptr;
-        }
-
-        // Create a buffer from the shared memory pool
-        wl_buffer *buffer = wl_shm_pool_create_buffer(
-            pool, 0, width, height, stride, WL_SHM_FORMAT_ARGB8888);
-        if (!buffer) {
-            std::cerr << "Failed to create buffer." << std::endl;
-            wl_shm_pool_destroy(pool);
-            return nullptr;
-        }
-
-        // You can attach listeners to handle buffer events if needed
-
-        return buffer;
-    }
-
-    static void savePngImage(const std::string &filename, const uint8_t *buffer,
-                             uint32_t width, uint32_t height, uint32_t stride) {
-        FILE *fp = fopen(filename.c_str(), "wb");
-        if (!fp) {
-            std::cerr << "Error: Failed to open file for writing." << std::endl;
-            return;
-        }
-
-        png_structp png = png_create_write_struct(PNG_LIBPNG_VER_STRING,
-                                                  nullptr, nullptr, nullptr);
-        if (!png) {
-            std::cerr << "Error: Failed to create PNG write struct."
-                      << std::endl;
-            fclose(fp);
-            return;
-        }
-
-        png_infop info = png_create_info_struct(png);
-        if (!info) {
-            std::cerr << "Error: Failed to create PNG info struct."
-                      << std::endl;
-            png_destroy_write_struct(&png, nullptr);
-            fclose(fp);
-            return;
-        }
-
-        png_init_io(png, fp);
-
-        png_set_IHDR(png, info, width, height, 8, PNG_COLOR_TYPE_RGB_ALPHA,
-                     PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
-                     PNG_FILTER_TYPE_DEFAULT);
-
-        std::vector<png_bytep> row_pointers(height);
-        for (uint32_t y = 0; y < height; ++y) {
-            row_pointers[y] = const_cast<png_bytep>(&buffer[y * stride]);
-        }
-
-        png_set_rows(png, info, row_pointers.data());
-
-        png_write_png(png, info, PNG_TRANSFORM_IDENTITY, nullptr);
-
+    if (setjmp(png_jmpbuf(png))) {
+        std::cerr << "Error writing PNG file" << std::endl;
         png_destroy_write_struct(&png, &info);
         fclose(fp);
-
-        std::cout << "PNG image saved as " << filename << std::endl;
+        return;
     }
 
-    static void frameFailed(void *data, zwlr_screencopy_frame_v1 *frame) {
-        std::cerr << "Failed to capture frame." << std::endl;
+    png_init_io(png, fp);
+    png_set_IHDR(png, info, width, height, 8, PNG_COLOR_TYPE_RGBA,
+                 PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+    png_write_info(png, info);
+
+    for (int y = 0; y < height; y++) {
+        png_write_row(png, (png_bytep)data + y * width * 4);
     }
 
-    wl_display *display;
-    wl_registry *registry;
-    wl_shm *shm;
-    zwlr_screencopy_manager_v1 *screencopy_manager;
-    wl_output *output;
-    std::unordered_map<uint32_t, std::string> globalObjects;
+    png_write_end(png, NULL);
+    png_destroy_write_struct(&png, &info);
+    fclose(fp);
+}
 
-    static const zwlr_screencopy_frame_v1_listener frameListener;
-};
+static void frame_handle_buffer(void *data, struct zwlr_screencopy_frame_v1 *frame,
+                                uint32_t format, uint32_t width, uint32_t height, uint32_t stride) {
+    ScreencopyFrameListener *listener = static_cast<ScreencopyFrameListener*>(data);
+    listener->format = (wl_shm_format)format;
+    listener->width = width;
+    listener->height = height;
+    listener->stride = stride;
+}
 
-const zwlr_screencopy_frame_v1_listener WaylandConnection::frameListener = {
-    frameBuffer,
+static void frame_handle_linux_dmabuf(void *data, struct zwlr_screencopy_frame_v1 *frame,
+                                      uint32_t format, uint32_t width, uint32_t height) {
+    // Handle linux_dmabuf if needed
+}
+
+static void frame_handle_buffer_done(void *data, struct zwlr_screencopy_frame_v1 *frame) {
+    // Handle buffer_done if needed
+}
+
+static void frame_handle_damage(void *data, struct zwlr_screencopy_frame_v1 *frame,
+                                uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+    // Handle damage if needed
+}
+
+static const struct zwlr_screencopy_frame_v1_listener frame_listener = {
+    .buffer = frame_handle_buffer,
+    .linux_dmabuf = frame_handle_linux_dmabuf,
+    .buffer_done = frame_handle_buffer_done,
+    .flags = frame_handle_flags,
+    .ready = frame_handle_ready,
+    .failed = frame_handle_failed,
+    .damage = frame_handle_damage,
 };
 
 int main() {
-    WaylandConnection connection;
-    connection.init();
-
-    connection.print();
-
-    wl_output *output = connection.getOutput();
-    if (output) {
-        std::cout << "wl_output pointer is set." << std::endl;
-        connection.setupListeners();
-        connection.captureScreen();
-    } else {
-        std::cerr << "Failed to get wl_output pointer." << std::endl;
+    display = wl_display_connect(NULL);
+    if (!display) {
+        std::cerr << "Failed to connect to Wayland display" << std::endl;
+        return 1;
     }
 
-    connection.cleanup();
+    registry = wl_display_get_registry(display);
+    wl_registry_add_listener(registry, &registry_listener, NULL);
+    wl_display_roundtrip(display);
+
+    if (!screencopy_manager) {
+        std::cerr << "Screencopy protocol not supported" << std::endl;
+        return 1;
+    }
+
+    ScreencopyFrameListener listener = {};
+    listener.frame = zwlr_screencopy_manager_v1_capture_output(screencopy_manager, 0, output);
+    zwlr_screencopy_frame_v1_add_listener(listener.frame, &frame_listener, &listener);
+
+    while (!listener.done) {
+        wl_display_dispatch(display);
+    }
+
+    if (!listener.data) {
+        std::cerr << "Failed to capture frame" << std::endl;
+        return 1;
+    }
+
+    int size = listener.stride * listener.height;
+
+    write_png("screenshot.png", listener.width, listener.height, listener.data);
+
+    munmap(listener.data, size);
+
+    zwlr_screencopy_frame_v1_destroy(listener.frame);
+    zwlr_screencopy_manager_v1_destroy(screencopy_manager);
+    wl_output_destroy(output);
+    wl_shm_destroy(shm);
+    wl_registry_destroy(registry);
+    wl_display_disconnect(display);
+
+    std::cout << "Screenshot saved as screenshot.png" << std::endl;
+
     return 0;
 }
