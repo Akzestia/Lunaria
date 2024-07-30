@@ -131,12 +131,12 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         printf("[strm][%p] Peer shut down\n", Stream);
         onPeerShutdown(Stream, this);
         break;
-    case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
+    case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE: {
         printf("[strm][%p] All done\n", Stream);
         if (!Event->SHUTDOWN_COMPLETE.AppCloseInProgress) {
             MsQuic->StreamClose(Stream);
         }
-        break;
+    } break;
     default:
         break;
     }
@@ -197,7 +197,7 @@ void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
     }
 }
 
-QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
+QuicClient::QuicClient(const char *Host, const uint16_t UdpPort, const size_t ThreadNumber,
                        const char *Alpn, const char *cert, const char *key)
     : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn} {
 
@@ -217,7 +217,9 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
 
     ClientLoadConfiguration(cert, key);
 
-    cListener = new ClientListener(MsQuic, Registration, this->Alpn, 6122, cert, key);
+    cListener = new ClientListener(MsQuic, Registration, this->Alpn, 6122, ThreadNumber,
+                                   cert, key);
+
     cListener->Start();
 
     HQUIC Connection = NULL;

@@ -17,10 +17,11 @@ typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
 } QUIC_CREDENTIAL_CONFIG_HELPER;
 
 
-ClientListener::ClientListener(const QUIC_API_TABLE *MsQuic, HQUIC Registration, const QUIC_BUFFER Alpn, uint16_t UdpPort, const char* cert, const char* key) : MsQuic(MsQuic),
+ClientListener::ClientListener(const QUIC_API_TABLE *MsQuic, HQUIC Registration, const QUIC_BUFFER Alpn, uint16_t UdpPort, const size_t ThreadNumber, const char* cert, const char* key) : MsQuic(MsQuic),
  Registration(Registration),
-  Alpn(Alpn), 
-  UdpPort(UdpPort) {
+  Alpn(Alpn),
+  UdpPort(UdpPort),
+  threadPool(ThreadNumber) {
     printf("ClientListener constructor\n");
     LoadConfiguration(cert, key);
 };
@@ -204,7 +205,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
 
         std::printf("\n\nReceived Cord from [%p]", Stream);
 
-        // HandlePeer(Stream, (*data), dataSize);
+        HandlePeer(Stream, (*data), dataSize);
 
         MsQuic->StreamReceiveComplete(Stream, Event->RECEIVE.TotalBufferLength);
     } break;
@@ -217,10 +218,10 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN: {
         printf("[strm][%p] Peer shut down\n", Stream);
 
-        // threadPool.enqueueTask([Stream, this](HQUIC, void *) -> bool {
-        //     return onPeerShutdown(static_cast<HQUIC>(Stream),
-        //                           static_cast<void *>(this));
-        // });
+        threadPool.enqueueTask([Stream, this](HQUIC, void *) -> bool {
+            return onPeerShutdown(static_cast<HQUIC>(Stream),
+                                  static_cast<void *>(this));
+        });
     } break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE:
         printf("[strm][%p] All done\n", Stream);

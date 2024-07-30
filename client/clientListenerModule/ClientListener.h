@@ -1,15 +1,17 @@
 #ifndef CLIENT_LISTENER_H
 #define CLIENT_LISTENER_H
 #include "../../MsQuic/Linux_x64/include/msquic.h"
+#include "../../tokio-cpp/ThreadPool.h"
+#include "../clientPeerHandler/ClientPeerHandler.h"
 #include <atomic>
 #include <cstdio>
 #include <iostream>
 #include <thread>
 
-class ClientListener {
+class ClientListener : protected ClientPeerHandler {
   public:
     ClientListener(const QUIC_API_TABLE *MsQuic, HQUIC Registration,
-                   const QUIC_BUFFER Alpn, uint16_t UdpPort, const char *cert,
+                   const QUIC_BUFFER Alpn, uint16_t UdpPort, const size_t ThreadNumber, const char *cert,
                    const char *key);
     ~ClientListener();
     ClientListener() = delete;
@@ -20,6 +22,8 @@ class ClientListener {
   private:
     std::atomic<bool> isRunning = false;
     std::thread serverThread;
+    using ClientPeerHandler::HandlePeer;
+    using ClientPeerHandler::onPeerShutdown;
 
     const QUIC_API_TABLE *MsQuic = nullptr;
     HQUIC Listener = nullptr;
@@ -27,6 +31,10 @@ class ClientListener {
     HQUIC Configuration = nullptr;
     const QUIC_BUFFER Alpn;
     uint16_t UdpPort;
+
+    ThreadPool threadPool;
+    ClientPeerHandler clientPeerHandler;
+
     QUIC_STATUS Status;
 
     void LoadConfiguration(const char *cert, const char *key);

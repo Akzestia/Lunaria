@@ -15,8 +15,10 @@
 #include "../error-manager/ErrorManager.h"
 #include "../NetBird/VpnManager.h"
 #include "../Helpers/PeerHandler/PeerHandler.h"
+#include "../tokio-cpp/ThreadPool.h"
+#include "clientPeerHandler/ClientPeerHandler.h"
 
-class QuicClient : protected PeerHandler {
+class QuicClient : protected ClientPeerHandler {
   public:
     void Connect();
 
@@ -34,14 +36,15 @@ class QuicClient : protected PeerHandler {
     void sendToPeer();
     void closePeer();
 
-    QuicClient(const char *Host, const uint16_t UdpPort, const char* Alpn, const char *cert,
+    QuicClient(const char *Host, const uint16_t UdpPort, const size_t ThreadNumber, const char* Alpn, const char *cert,
                const char *key = nullptr);
 
     ~QuicClient();
 
   private:
-    using PeerHandler::HandlePeer;
-    using PeerHandler::onPeerShutdown;
+    using ClientPeerHandler::HandlePeer;
+    using ClientPeerHandler::onPeerShutdown;
+
     const QUIC_API_TABLE *MsQuic = nullptr;
     static std::condition_variable cv;
     static std::mutex cv_m;
