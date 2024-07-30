@@ -164,12 +164,6 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         return false;
     }
-    case AUTH_RESPONSE: {
-        printf("Auth response\n");
-        printf("Is successful: %d\n", wrapper->authresponse().is_successful());
-        printf("Token: %s\n", wrapper->authresponse().token().c_str());
-        break;
-    }
     case SEND_FRIEND_REQUEST: {
 
         break;
@@ -232,10 +226,6 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     }
     case USER_OFFLINE_STATUS: {
 
-        break;
-    }
-    case SERVER_BINDING_REQUEST: {
-        std::cout << "Server binding request\n";
         break;
     }
     default:
