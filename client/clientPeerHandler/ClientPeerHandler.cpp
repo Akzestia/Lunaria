@@ -52,11 +52,18 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     std::cout << "\nRoute: " << wrapper->route() << "\n";
 
     switch (wrapper->route()) {
-        
+        case AUTH_RESPONSE:{
+
+        }
+        break;
+        case SERVER_BINDING_REQUEST:{
+
+        }
+        break;
     }
 
     return true;
-} 
+}
 
 // TODO proper handling
 void ClientPeerHandler::HandlePeer(HQUIC Stream, const uint8_t &data,
