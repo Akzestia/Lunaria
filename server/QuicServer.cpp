@@ -298,7 +298,7 @@ void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
     QUIC_ADDR clientAddr = {};
     uint32_t clientAddrSize = sizeof(clientAddr);
 
-    HQUIC xcon = QuicServer::openPeer("localhost", 6122);
+    HQUIC xcon;
 
     QUIC_STATUS status =
         MsQuic->GetParam(Connection, QUIC_PARAM_CONN_REMOTE_ADDRESS,
@@ -306,6 +306,7 @@ void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
     if (QUIC_SUCCEEDED(status)) {
         std::cout << "Client IP: " << QuicAddrToIpString(clientAddr) << "\n";
         std::cout << "Client Port: " << QuicAddrToPort(clientAddr) << "\n";
+        xcon = QuicServer::openPeer(QuicAddrToIpString(clientAddr).c_str(), 6122);
     } else {
         std::cerr << "Failed to get client address\n";
     }

@@ -52,8 +52,6 @@ add_executable(client
     ${PROTO_BUILD_DIR}/wrapper.pb.cc
     ${HELPERS_DIR}/ConnectionManager/ConnectionManager.cpp
     ${HELPERS_DIR}/Encryption/EncryptionManager.cpp
-    ${DB_DIR}/DbManager.cpp
-    ${HELPERS_DIR}/PeerHandler/PeerHandler.cpp
 )
 
 # Link libraries

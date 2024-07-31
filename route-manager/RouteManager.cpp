@@ -1,4 +1,5 @@
 #include "RouteManager.h"
+#include "../error-manager/ErrorManager.h"
 
 Lxcode RouteManager::handleAuth(const Payload &payload) {
     Lxcode return_code;
@@ -10,7 +11,7 @@ Lxcode RouteManager::handleAuth(const Payload &payload) {
         if(auth.has_sign_up())
             return handleSignUp(auth.sign_up());
         return handleSignIn(auth.sign_in());
-        
+
     } else {
         return_code.error_code = 0x01;
         return_code.is_successful = false;
@@ -50,7 +51,7 @@ Lxcode RouteManager::handleSignUp(const Payload &payload) {
             return_code.response = "hdwqd632131dhsdwqfgqwfqg9fgq";
             return return_code;
         }
-            
+
         return return_code;
     } else {
         return_code.error_code = 0x01;
@@ -60,14 +61,14 @@ Lxcode RouteManager::handleSignUp(const Payload &payload) {
 }
 
 Lxcode RouteManager::handleSignIn(const Payload &payload) {
-    Lxcode return_code;
-    return_code.error_code = 0x00;
-    return_code.is_successful = true;
+    Lxcode return_code = Lxcode::OK();
+
     if (std::holds_alternative<Sign_in>(payload)) {
         const Sign_in &si = std::get<Sign_in>(payload);
         User *u = new User();
 
-        if(DbManager::getUser(si, u).is_successful){
+        return_code = DbManager::getUser(si, u);
+        if(return_code == Lxcode::OK()){
             return_code.response = AuthManager::generateToken(u->user_name().c_str(), u->user_password().c_str());
             delete u;
             return return_code;
@@ -76,9 +77,7 @@ Lxcode RouteManager::handleSignIn(const Payload &payload) {
         delete u;
         return return_code;
     } else {
-        return_code.error_code = 0x01;
-        return_code.is_successful = false;
-        return return_code;
+        return Lxcode::UNKNOWN_ERROR(0x0);
     }
 }
 
@@ -94,7 +93,7 @@ Lxcode RouteManager::getMessages(const Payload &payload, std::set<Message> &) {
     } else {
         return_code.error_code = 0x01;
         return_code.is_successful = false;
-        return return_code; 
+        return return_code;
     }
 }
 

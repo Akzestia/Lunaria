@@ -52,7 +52,7 @@ Lxcode DbManager::getUser(const Sign_in &auth, User *output) {
                       << connection.dbname() << std::endl;
         } else {
             std::cerr << "Can't open database" << std::endl;
-            return {false, DB_ERROR_CONNECTION_FAILED};
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Can't open database");
         }
 
         pqxx::nontransaction nontransaction(connection);
@@ -73,10 +73,10 @@ Lxcode DbManager::getUser(const Sign_in &auth, User *output) {
         }
 
         connection.close();
-        return {true, SUCCESS};
+        return Lxcode::OK({});
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
-        return {false, DB_ERROR_STD_EXCEPTION};
+        return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
     }
 };
 

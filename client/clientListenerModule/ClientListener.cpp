@@ -16,7 +16,6 @@ typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
     };
 } QUIC_CREDENTIAL_CONFIG_HELPER;
 
-
 ClientListener::ClientListener(const QUIC_API_TABLE *MsQuic, HQUIC Registration, const QUIC_BUFFER Alpn, uint16_t UdpPort, const size_t ThreadNumber, const char* cert, const char* key) : MsQuic(MsQuic),
  Registration(Registration),
   Alpn(Alpn),
@@ -306,3 +305,12 @@ void ClientListener::Close() {
     std::cout << "isRunning: " << this->isRunning.load() << std::endl;
 }
 #pragma endregion
+
+
+#pragma region SendResponse()
+
+Lxcode ClientListener::SendResponseToServer(const Wrapper& wrapper) {
+    Lxcode code = Lxcode::OK();
+
+    return {};
+}

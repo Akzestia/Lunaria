@@ -3,6 +3,8 @@
 #include "../../MsQuic/Linux_x64/include/msquic.h"
 #include "../../tokio-cpp/ThreadPool.h"
 #include "../clientPeerHandler/ClientPeerHandler.h"
+#include "../../error-manager/ErrorManager.h"
+#include "../../proto/build/wrapper.pb.h"
 #include <atomic>
 #include <cstdio>
 #include <iostream>
@@ -20,6 +22,10 @@ class ClientListener : protected ClientPeerHandler {
     void Close();
 
   private:
+    friend class ClientPeerHandler;
+
+    Lxcode SendResponseToServer(const Wrapper &wrapper);
+
     std::atomic<bool> isRunning = false;
     std::thread serverThread;
     using ClientPeerHandler::HandlePeer;

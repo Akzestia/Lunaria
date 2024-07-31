@@ -1,5 +1,11 @@
 #include "ClientPeerHandler.h"
 #include "../../route-manager/Routes.hpp"
+#include "../../proto/build/authResponse.pb.h"
+#include "../../proto/build/user.pb.h"
+#include "../../proto/build/wrapper.pb.h"
+#include "../../error-manager/ErrorManager.h"
+#include "../clientListenerModule/ClientListener.h"
+#include <memory>
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -53,16 +59,26 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
     switch (wrapper->route()) {
         case AUTH_RESPONSE:{
+            if(wrapper->authresponse().is_successful()){
+                std::cout << "Auth successful\n";
 
+                std::cout << wrapper->authresponse().token() << "\n";
+
+                return true;
+            }
+            std::cout << "Auth failed\n";
+            return false;
         }
-        break;
         case SERVER_BINDING_REQUEST:{
+            std::cout << "Server binding request\n";
+            auto listener = reinterpret_cast<ClientListener*>(context);
 
+            return true;
         }
-        break;
+        default:
+            std::cerr << "Error: Unknown route\n";
+            return false;
     }
-
-    return true;
 }
 
 // TODO proper handling
