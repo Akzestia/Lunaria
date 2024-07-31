@@ -112,8 +112,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             *responseWrapper->mutable_authresponse() = authResponse;
 
-            reinterpret_cast<QuicServer *>(context)->SendResponse(
-                Stream, *responseWrapper);
+            reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, *responseWrapper);
 
             return true;
         }

@@ -65,10 +65,6 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
 
     HQUIC openPeer(const char* PeerIp, uint16_t UdpPort);
 
-    static void send(HQUIC, void *);
-
-    void send(HQUIC);
-
     void ServerLoadConfiguration(const char *hash);
 
     void ServerLoadConfiguration(const char *cert, const char *key);

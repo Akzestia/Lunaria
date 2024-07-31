@@ -233,38 +233,6 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     return QUIC_STATUS_SUCCESS;
 }
 
-#pragma region SendResponse(HQUIC Stream,const Wrapper& wrapper)
-
-void QuicServer::SendResponse(HQUIC Stream, const Wrapper &wrapper) {
-    absl::Cord response;
-    wrapper.SerializePartialToCord(&response);
-    QUIC_BUFFER *SendBuffer;
-    absl::Cord::ChunkIterator start = response.chunk_begin();
-    absl::Cord::ChunkIterator end = response.chunk_end();
-    std::vector<uint8_t> buffer;
-    for (auto it = start; it != end; ++it) {
-        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
-    }
-
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer.size();
-    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
-
-    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("Response failed, 0x%x!\n", Status);
-        MsQuic->StreamShutdown(Stream, QUIC_STREAM_SHUTDOWN_FLAG_ABORT, 0);
-    }
-}
-
-#pragma endregion
-
-void QuicServer::send(HQUIC Stream, void *Context) {
-    return reinterpret_cast<QuicServer *>(Context)->send(Stream);
-}
-
 HQUIC QuicServer::openPeer(const char *PeerIp, uint16_t UdpPort) {
     HQUIC p2pConnection = NULL;
     if (QUIC_FAILED(Status = MsQuic->ConnectionOpen(
@@ -291,6 +259,36 @@ Error:
     return nullptr;
 }
 
+void QuicServer::SendResponse(HQUIC Stream, const Wrapper &w) {
+    QUIC_BUFFER *SendBuffer;
+
+    size_t size = w.ByteSizeLong();
+    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
+    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
+        std::cerr << "Failed to serialize Wrapper\n";
+        goto Error;
+    }
+
+    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
+    SendBuffer->Length = buffer->size();
+    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
+    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
+
+    if (QUIC_FAILED(Status =
+                        MsQuic->StreamSend(Stream, SendBuffer, 1,
+                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
+        printf("StreamSend failed, 0x%x!\n", Status);
+        goto Error;
+    }
+
+    std::cout << "\nSuccess" << "\n";
+Error:
+    if (QUIC_FAILED(Status)) {
+        free(SendBuffer);
+        delete buffer;
+    }
+}
+
 void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
     HQUIC Stream = NULL;
     QUIC_BUFFER *SendBuffer;
@@ -306,7 +304,8 @@ void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
     if (QUIC_SUCCEEDED(status)) {
         std::cout << "Client IP: " << QuicAddrToIpString(clientAddr) << "\n";
         std::cout << "Client Port: " << QuicAddrToPort(clientAddr) << "\n";
-        xcon = QuicServer::openPeer(QuicAddrToIpString(clientAddr).c_str(), 6122);
+        xcon =
+            QuicServer::openPeer(QuicAddrToIpString(clientAddr).c_str(), 6122);
     } else {
         std::cerr << "Failed to get client address\n";
     }
@@ -437,34 +436,6 @@ QUIC_STATUS QUIC_API QuicServer::StaticClientConnectionCallback(
         Connection, Context, Event);
 }
 
-void QuicServer::send(HQUIC Stream) {
-    User u;
-    u.set_user_name("Akzestia");
-    u.set_user_email("akzestia@xxx.com");
-
-    absl::Cord message;
-    u.SerializePartialToCord(&message);
-    QUIC_BUFFER *SendBuffer;
-    absl::Cord::ChunkIterator start = message.chunk_begin();
-    absl::Cord::ChunkIterator end = message.chunk_end();
-    std::vector<uint8_t> buffer;
-    for (auto it = start; it != end; ++it) {
-        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
-    }
-
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer.size();
-    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
-
-    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("StreamSend failed, 0x%x!\n", Status);
-        MsQuic->StreamShutdown(Stream, QUIC_STREAM_SHUTDOWN_FLAG_ABORT, 0);
-    }
-}
-
 bool QuicServer::getUserCreds(HQUIC connection, void *Context) {
     return reinterpret_cast<QuicServer *>(Context)->getUserCreds(connection);
 }
@@ -579,8 +550,6 @@ QUIC_STATUS QUIC_API QuicServer::StaticServerListenerCallback(
 
 #pragma region Start()
 void QuicServer::Start() {
-    std::cout << "Start"
-              << "\n";
     if (!this->isRunning.load()) {
         this->isRunning.store(true);
 

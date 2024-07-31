@@ -24,7 +24,7 @@ class ClientListener : protected ClientPeerHandler {
   private:
     friend class ClientPeerHandler;
 
-    Lxcode SendResponseToServer(const Wrapper &wrapper);
+    Lxcode SendResponseToServer(HQUIC Stream, const Wrapper &wrapper);
 
     std::atomic<bool> isRunning = false;
     std::thread serverThread;

@@ -309,7 +309,7 @@ void ClientListener::Close() {
 
 #pragma region SendResponse()
 
-Lxcode ClientListener::SendResponseToServer(const Wrapper& wrapper) {
+Lxcode ClientListener::SendResponseToServer(HQUIC Stream, const Wrapper& wrapper) {
     Lxcode code = Lxcode::OK();
 
     return {};
