@@ -37,7 +37,7 @@ void DbManager::test() {
 }
 
 #pragma region GET
-Lxcode DbManager::getUser(const Sign_in &auth, User *output) {
+Lxcode DbManager::getUser(const Sign_in &auth) {
 
     const std::string user_name = auth.user_name();
     const std::string user_password = auth.user_password();
@@ -57,7 +57,7 @@ Lxcode DbManager::getUser(const Sign_in &auth, User *output) {
 
         pqxx::nontransaction nontransaction(connection);
 
-        const std::string query = "SELECT FIRST FROM Users WHERE user_password "
+        const std::string query = "SELECT display_name, user_name, user_email, user_password, user_avatar, online_status FROM Users WHERE user_password "
                                   "= $1 AND user_name = $2;";
 
         pqxx::result result =
@@ -66,14 +66,23 @@ Lxcode DbManager::getUser(const Sign_in &auth, User *output) {
         pqxx::result::const_iterator row_it = result.begin();
         pqxx::result::const_iterator row_end = result.end();
 
-        for (; row_it != row_end; ++row_it) {
-            const pqxx::result::const_iterator row = *row_it;
-            std::cout << row[0].c_str() << std::endl;
-            std::cout << row[1].c_str() << std::endl;
+        if (row_it == row_end) {
+            return Lxcode::DB_ERROR(DB_ERROR_USER_NOT_FOUND, "User not found");
         }
 
+        const pqxx::result::const_iterator row = *row_it;
+
+        User *u = new User();
+        u->set_display_name(row[0]);
+        u->set_user_name(row[1]);
+        u->set_user_email(row[2]);
+        u->set_user_password(row[3]);
+        u->set_user_avatar(row[4]);
+        u->set_online_status(row[5].as<int>());
+
         connection.close();
-        return Lxcode::OK({});
+
+        return Lxcode::OK(u);
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());

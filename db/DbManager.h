@@ -18,7 +18,7 @@ class DbManager {
   protected:
 
     #pragma region GET
-    static Lxcode getUser(const Sign_in &, User*);
+    static Lxcode getUser(const Sign_in &);
     static bool getMessages(const User &, std::vector<uint8_t>*);
     static bool getContacts(const User &, std::vector<uint8_t>*);
     static bool getGraphs(const User &, std::vector<uint8_t>*);
