@@ -103,7 +103,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         responseWrapper->set_route(AUTH_RESPONSE);
 
         AuthResponse authResponse;
-        if (response.is_successful) {
+        if (response == Lxcode::OK()) {
             std::cout << "Sign up successful\n";
 
             authResponse.set_is_successful(true);
@@ -114,6 +114,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, *responseWrapper);
 
+             delete std::get<User*>(response.payload);
             return true;
         }
 
@@ -136,7 +137,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         responseWrapper->set_route(AUTH_RESPONSE);
 
         AuthResponse authResponse;
-        if (response.is_successful) {
+        if (response == Lxcode::OK()) {
 
             std::cout << "Sign in successful\n";
 
@@ -149,6 +150,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
             reinterpret_cast<QuicServer *>(context)->SendResponse(
                 Stream, *responseWrapper);
 
+            delete std::get<User*>(response.payload);
             return true;
         }
 

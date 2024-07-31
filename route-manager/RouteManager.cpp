@@ -1,6 +1,5 @@
 #include "RouteManager.h"
 #include "../error-manager/ErrorManager.h"
-
 Lxcode RouteManager::handleAuth(const Payload &payload) {
     Lxcode return_code;
     return_code.error_code = 0x00;
@@ -65,16 +64,14 @@ Lxcode RouteManager::handleSignIn(const Payload &payload) {
 
     if (std::holds_alternative<Sign_in>(payload)) {
         const Sign_in &si = std::get<Sign_in>(payload);
-        User *u = new User();
 
-        return_code = DbManager::getUser(si, u);
+        return_code = DbManager::getUser(si);
         if(return_code == Lxcode::OK()){
-            return_code.response = AuthManager::generateToken(u->user_name().c_str(), u->user_password().c_str());
-            delete u;
+
+            return_code.response = AuthManager::generateToken(std::get<User*>(return_code.payload)->user_name().c_str(), std::get<User*>(return_code.payload)->user_password().c_str());
+
             return return_code;
         }
-
-        delete u;
         return return_code;
     } else {
         return Lxcode::UNKNOWN_ERROR(0x0);
