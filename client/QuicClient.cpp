@@ -569,9 +569,9 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
     wrapper.set_route(SIGN_UP);
 
     if (AuthRequest(wrapper)) {
-        return {true, SUCCESS, "Success"};
+        return Lxcode::OK();
     }
-    return {false, DB_ERROR_CONNECTION_FAILED, "Failed to connect"};
+    return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to connect");
 }
 
 #pragma endregion
@@ -584,9 +584,9 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
     *wrapper.mutable_auth() = auth;
     wrapper.set_route(SIGN_IN);
     if (AuthRequest(wrapper)) {
-        return {true, SUCCESS, "Success"};
+        return Lxcode::OK();
     }
-    return {false, DB_ERROR_CONNECTION_FAILED, "Failed to connect"};
+    return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to connect");
 }
 
 #pragma endregion

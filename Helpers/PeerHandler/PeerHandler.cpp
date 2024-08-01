@@ -31,21 +31,15 @@ void PeerHandler::SetPeer(HQUIC Stream, const uint8_t &data, size_t dataSize) {
     }
 }
 
-// TODO proper handling
 void PeerHandler::HandlePeer(HQUIC Stream, const uint8_t &data,
                              size_t dataSize) {
     SetPeer(Stream, data, dataSize);
 }
 
-//
-
 bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
-    // absl::string_view dataView(reinterpret_cast<const char *>(data),
-    // dataSize); absl::Cord receivedCord(dataView);
-
     std::unique_ptr<Wrapper> wrapper = std::make_unique<Wrapper>();
     if (!wrapper->ParseFromArray(data, dataSize)) {
         std::cerr << "Error: Failed to parse the Cord into a Wrapper"
