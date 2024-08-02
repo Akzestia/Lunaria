@@ -2,6 +2,7 @@
 images/
 output/
 .clang-format
+.clangd
 gdk/
 db/config.ini
 --disable-gpu
