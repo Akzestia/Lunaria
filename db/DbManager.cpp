@@ -41,6 +41,8 @@ Lxcode DbManager::getUser(const Sign_in &auth) {
 
     const std::string user_name = auth.user_name();
     const std::string user_password = auth.user_password();
+    if(user_name.length() < 3 || user_password.length() < 4)
+        return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT, "Invalid input");
 
     try {
         const std::string connection_str = DbManager::getConnectionString();
@@ -66,20 +68,25 @@ Lxcode DbManager::getUser(const Sign_in &auth) {
         pqxx::result::const_iterator row_it = result.begin();
         pqxx::result::const_iterator row_end = result.end();
 
+        std::cout << "UserName: " << user_name << std::endl;
+        std::cout << "Password: " << user_password << std::endl;
+        std::cout << "Row count: " << result.size() << std::endl;
+
         if (row_it == row_end) {
+            std::cerr << "User not found" << std::endl;
+            connection.close();
             return Lxcode::DB_ERROR(DB_ERROR_USER_NOT_FOUND, "User not found");
         }
 
         const pqxx::result::const_iterator row = *row_it;
 
         User *u = new User();
-        u->set_display_name(row[0]);
-        u->set_user_name(row[1]);
-        u->set_user_email(row[2]);
-        u->set_user_password(row[3]);
-        u->set_user_avatar(row[4]);
+        u->set_display_name(row[0].c_str());
+        u->set_user_name(row[1].c_str());
+        u->set_user_email(row[2].c_str());
+        u->set_user_password(row[3].c_str());
+        u->set_user_avatar(row[4].c_str());
         u->set_online_status(row[5].as<int>());
-
         connection.close();
 
         return Lxcode::OK(u);
