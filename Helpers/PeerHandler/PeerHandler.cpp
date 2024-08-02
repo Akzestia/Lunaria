@@ -98,12 +98,12 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             authResponse.set_is_successful(true);
             authResponse.set_token(response.response);
-            authResponse.set_allocated_user(std::get<User *>(response.payload));
+
+            *authResponse.mutable_user() = *std::get<User *>(response.payload);
 
             *responseWrapper->mutable_authresponse() = authResponse;
 
-            reinterpret_cast<QuicServer *>(context)->SendResponse(
-                Stream, *responseWrapper);
+            reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, *responseWrapper);
 
             delete std::get<User *>(response.payload);
             return true;
