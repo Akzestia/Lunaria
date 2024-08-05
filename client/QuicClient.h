@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <mutex>
+#include <shared_mutex>
 #include <sys/stat.h>
 #include "../proto/build/auth.pb.h"
 #include "clientListenerModule/ClientListener.h"
@@ -42,12 +43,11 @@ class QuicClient : protected ClientPeerHandler {
     ~QuicClient();
 
   private:
+
     using ClientPeerHandler::HandlePeer;
     using ClientPeerHandler::onPeerShutdown;
 
     const QUIC_API_TABLE *MsQuic = nullptr;
-    static std::condition_variable cv;
-    static std::mutex cv_m;
     static bool disconnected;
     HQUIC TunnelStream;
 

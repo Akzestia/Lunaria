@@ -5,8 +5,9 @@
 #include <string_view>
 #include "../proto/build/user.pb.h"
 #include "../proto/build/contact.pb.h"
+#include "../proto/build/authResponse.pb.h"
 
-using LxPayload = std::variant<User*, Contact*>;
+using LxPayload = std::variant<User*, Contact*, AuthResponse*>;
 
 enum class LxcodeType : uint8_t {
     OK = 0x00,
@@ -61,6 +62,8 @@ enum Lxcodes : uint8_t {
     DB_ERROR_USER_NOT_FOUND = 0x32,
     DB_ERROR_FAILED_TO_ADD_USER = 0x33,
     DB_ERROR_CONNECTION_FAILED = 0x34,
+    DB_ERROR_INVALID_INPUT = 0x35,
+    DB_ERROR_LOGIN_FAILED = 0x36,
 };
 
 class ErrorManager {

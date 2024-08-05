@@ -53,9 +53,7 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
     using PeerHandler::SetPeer;
 
     const QUIC_API_TABLE *MsQuic = nullptr;
-    static std::condition_variable cv;
     static std::condition_variable server_status;
-    static std::mutex cv_m;
     static std::mutex server_status_m;
     static bool disconnected;
 

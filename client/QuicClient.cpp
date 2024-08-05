@@ -1,15 +1,17 @@
 #include "QuicClient.h"
 #include "../Helpers/fileChecks.hpp"
 #include "../route-manager/Routes.hpp"
+#include "./QuicResponse.hpp"
 #include "clientListenerModule/ClientListener.h"
+#include "clientPeerHandler/ClientPeerHandler.h"
 #include <cstdint>
+#include <mutex>
+#include <shared_mutex>
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
 #endif
 
-std::condition_variable QuicClient::cv;
-std::mutex QuicClient::cv_m;
 bool QuicClient::disconnected = false;
 
 // Test
@@ -154,6 +156,8 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientStreamCallback(
 void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
     QUIC_SETTINGS Settings = {0};
 
+    Settings.IdleTimeoutMs = 0;
+    Settings.IsSet.IdleTimeoutMs = TRUE;
     // Settings.PeerBidiStreamCount = 10;
     // Settings.IsSet.PeerBidiStreamCount = TRUE;
 
@@ -197,8 +201,9 @@ void QuicClient::ClientLoadConfiguration(const char *cert, const char *key) {
     }
 }
 
-QuicClient::QuicClient(const char *Host, const uint16_t UdpPort, const size_t ThreadNumber,
-                       const char *Alpn, const char *cert, const char *key)
+QuicClient::QuicClient(const char *Host, const uint16_t UdpPort,
+                       const size_t ThreadNumber, const char *Alpn,
+                       const char *cert, const char *key)
     : Alpn{static_cast<uint32_t>(strlen(Alpn)), (uint8_t *)Alpn} {
 
     this->Host = Host;
@@ -217,8 +222,8 @@ QuicClient::QuicClient(const char *Host, const uint16_t UdpPort, const size_t Th
 
     ClientLoadConfiguration(cert, key);
 
-    cListener = new ClientListener(MsQuic, Registration, this->Alpn, 6122, ThreadNumber,
-                                   cert, key);
+    cListener = new ClientListener(MsQuic, Registration, this->Alpn, 6122,
+                                   ThreadNumber, cert, key);
 
     cListener->Start();
 
@@ -492,6 +497,7 @@ bool QuicClient::AuthRequest(const Wrapper &auth_request) {
         goto Error;
     }
 
+    return true;
     delete buffer;
 Error:
     if (QUIC_FAILED(Status)) {
@@ -503,62 +509,6 @@ Error:
     return false;
 }
 
-/*
-
-         HQUIC Stream = NULL;
-    QUIC_BUFFER *SendBuffer;
-
-    size_t size = w.ByteSizeLong();
-    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
-    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
-        std::cerr << "Failed to serialize Wrapper\n";
-        goto Error;
-    }
-
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer->size();
-    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
-
-    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
-
-    if (QUIC_FAILED(
-            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
-                                        QuicClient::StaticClientStreamCallback,
-                                        this, &Stream))) {
-        printf("StreamOpen failed, 0x%x!\n", Status);
-        goto Error;
-    }
-
-    printf("[strm][%p] Starting...\n", Stream);
-
-    if (QUIC_FAILED(Status = MsQuic->StreamStart(
-                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
-        printf("StreamStart failed, 0x%x!\n", Status);
-        MsQuic->StreamClose(Stream);
-        goto Error;
-    }
-
-    printf("[strm][%p] Sending data...\n", Stream);
-
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("StreamSend failed, 0x%x!\n", Status);
-        goto Error;
-    }
-
-    std::cout << "\nSuccess" << "\n";
-
-    delete buffer;
-
-Error:
-    if (QUIC_FAILED(Status)) {
-        MsQuic->ConnectionShutdown(Connection,
-                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
-        free(SendBuffer);
-        delete buffer;
-    }
- */
 #pragma endregion
 
 #pragma region SignUp()
@@ -584,6 +534,31 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
     *wrapper.mutable_auth() = auth;
     wrapper.set_route(SIGN_IN);
     if (AuthRequest(wrapper)) {
+
+        std::cout << "Request started\n";
+        std::unique_lock<std::mutex> lock(ClientPeerHandler::GetLoginMutex());
+        std::cout << "Waiting for respons\n";
+        ClientPeerHandler::waitingForLogin = true;
+
+        if (ClientPeerHandler::GetLoginCv().wait_for(lock, std::chrono::seconds(5), [this] { return ClientPeerHandler::loginResponse.success || !ClientPeerHandler::waitingForLogin; })) {
+            std::cout << "Response received\n";
+
+            if (ClientPeerHandler::loginResponse.success) {
+                std::cout << "Login success\n";
+                return Lxcode::OK();
+            }
+            else{
+                std::cout << "Login failed\n";
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Login failed");
+            }
+
+
+        } else {
+            std::cout << "Timeout waiting for response\n";
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect");
+        }
+
         return Lxcode::OK();
     }
     return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to connect");

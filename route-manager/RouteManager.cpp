@@ -62,6 +62,8 @@ Lxcode RouteManager::handleSignUp(const Payload &payload) {
 Lxcode RouteManager::handleSignIn(const Payload &payload) {
     Lxcode return_code = Lxcode::OK();
 
+    std::cout << "handleSignIn" << std::endl;
+
     if (std::holds_alternative<Sign_in>(payload)) {
         const Sign_in &si = std::get<Sign_in>(payload);
 

@@ -9,8 +9,6 @@
 #define UNREFERENCED_PARAMETER(P) (void)(P)
 #endif
 
-std::condition_variable QuicServer::cv;
-std::mutex QuicServer::cv_m;
 std::condition_variable QuicServer::server_status;
 std::mutex QuicServer::server_status_m;
 bool QuicServer::disconnected = false;
