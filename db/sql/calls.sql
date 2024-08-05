@@ -1,4 +1,4 @@
-CREATE TABLE
+CREATE TABLE if not exists
     Calls (
         id SERIAL NOT NULL PRIMARY KEY,
         _type INT NOT NULL DEFAULT 0,
@@ -12,6 +12,6 @@ CREATE TABLE
         made_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-CREATE INDEX idx_calls_sender_id ON Calls(_sender_id);
-CREATE INDEX idx_calls_receiver_id ON Calls(_receiver_id);
-CREATE INDEX idx_calls_made_at ON Calls(made_at);
+CREATE INDEX if not exists idx_calls_sender_id ON Calls(_sender_id);
+CREATE INDEX if not exists idx_calls_receiver_id ON Calls(_receiver_id);
+CREATE INDEX if not exists idx_calls_made_at ON Calls(made_at);

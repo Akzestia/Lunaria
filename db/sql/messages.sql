@@ -1,4 +1,4 @@
-CREATE TABLE
+CREATE TABLE if not exists
     Messages (
         id SERIAL PRIMARY KEY,
         sender_id INT NOT NULL,
@@ -10,6 +10,6 @@ CREATE TABLE
         FOREIGN KEY (receiver_id) REFERENCES Users (id)
     );
 
-CREATE INDEX idx_messages_sender_id ON Messages(sender_id);
-CREATE INDEX idx_messages_receiver_id ON Messages(receiver_id);
-CREATE INDEX idx_messages_created_at ON Messages(created_at);
+CREATE INDEX if not exists idx_messages_sender_id ON Messages(sender_id);
+CREATE INDEX if not exists idx_messages_receiver_id ON Messages(receiver_id);
+CREATE INDEX if not exists idx_messages_created_at ON Messages(created_at);

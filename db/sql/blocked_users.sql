@@ -1,4 +1,4 @@
-CREATE TABLE Blocked_users (
+CREATE TABLE if not exists Blocked_users (
     id SERIAL NOT NULL PRIMARY KEY,
     _blocked_id INT NOT NULL,
     _blocker_id INT NOT NULL,
@@ -7,5 +7,5 @@ CREATE TABLE Blocked_users (
     blocked_from TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX idx_blocked_users_blocked_id ON Blocked_users(_blocked_id);
-CREATE INDEX idx_blocked_users_blocker_id ON Blocked_users(_blocker_id);
+CREATE INDEX if not exists idx_blocked_users_blocked_id ON Blocked_users(_blocked_id);
+CREATE INDEX if not exists idx_blocked_users_blocker_id ON Blocked_users(_blocker_id);

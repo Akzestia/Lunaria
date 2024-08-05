@@ -1,4 +1,4 @@
-CREATE TABLE
+CREATE TABLE if not exists
     Users (
         id SERIAL PRIMARY KEY,
         display_name VARCHAR(50) NOT NULL,
@@ -10,6 +10,6 @@ CREATE TABLE
         joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
 
-CREATE INDEX idx_users_user_name ON Users(user_name);
-CREATE INDEX idx_users_user_email ON Users(user_email);
-CREATE INDEX idx_users_online_status ON Users(online_status);
+CREATE INDEX if not exists idx_users_user_name ON Users(user_name);
+CREATE INDEX if not exists idx_users_user_email ON Users(user_email);
+CREATE INDEX if not exists idx_users_online_status ON Users(online_status);
