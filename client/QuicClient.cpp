@@ -519,6 +519,29 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
     wrapper.set_route(SIGN_UP);
 
     if (AuthRequest(wrapper)) {
+
+        std::cout << "Request started\n";
+        std::unique_lock<std::mutex> lock(ClientPeerHandler::GetSignUpMutex());
+        std::cout << "Waiting for respons\n";
+        ClientPeerHandler::waitingForSignUp = true;
+
+        if (ClientPeerHandler::GetLoginCv().wait_for(lock, std::chrono::seconds(5), [this] { return !ClientPeerHandler::waitingForSignUp; })) {
+            std::cout << "Response received\n";
+
+            if (ClientPeerHandler::signUpResponse.success) {
+                std::cout << "SignUp success\n";
+                return Lxcode::OK();
+            }
+            else{
+                std::cout << "SignUp failed\n";
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "SignUp failed");
+            }
+        } else {
+            std::cout << "Timeout waiting for response\n";
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect");
+        }
+
         return Lxcode::OK();
     }
     return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to connect");
@@ -551,8 +574,6 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
                 std::cout << "Login failed\n";
                 return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Login failed");
             }
-
-
         } else {
             std::cout << "Timeout waiting for response\n";
             return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
