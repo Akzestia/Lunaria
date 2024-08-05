@@ -15,12 +15,15 @@ class ClientPeerHandler {
     static bool waitingForLogin;
     static QuicResponse loginResponse;
 
+    static bool waitingForSignUp;
+    static QuicResponse signUpResponse;
+
     static void HandlePeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static std::unordered_map<HQUIC, uint8_t *> *GetPeers();
     static void SetPeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static bool onPeerShutdown(HQUIC Stream, void *context);
     static void
-    ReleaseLoginMutex(std::mutex &lock,
+    ReleaseAuthMutex(std::mutex &lock,
                       std::condition_variable_any &login_Cv,
                       QuicResponse &response, bool success,
                       const AuthResponse &authResponse = AuthResponse());
