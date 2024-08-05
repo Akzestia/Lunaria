@@ -540,7 +540,7 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
         std::cout << "Waiting for respons\n";
         ClientPeerHandler::waitingForLogin = true;
 
-        if (ClientPeerHandler::GetLoginCv().wait_for(lock, std::chrono::seconds(5), [this] { return ClientPeerHandler::loginResponse.success || !ClientPeerHandler::waitingForLogin; })) {
+        if (ClientPeerHandler::GetLoginCv().wait_for(lock, std::chrono::seconds(5), [this] { return !ClientPeerHandler::waitingForLogin; })) {
             std::cout << "Response received\n";
 
             if (ClientPeerHandler::loginResponse.success) {
