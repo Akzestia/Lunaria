@@ -27,6 +27,8 @@ class QuicClient : protected ClientPeerHandler {
 
     HQUIC getConnection();
 
+    QuicClient& getRef();
+
     Lxcode SignUp(const Auth &);
     Lxcode SignIn(const Auth &);
 

@@ -5,7 +5,6 @@
 #include "../clientListenerModule/ClientListener.h"
 #include <condition_variable>
 #include <memory>
-#include <shared_mutex>
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();

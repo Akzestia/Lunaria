@@ -14,6 +14,10 @@
 
 bool QuicClient::disconnected = false;
 
+QuicClient& QuicClient::getRef() {
+    return *this;
+}
+
 // Test
 typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
     QUIC_CREDENTIAL_CONFIG CredConfig;

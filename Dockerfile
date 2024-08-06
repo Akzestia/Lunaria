@@ -1,3 +1,4 @@
+# Best OS ^_^
 FROM archlinux:latest
 
 # Install dependencies
@@ -6,7 +7,7 @@ RUN pacman -Syu --noconfirm && \
 
 ENV OPENSSL_ROOT_DIR=/usr/lib/openssl-1.1
 ENV OPENSSL_LIBRARIES=/usr/lib/openssl-1.1
-    
+
 
 # Verify OpenSSL version
 RUN openssl version -a
