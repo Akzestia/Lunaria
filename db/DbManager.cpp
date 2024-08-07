@@ -59,8 +59,8 @@ Lxcode DbManager::getUser(const Sign_in &auth) {
 
         pqxx::nontransaction nontransaction(connection);
 
-        const std::string query = "SELECT display_name, user_name, user_email, user_password, user_avatar, online_status FROM Users WHERE user_password "
-                                  "= $1 AND user_name = $2;";
+        const std::string query = "SELECT display_name, user_name, user_email, user_password, user_avatar, online_status FROM Users WHERE (user_password "
+                                  "= $1 AND user_name = $2) OR (user_password = $1 AND user_email = $2);";
 
         pqxx::result result =
             nontransaction.exec_params(query, user_password, user_name);
