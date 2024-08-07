@@ -54,7 +54,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         Lxcode response = RouteManager::handleSignUp(wrapper->auth().sign_up());
         std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
 
-        responseWrapper->set_route(AUTH_RESPONSE);
+        responseWrapper->set_route(AUTH_RESPONSE_SIGN_UP);
 
         AuthResponse authResponse;
         if (response == Lxcode::OK()) {
@@ -89,7 +89,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
 
-        responseWrapper->set_route(AUTH_RESPONSE);
+        responseWrapper->set_route(AUTH_RESPONSE_SIGN_IN);
 
         AuthResponse authResponse;
         if (response == Lxcode::OK()) {
