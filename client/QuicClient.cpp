@@ -528,7 +528,7 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
         std::cout << "Waiting for respons\n";
         ClientPeerHandler::waitingForSignUp = true;
 
-        if (ClientPeerHandler::GetLoginCv().wait_for(lock, std::chrono::seconds(5), [this] { return !ClientPeerHandler::waitingForSignUp; })) {
+        if (ClientPeerHandler::GetSignUpCv().wait_for(lock, std::chrono::seconds(5), [this] { return !ClientPeerHandler::waitingForSignUp; })) {
             std::cout << "Response received\n";
 
             if (ClientPeerHandler::signUpResponse.success) {
