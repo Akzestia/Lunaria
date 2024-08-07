@@ -34,9 +34,7 @@ Lxcode RouteManager::handleReport(const Payload &payload) {
 }
 
 Lxcode RouteManager::handleSignUp(const Payload &payload) {
-    Lxcode return_code;
-    return_code.error_code = 0x00;
-    return_code.is_successful = true;
+    Lxcode return_code = Lxcode::OK();
 
     if (std::holds_alternative<Sign_up>(payload)) {
         const Sign_up &sign_up = std::get<Sign_up>(payload);
@@ -46,16 +44,15 @@ Lxcode RouteManager::handleSignUp(const Payload &payload) {
         u.set_user_email(sign_up.user_email());
         u.set_user_password(sign_up.user_password());
 
-        if(DbManager::addUser(u)){
-            return_code.response = "hdwqd632131dhsdwqfgqwfqg9fgq";
+        return_code = DbManager::addUser(u);
+        if(return_code == Lxcode::OK()){
+            return_code.response = AuthManager::generateToken(std::get<User*>(return_code.payload)->user_name().c_str(), std::get<User*>(return_code.payload)->user_password().c_str());
             return return_code;
         }
 
         return return_code;
     } else {
-        return_code.error_code = 0x01;
-        return_code.is_successful = false;
-        return return_code;
+        return Lxcode::UNKNOWN_ERROR(0x0);
     }
 }
 
@@ -71,7 +68,6 @@ Lxcode RouteManager::handleSignIn(const Payload &payload) {
         if(return_code == Lxcode::OK()){
 
             return_code.response = AuthManager::generateToken(std::get<User*>(return_code.payload)->user_name().c_str(), std::get<User*>(return_code.payload)->user_password().c_str());
-
             return return_code;
         }
         return return_code;
