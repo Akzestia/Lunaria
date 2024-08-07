@@ -6,7 +6,6 @@
 #include "clientPeerHandler/ClientPeerHandler.h"
 #include <cstdint>
 #include <mutex>
-#include <shared_mutex>
 
 #ifndef UNREFERENCED_PARAMETER
 #define UNREFERENCED_PARAMETER(P) (void)(P)
