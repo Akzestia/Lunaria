@@ -7,6 +7,11 @@
 #include <shared_mutex>
 #include <unordered_map>
 
+enum AuthType : uint8_t {
+    T_SIGN_UP = 0,
+    T_SIGN_IN = 1,
+};
+
 class ClientPeerHandler {
   public:
     virtual ~ClientPeerHandler();
@@ -25,6 +30,7 @@ class ClientPeerHandler {
     static void
     ReleaseAuthMutex(std::mutex &lock,
                       std::condition_variable_any &login_Cv,
+                      AuthType authType,
                       QuicResponse &response, bool success,
                       const AuthResponse &authResponse = AuthResponse());
 

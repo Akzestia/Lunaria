@@ -17,10 +17,10 @@ std::condition_variable_any ClientPeerHandler::login_Cv = {};
 std::mutex ClientPeerHandler::signupMutex = {};
 std::condition_variable_any ClientPeerHandler::signup_Cv = {};
 
-QuicResponse ClientPeerHandler::loginResponse = { false, nullptr };
+QuicResponse ClientPeerHandler::loginResponse = {false, nullptr};
 bool ClientPeerHandler::waitingForLogin = false;
 
-QuicResponse ClientPeerHandler::signUpResponse = { false, nullptr };
+QuicResponse ClientPeerHandler::signUpResponse = {false, nullptr};
 bool ClientPeerHandler::waitingForSignUp = false;
 
 ClientPeerHandler::~ClientPeerHandler() {
@@ -71,18 +71,29 @@ std::condition_variable_any &ClientPeerHandler::GetSignUpCv() {
 }
 
 void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
-                                          std::condition_variable_any &Cv,
-                                          QuicResponse &response, bool success,
-                                          const AuthResponse &authResponse) {
-
+                                         std::condition_variable_any &Cv,
+                                         AuthType authType,
+                                         QuicResponse &response, bool success,
+                                         const AuthResponse &authResponse) {
     std::unique_lock<std::mutex> ulock(lock);
-    ClientPeerHandler::loginResponse.success = success;
-    if (success) {
-        response.payload = new AuthResponse(authResponse);
+    switch (authType) {
+    case T_SIGN_IN:
+        ClientPeerHandler::loginResponse.success = success;
+        if (success) {
+            response.payload = new AuthResponse(authResponse);
+        }
+        Cv.notify_one();
+        ClientPeerHandler::waitingForLogin = false;
+        break;
+    case T_SIGN_UP:
+        ClientPeerHandler::signUpResponse.success = success;
+        if (success) {
+            response.payload = new AuthResponse(authResponse);
+        }
+        Cv.notify_one();
+        ClientPeerHandler::waitingForSignUp = false;
+        break;
     }
-    Cv.notify_one();
-    ClientPeerHandler::waitingForLogin = false;
-
     std::cout << "NotifiedX\n";
 }
 
@@ -100,19 +111,34 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     std::cout << "\nRoute: " << wrapper->route() << "\n";
 
     switch (wrapper->route()) {
-    case AUTH_RESPONSE: {
+    case AUTH_RESPONSE_SIGN_UP: {
         QuicResponse response;
         if (wrapper->authresponse().is_successful()) {
-            std::cout << "Auth successful\n";
+            std::cout << "Auth successful SU\n";
 
             std::cout << wrapper->authresponse().token() << "\n";
-            ReleaseAuthMutex(loginMutex, login_Cv, response, 1,
-                              wrapper->authresponse());
+            ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, response, 1,
+                             wrapper->authresponse());
             return true;
         }
         std::cout << "Auth failed\n";
 
-        ReleaseAuthMutex(loginMutex, login_Cv, response, 0);
+        ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, response, 0);
+        return false;
+    }
+    case AUTH_RESPONSE_SIGN_IN: {
+        QuicResponse response;
+        if (wrapper->authresponse().is_successful()) {
+            std::cout << "Auth successful SI\n";
+
+            std::cout << wrapper->authresponse().token() << "\n";
+            ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, response, 1,
+                             wrapper->authresponse());
+            return true;
+        }
+        std::cout << "Auth failed\n";
+
+        ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, response, 0);
         return false;
     }
     case SERVER_BINDING_REQUEST: {
