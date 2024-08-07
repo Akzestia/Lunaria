@@ -25,7 +25,7 @@ class DbManager {
     #pragma endregion
 
     #pragma region POST
-    static bool addUser(const User&);
+    static Lxcode addUser(const User&);
     static bool addMessage(const Message&);
     static bool addContact(const Contact&);
     #pragma endregion

@@ -41,7 +41,7 @@ Lxcode DbManager::getUser(const Sign_in &auth) {
 
     const std::string user_name = auth.user_name();
     const std::string user_password = auth.user_password();
-    if(user_name.length() < 3 || user_password.length() < 4)
+    if (user_name.length() < 3 || user_password.length() < 4)
         return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT, "Invalid input");
 
     try {
@@ -54,13 +54,17 @@ Lxcode DbManager::getUser(const Sign_in &auth) {
                       << connection.dbname() << std::endl;
         } else {
             std::cerr << "Can't open database" << std::endl;
-            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Can't open database");
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Can't open database");
         }
 
         pqxx::nontransaction nontransaction(connection);
 
-        const std::string query = "SELECT display_name, user_name, user_email, user_password, user_avatar, online_status FROM Users WHERE (user_password "
-                                  "= $1 AND user_name = $2) OR (user_password = $1 AND user_email = $2);";
+        const std::string query =
+            "SELECT display_name, user_name, user_email, user_password, "
+            "user_avatar, online_status FROM Users WHERE (user_password "
+            "= $1 AND user_name = $2) OR (user_password = $1 AND user_email = "
+            "$2);";
 
         pqxx::result result =
             nontransaction.exec_params(query, user_password, user_name);
@@ -211,7 +215,10 @@ bool DbManager::getGraphs(const User &u, std::vector<uint8_t> *output) {
 #pragma endregion
 
 #pragma region POST
-bool DbManager::addUser(const User &user) {
+Lxcode DbManager::addUser(const User &user) {
+    if(user.user_name().length() < 3 || user.user_email().length() < 3 || user.user_password().length() < 3)
+        return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT, "Invalid input");
+
     try {
         const std::string connection_str = DbManager::getConnectionString();
 
@@ -222,31 +229,40 @@ bool DbManager::addUser(const User &user) {
                       << connection.dbname() << std::endl;
         } else {
             std::cerr << "Can't open database" << std::endl;
-            return false;
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Can't open database");
         }
 
         pqxx::work txn(connection);
 
-        std::string query =
-            "INSERT INTO Users (display_name, user_name, user_email, "
-            "user_avatar, user_password, online_status) VALUES (" +
-            txn.quote(user.display_name()) + ", " +
-            txn.quote(user.user_name()) + ", " + txn.quote(user.user_email()) +
-            ", " + txn.quote(user.user_avatar()) + ", " +
-            txn.quote(user.user_password()) + ", " +
-            txn.quote(user.online_status()) + ");";
+        const std::string user_name = user.user_name();
+        const std::string user_email = user.user_email();
+        const std::string user_password = user.user_password();
 
-        txn.exec(query);
+        const std::string query =
+            "INSERT INTO Users (display_name, user_name, user_email, "
+            "user_avatar, user_password, online_status) "
+            "VALUES ($1, $2, $3, $4, $5, $6)";
+
+        txn.exec_params(query,
+                        user.display_name().empty() ? "New User" : user.display_name(), // $1: Default display name
+                        user_name,            // $2
+                        user_email,           // $3
+                        0x0, // $4: Default avatar
+                        user_password,        // $5
+                        0             // $6: Default online status
+        );
 
         txn.commit();
 
         std::cout << "\nUser added successfully." << std::endl;
 
-        return true;
-    } catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return false;
-    }
+        return Lxcode::OK(new User(user));
+    }  catch (const pqxx::unique_violation &e) {
+           return Lxcode::DB_ERROR(DB_ERROR_UNIQUE_VIOLATION, "User already exists");
+       } catch (const std::exception &e) {
+           return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
+       }
 }
 
 bool DbManager::addMessage(const Message &message) {
@@ -472,7 +488,8 @@ bool DbManager::deleteContact(const Contact &contact) {
 
 std::string DbManager::getConnectionString() {
 
-    std::cout << "Current working directory: " << std::filesystem::current_path().string() << std::endl;
+    std::cout << "Current working directory: "
+              << std::filesystem::current_path().string() << std::endl;
 
     boost::property_tree::ptree pt;
     boost::property_tree::ini_parser::read_ini("./config.ini", pt);
