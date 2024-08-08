@@ -47,7 +47,6 @@ class DbManager {
     static std::string getConnectionString();
     DbManager() = default;
     friend class QuicServer;
-    friend class RequestManager;
     friend class RouteManager;
 };
 
