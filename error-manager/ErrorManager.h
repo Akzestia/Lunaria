@@ -66,6 +66,8 @@ enum Lxcodes : uint8_t {
     DB_ERROR_LOGIN_FAILED = 0x36,
     DB_ERROR_UNIQUE_VIOLATION = 0x37,
     DB_ERROR_QUERY_FAILED = 0x38,
+    DB_ERROR_USER_EXISTS = 0x39,
+    DB_ERROR_INVALID_PASSWORD = 0x3A,
 };
 
 class ErrorManager {
