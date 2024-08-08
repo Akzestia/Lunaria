@@ -8,6 +8,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
 
 find_package(Protobuf REQUIRED)
 
+option(USE_SCYLLA_DB "Use ScyllaDB instead of PostgreSQL" OFF)
+
 # Set the correct directory for the MsQuic library
 set(MSQUIC_LIB_DIR ${CMAKE_SOURCE_DIR}/../MsQuic/Linux_x64/bin)
 set(PROTOBUF_LIB_DIR ${CMAKE_SOURCE_DIR}/../protobuf)
@@ -53,6 +55,7 @@ add_executable(server
     ${HELPERS_DIR}/AuthManager/AuthManager.cpp
     ${HELPERS_DIR}/Encryption/EncryptionManager.cpp
     ${DB_DIR}/Postgress/DbManager.cpp
+    ${DB_DIR}/Scylla/ScyllaManager.cpp
     ${HELPERS_DIR}/PeerHandler/PeerHandler.cpp
 )
 
@@ -69,6 +72,7 @@ target_link_libraries(server
     numa
     stdc++
     pthread
+    cassandra
 )
 
 set(SOURCE_INI ${CMAKE_SOURCE_DIR}/../db/config.ini)
@@ -79,6 +83,10 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SOURCE_INI} ${DESTINATION_INI}
     COMMENT "Copying config.ini to ${DESTINATION_INI}"
 )
+
+if(USE_SCYLLA_DB)
+    target_compile_definitions(server PRIVATE USE_SCYLLA_DB)
+endif()
 
 # Set RPATH
 set_target_properties(server PROPERTIES
