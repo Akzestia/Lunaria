@@ -12,7 +12,7 @@ keyspaces=$(cqlsh -u $CASSANDRA_USER -p $CASSANDRA_PASSWORD -e "DESCRIBE KEYSPAC
 # Loop through the keyspaces and drop them
 for keyspace in $keyspaces; do
     echo "Dropping keyspace: $keyspace"
-    cqlsh -u $CASSANDRA_USER -p $CASSANDRA_PASSWORD -e "DROP KEYSPACE $keyspace;"
+    /home/azure/scylladb/tools/cqlsh/bin/cqlsh.py -u $CASSANDRA_USER -p $CASSANDRA_PASSWORD -e "DROP KEYSPACE $keyspace;"
 done
 
 echo "All keyspaces and tables have been deleted."
