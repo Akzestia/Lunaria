@@ -6,7 +6,6 @@
 #include "../Helpers/ConnectionManager/ConnectionManager.h"
 #include "../Helpers/PeerHandler/PeerHandler.h"
 #include "../MsQuic/Linux_x64/include/msquic.h"
-#include "../db/Postgress/DbManager.h"
 #include "../proto/build/user.pb.h"
 #include "../tokio-cpp/ThreadPool.h"
 #include <absl/strings/cord.h>
@@ -42,11 +41,6 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
   private:
     using ConnectionManager::addUser;
     using ConnectionManager::removeUser;
-    using DbManager::getContacts;
-    using DbManager::getGraphs;
-    using DbManager::getMessages;
-    using DbManager::getUser;
-    using DbManager::test;
     using PeerHandler::GetPeers;
     using PeerHandler::HandlePeer;
     using PeerHandler::onPeerShutdown;

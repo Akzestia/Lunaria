@@ -612,6 +612,10 @@ QuicServer::QuicServer(const char *Host, const uint16_t UdpPort,
     this->cert = (char *)cert;
     this->key = (char *)key;
 
+#ifdef USE_SCYLLA_DB
+    RouteManager::InitScyllaDb();
+#endif
+
     if (QUIC_FAILED(Status = MsQuicOpen2(&MsQuic))) {
         printf("MsQuicOpen2 failed, 0x%x!\n", Status);
         exit(-1);
