@@ -60,17 +60,23 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         if (response == Lxcode::OK()) {
             std::cout << "Sign up successful\n";
 
-            authResponse.set_is_successful(true);
-            authResponse.set_token(response.response);
-            authResponse.set_allocated_user(std::get<User *>(response.payload));
+            try {
+                authResponse.set_is_successful(true);
+                authResponse.set_token(response.response);
+                *authResponse.mutable_user() =
+                    *std::get<User *>(response.payload);
 
-            *responseWrapper->mutable_authresponse() = authResponse;
+                *responseWrapper->mutable_authresponse() = authResponse;
 
-            reinterpret_cast<QuicServer *>(context)->SendResponse(
-                Stream, *responseWrapper);
+                reinterpret_cast<QuicServer *>(context)->SendResponse(
+                    Stream, *responseWrapper);
 
-            delete std::get<User *>(response.payload);
-            return true;
+                delete std::get<User *>(response.payload);
+                return true;
+            } catch (const std::exception &e) {
+                std::cerr << e.what() << '\n';
+                delete std::get<User *>(response.payload);
+            }
         }
 
         std::cout << "Sign up failed\n";
@@ -103,7 +109,8 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             *responseWrapper->mutable_authresponse() = authResponse;
 
-            reinterpret_cast<QuicServer *>(context)->SendResponse(Stream, *responseWrapper);
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, *responseWrapper);
 
             delete std::get<User *>(response.payload);
             return true;
