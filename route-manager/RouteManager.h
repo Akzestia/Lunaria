@@ -3,6 +3,7 @@
 #define ROUTE_MANAGER_H
 
 #include "../db/Postgress/DbManager.h"
+#include "../db/Scylla/ScyllaManager.h"
 #include "../proto/build/auth.pb.h"
 #include "../proto/build/contact.pb.h"
 #include "../proto/build/encrypt_key.pb.h"
@@ -24,9 +25,10 @@ using Payload = std::variant<User, Message, Contact, Auth, Vpn_graph, Server,
                              Report, Invite_link, Encrypt_key, Sign_up, Sign_in>;
 using RouteFunction = std::function<Lxcode(const Payload &)>;
 
-class RouteManager : protected DbManager {
+class RouteManager {
   public:
   protected:
+    static void InitScyllaDb();
     static Lxcode proccesRoute(const Wrapper &);
     virtual ~RouteManager();
   private:
@@ -45,7 +47,7 @@ class RouteManager : protected DbManager {
 
     static std::unordered_map<uint8_t, RouteFunction> *routes;
 
-    RouteManager() : DbManager() {};
+    // RouteManager() : DbManager() {};
 
     friend class PeerHandler;
 };
