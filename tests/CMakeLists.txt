@@ -52,7 +52,7 @@ add_executable(server
     ${HELPERS_DIR}/ConnectionManager/ConnectionManager.cpp
     ${HELPERS_DIR}/AuthManager/AuthManager.cpp
     ${HELPERS_DIR}/Encryption/EncryptionManager.cpp
-    ${DB_DIR}/DbManager.cpp
+    ${DB_DIR}/Postgress/DbManager.cpp
     ${HELPERS_DIR}/PeerHandler/PeerHandler.cpp
 )
 
