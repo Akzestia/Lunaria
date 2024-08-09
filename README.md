@@ -33,15 +33,17 @@ This project utilizes various technologies including:
 
 - **Libraries/Frameworks**
   - [Qt](https://www.qt.io/) - C++ GUI Framework
-  - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ Library
+  - [pqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ Library
+  - [cassandra](https://opensource.docs.scylladb.com/stable/using-scylla/drivers/cql-drivers/scylla-cpp-driver.html) - C++ driver for ScyllaDB
   - [Protobuf](https://developers.google.com/protocol-buffers) - Protocol Buffers
   - [NetBird](https://netbird.io/) - VPN solution
   - [MsQuic](https://github.com/microsoft/msquic) - Cross-platform QUIC protocol implementation
   - [Abseil](https://abseil.io/docs/cpp/quickstart-cmake.html) - C++ Common Library by Google, offering essential components for modern C++ development.
   - [OpenSSL](https://www.openssl.org/) - Open Source cryptographic library that implements SSL/TLS protocols and provides cryptographic algorithms.
 
-- **Database**
+- **Databases**
   - [PostgreSQL](https://www.postgresql.org/)
+  - [ScyllaDB](https://www.scylladb.com/) Migrating to Scylla
 
 - **Tools**
   - [g++](https://gcc.gnu.org/) - Compiler
