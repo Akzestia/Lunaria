@@ -14,8 +14,12 @@
     ```
 
 ### Scylla
-  - Linux
+  - Linux (default Scylla username && password)
     ```
     chmod +x run.scripts.cql.sh
     ./run.scripts.cql.sh -u casandra -p casandra -s ../Scylla/cql
+    ```
+ - Linux (Replace user_name && password with your username && password)
+    ```
+    ./run.scripts.cql.sh -u <user_name> -p <password> -s ../Scylla/cql 
     ```
