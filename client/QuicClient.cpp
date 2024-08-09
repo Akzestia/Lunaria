@@ -533,12 +533,19 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
             std::cout << "Response received\n";
 
             if (ClientPeerHandler::signUpResponse.success) {
-                std::cout << "SignUp success\n";
-                return Lxcode::OK();
+                try{
+                    AuthResponse* ar = std::get<AuthResponse*>(ClientPeerHandler::signUpResponse.payload);
+                    auto response = Lxcode::OK(ar);
+                    return response;
+                }
+                catch(const std::exception& e){
+                    std::cerr << e.what() << '\n';
+                    return Lxcode::DB_ERROR(DB_ERROR_SIGNUP_FAILED, "Login failed");
+                }
             }
             else{
                 std::cout << "SignUp failed\n";
-                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "SignUp failed");
+                return Lxcode::DB_ERROR(DB_ERROR_SIGNUP_FAILED, "SignUp failed");
             }
         } else {
             std::cout << "Timeout waiting for response\n";
