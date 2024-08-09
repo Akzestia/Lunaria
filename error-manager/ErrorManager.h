@@ -6,8 +6,10 @@
 #include "../proto/build/user.pb.h"
 #include "../proto/build/contact.pb.h"
 #include "../proto/build/authResponse.pb.h"
+#include "../proto/build/server.pb.h"
+#include "../proto/build/message.pb.h"
 
-using LxPayload = std::variant<User*, Contact*, AuthResponse*>;
+using LxPayload = std::variant<User*, Contact*, Server*, Message*, AuthResponse*>;
 
 enum class LxcodeType : uint8_t {
     OK = 0x00,
