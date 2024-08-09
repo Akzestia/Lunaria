@@ -30,8 +30,7 @@ class ClientPeerHandler {
     static void
     ReleaseAuthMutex(std::mutex &lock,
                       std::condition_variable_any &login_Cv,
-                      AuthType authType,
-                      QuicResponse &response, bool success,
+                      AuthType authType, bool success,
                       const AuthResponse &authResponse = AuthResponse());
 
     static std::mutex &GetLoginMutex();

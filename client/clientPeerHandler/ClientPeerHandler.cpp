@@ -4,6 +4,7 @@
 #include "../../route-manager/Routes.hpp"
 #include "../clientListenerModule/ClientListener.h"
 #include <condition_variable>
+#include <iostream>
 #include <memory>
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
@@ -72,15 +73,14 @@ std::condition_variable_any &ClientPeerHandler::GetSignUpCv() {
 
 void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
                                          std::condition_variable_any &Cv,
-                                         AuthType authType,
-                                         QuicResponse &response, bool success,
+                                         AuthType authType, bool success,
                                          const AuthResponse &authResponse) {
     std::unique_lock<std::mutex> ulock(lock);
     switch (authType) {
     case T_SIGN_IN:
         ClientPeerHandler::loginResponse.success = success;
         if (success) {
-            response.payload = new AuthResponse(authResponse);
+            ClientPeerHandler::loginResponse.payload = new AuthResponse(authResponse);
         }
         Cv.notify_one();
         ClientPeerHandler::waitingForLogin = false;
@@ -88,7 +88,7 @@ void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
     case T_SIGN_UP:
         ClientPeerHandler::signUpResponse.success = success;
         if (success) {
-            response.payload = new AuthResponse(authResponse);
+            ClientPeerHandler::signUpResponse.payload = new AuthResponse(authResponse);
         }
         Cv.notify_one();
         ClientPeerHandler::waitingForSignUp = false;
@@ -112,33 +112,32 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
     switch (wrapper->route()) {
     case AUTH_RESPONSE_SIGN_UP: {
-        QuicResponse response;
         if (wrapper->authresponse().is_successful()) {
             std::cout << "Auth successful SU\n";
 
+            std::cout << "Auth user: " << wrapper->authresponse().user().user_name() << "\n";
             std::cout << wrapper->authresponse().token() << "\n";
-            ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, response, 1,
+            ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, 1,
                              wrapper->authresponse());
             return true;
         }
         std::cout << "Auth failed\n";
 
-        ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, response, 0);
+        ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, 0);
         return false;
     }
     case AUTH_RESPONSE_SIGN_IN: {
-        QuicResponse response;
         if (wrapper->authresponse().is_successful()) {
             std::cout << "Auth successful SI\n";
 
             std::cout << wrapper->authresponse().token() << "\n";
-            ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, response, 1,
+            ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, 1,
                              wrapper->authresponse());
             return true;
         }
         std::cout << "Auth failed\n";
 
-        ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, response, 0);
+        ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, 0);
         return false;
     }
     case SERVER_BINDING_REQUEST: {
