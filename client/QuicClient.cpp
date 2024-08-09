@@ -5,6 +5,7 @@
 #include "clientListenerModule/ClientListener.h"
 #include "clientPeerHandler/ClientPeerHandler.h"
 #include <cstdint>
+#include <iostream>
 #include <mutex>
 
 #ifndef UNREFERENCED_PARAMETER
@@ -571,7 +572,17 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
 
             if (ClientPeerHandler::loginResponse.success) {
                 std::cout << "Login success\n";
-                return Lxcode::OK();
+
+                try{
+                    AuthResponse* ar = std::get<AuthResponse*>(ClientPeerHandler::loginResponse.payload);
+                    auto response = Lxcode::OK(ar);
+                    return response;
+                }
+                catch(const std::exception& e){
+                    std::cerr << e.what() << '\n';
+                    return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Login failed");
+                }
+
             }
             else{
                 std::cout << "Login failed\n";
@@ -582,8 +593,6 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
             return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
                                     "Failed to connect");
         }
-
-        return Lxcode::OK();
     }
     return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to connect");
 }

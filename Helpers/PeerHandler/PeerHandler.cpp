@@ -70,7 +70,6 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
                 reinterpret_cast<QuicServer *>(context)->SendResponse(
                     Stream, *responseWrapper);
-
                 delete std::get<User *>(response.payload);
                 return true;
             } catch (const std::exception &e) {
