@@ -17,5 +17,5 @@
   - Linux
     ```
     chmod +x run.scripts.cql.sh
-    ./run.scripts.cql.sh
+    ./run.scripts.cql.sh -u casandra -p casandra -s ../Scylla/cql
     ```
