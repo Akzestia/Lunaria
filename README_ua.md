@@ -34,6 +34,7 @@ Lunaria - це чат-додаток з відкритим вихідним ко
 - **Бібліотеки/фреймворки**
   - [Qt](https://www.qt.io/) - фреймворк графічного інтерфейсу C++
   - [libpqxx](https://libpqxx.readthedocs.io/) - бібліотека C++ для PostgreSQL
+  - [cassandra](https://opensource.docs.scylladb.com/stable/using-scylla/drivers/cql-drivers/scylla-cpp-driver.html) - C++ драйвер для ScyllaDB
   - [Protobuf](https://developers.google.com/protocol-buffers) - протокольні буфери
   - [NetBird](https://netbird.io/) -  VPN рішення
   - [MsQuic](https://github.com/microsoft/msquic) - Крос-платформна реалізація протоколу QUIC

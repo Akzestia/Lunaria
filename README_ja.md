@@ -34,6 +34,7 @@ Lunariaは、安全で効率的な通信のために設計されたQUICプロト
 - **ライブラリ/フレームワーク**
   - [Qt](https://www.qt.io/) - C++GUIフレームワーク
   - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ライブラリ
+  - [cassandra](https://opensource.docs.scylladb.com/stable/using-scylla/drivers/cql-drivers/scylla-cpp-driver.html) - ScyllaDB用C++ドライバ
   - [Protobuf](https://developers.google.com/protocol-buffers) - プロトコル・バッファ
   - [NetBird](https://netbird.io/) - VPNソリューション
   - [MsQuic](https://github.com/microsoft/msquic) - クロスプラットフォームQUICプロトコル実装
