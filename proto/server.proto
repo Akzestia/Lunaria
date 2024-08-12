@@ -1,5 +1,11 @@
 syntax = "proto3";
 
 message Server {
-    int32 id = 1;
+    string name = 1;
+    bytes icon = 2;
+    bytes banner = 3;
+    string description = 4;
+    int32 member_count = 5;
+    int32 online_count = 6;
+    string invite_url = 7;
 }
