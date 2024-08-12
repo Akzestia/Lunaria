@@ -26,6 +26,7 @@ if [ -z "$USERNAME" ] || [ -z "$PASSWORD" ] || [ -z "$SCHEMA_DIR" ]; then
     usage
 fi
 
+#Todo add var for cqlsh.py path
 # Function to execute a .cql script
 execute_script() {
     local script=$1
