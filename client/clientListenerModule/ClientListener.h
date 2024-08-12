@@ -15,7 +15,7 @@ class ClientListener : protected ClientPeerHandler {
     ClientListener(const QUIC_API_TABLE *MsQuic, HQUIC Registration,
                    const QUIC_BUFFER Alpn, uint16_t UdpPort, const size_t ThreadNumber, const char *cert,
                    const char *key);
-    ~ClientListener();
+    virtual ~ClientListener();
     ClientListener() = delete;
 
     void Start();
