@@ -7,6 +7,7 @@
 #include "../../proto/build/message.pb.h"
 #include "../../proto/build/sign_in.pb.h"
 #include "../../proto/build/user.pb.h"
+#include "../../proto/build/server.pb.h"
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <condition_variable>
@@ -28,7 +29,7 @@ class ScyllaManager {
     static Lxcode createUser(const Sign_up &);
     static Lxcode createContact(const Contact &);
     static Lxcode createMessage(const Message &);
-    static Lxcode createServer(const Auth &);
+    static Lxcode createServer(const Server &);
 #pragma endregion
 
 #pragma region PUT

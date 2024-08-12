@@ -2,6 +2,7 @@
 #include <cassandra.h>
 #include <cstdint>
 #include <ctime>
+#include <exception>
 #include <iostream>
 
 std::string ScyllaManager::_host = "";
@@ -477,6 +478,118 @@ Lxcode ScyllaManager::createUser(const Sign_up &su) {
             delete u;
 
         std::cerr << e.what() << std::endl;
+        return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
+    }
+}
+
+Lxcode ScyllaManager::createContact(const Contact &contact) {
+
+    CassSession *session = cass_session_new();
+    CassCluster *cluster = cass_cluster_new();
+    CassFuture *connect_future = nullptr;
+    CassStatement *statement = nullptr;
+    CassFuture *result_future = nullptr;
+    const CassResult *result = nullptr;
+    CassIterator *iterator = nullptr;
+    const CassRow *row = nullptr;
+    Contact *c = nullptr;
+
+    try {
+        // Set the contact points and authentication for the Scylla cluster
+        cass_cluster_set_contact_points(cluster, _host.c_str());
+        cass_cluster_set_port(cluster, _port);
+        cass_cluster_set_credentials(cluster, _user.c_str(), _password.c_str());
+
+        // Connect to the cluster
+        connect_future = cass_session_connect(session, cluster);
+        if (cass_future_error_code(connect_future) != CASS_OK) {
+            cass_future_free(connect_future);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect to Scylla cluster");
+        }
+
+        cass_future_free(connect_future);
+
+
+        return Lxcode::OK(c);
+    } catch (const std::exception e) {
+
+        if(c)
+            delete c;
+        if(session)
+            cass_session_free(session);
+        if(cluster)
+            cass_cluster_free(cluster);
+        if(connect_future)
+            cass_future_free(connect_future);
+        if(statement)
+            cass_statement_free(statement);
+        if(result_future)
+            cass_future_free(result_future);
+        if(result)
+            cass_result_free(result);
+        if(iterator)
+            cass_iterator_free(iterator);
+
+        std::cout << e.what() << "\n";
+        return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
+    }
+}
+
+
+Lxcode ScyllaManager::createServer(const Server& server){
+    CassSession *session = cass_session_new();
+    CassCluster *cluster = cass_cluster_new();
+    CassFuture *connect_future = nullptr;
+    CassStatement *statement = nullptr;
+    CassFuture *result_future = nullptr;
+    const CassResult *result = nullptr;
+    CassIterator *iterator = nullptr;
+    const CassRow *row = nullptr;
+    Server *s = nullptr;
+
+    try {
+        // Set the contact points and authentication for the Scylla cluster
+        cass_cluster_set_contact_points(cluster, _host.c_str());
+        cass_cluster_set_port(cluster, _port);
+        cass_cluster_set_credentials(cluster, _user.c_str(), _password.c_str());
+
+        // Connect to the cluster
+        connect_future = cass_session_connect(session, cluster);
+        if (cass_future_error_code(connect_future) != CASS_OK) {
+            cass_future_free(connect_future);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect to Scylla cluster");
+        }
+
+        cass_future_free(connect_future);
+
+
+        return Lxcode::OK(s);
+    } catch (const std::exception e) {
+
+        if(s)
+            delete s;
+        if(session)
+            cass_session_free(session);
+        if(cluster)
+            cass_cluster_free(cluster);
+        if(connect_future)
+            cass_future_free(connect_future);
+        if(statement)
+            cass_statement_free(statement);
+        if(result_future)
+            cass_future_free(result_future);
+        if(result)
+            cass_result_free(result);
+        if(iterator)
+            cass_iterator_free(iterator);
+
+        std::cout << e.what() << "\n";
         return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
     }
 }
