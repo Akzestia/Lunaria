@@ -1,6 +1,6 @@
 #include "../server/QuicServer.h"
+#include <csignal>
 #include <iostream>
-#include <csignal> 
 
 volatile sig_atomic_t g_signal_received = 0;
 
@@ -13,9 +13,7 @@ void signal_handler(int signal) {
 }
 
 // Function to check if stdin is connected
-bool is_stdin_interactive() {
-    return isatty(fileno(stdin)) != 0;
-}
+bool is_stdin_interactive() { return isatty(fileno(stdin)) != 0; }
 
 int main() {
     // Register signal handler for SIGINT
@@ -23,8 +21,8 @@ int main() {
 
     // Create and start the QuicServer instance
     QuicServer *server =
-        new QuicServer("10.10.3.201", 6121, 2, "nexus", "../../certs/server.cert",
-                       "../../certs/server.key");
+        new QuicServer("10.10.3.201", 6121, 8, "nexus",
+                       "../../certs/server.cert", "../../certs/server.key");
 
     server->Start();
 
