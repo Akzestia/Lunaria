@@ -18,6 +18,10 @@ QuicClient& QuicClient::getRef() {
     return *this;
 }
 
+bool QuicClient::ping() {
+    return Connection != NULL;
+}
+
 // Test
 typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
     QUIC_CREDENTIAL_CONFIG CredConfig;
@@ -457,7 +461,7 @@ QuicClient::~QuicClient() {
 }
 
 #pragma region AuthRequest()
-bool QuicClient::AuthRequest(const Wrapper &auth_request) {
+bool QuicClient::ClientRequest(const Wrapper &auth_request) {
 
     QUIC_BUFFER *SendBuffer;
     HQUIC Stream = NULL;
@@ -483,7 +487,7 @@ bool QuicClient::AuthRequest(const Wrapper &auth_request) {
         goto Error;
     }
 
-    printf("[strm][%p] Starting Auth Request...\n", Stream);
+    printf("[strm][%p] Starting Client Request...\n", Stream);
 
     if (QUIC_FAILED(Status = MsQuic->StreamStart(
                         Stream, QUIC_STREAM_START_FLAG_NONE))) {
@@ -492,7 +496,7 @@ bool QuicClient::AuthRequest(const Wrapper &auth_request) {
         goto Error;
     }
 
-    printf("[strm][%p] Sending Auth Request...\n", Stream);
+    printf("[strm][%p] Sending Client Request...\n", Stream);
 
     if (QUIC_FAILED(Status =
                         MsQuic->StreamSend(Stream, SendBuffer, 1,
@@ -522,7 +526,7 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
     *wrapper.mutable_auth() = auth;
     wrapper.set_route(SIGN_UP);
 
-    if (AuthRequest(wrapper)) {
+    if (ClientRequest(wrapper)) {
 
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetSignUpMutex());
@@ -567,7 +571,7 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
     Wrapper wrapper;
     *wrapper.mutable_auth() = auth;
     wrapper.set_route(SIGN_IN);
-    if (AuthRequest(wrapper)) {
+    if (ClientRequest(wrapper)) {
 
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetLoginMutex());
@@ -638,3 +642,24 @@ Error:
 #pragma endregion
 
 #pragma region closePeer()
+
+#pragma endregion
+
+#pragma region POST_request
+
+#pragma endregion
+
+#pragma region AddContact
+Lxcode QuicClient::AddContact(const Contact &contact){
+    Wrapper w;
+    *w.mutable_contact() = contact;
+    w.set_route(CREATE_CONTACT);
+    if(ClientRequest(w)){
+
+
+        return Lxcode::OK();
+    }
+
+    return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to send");
+}
+#pragma endregion
