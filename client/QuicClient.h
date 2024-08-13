@@ -15,7 +15,6 @@
 #include "clientListenerModule/ClientListener.h"
 #include "../error-manager/ErrorManager.h"
 #include "../NetBird/VpnManager.h"
-#include "../Helpers/PeerHandler/PeerHandler.h"
 #include "../tokio-cpp/ThreadPool.h"
 #include "clientPeerHandler/ClientPeerHandler.h"
 
@@ -32,6 +31,8 @@ class QuicClient : protected ClientPeerHandler {
     Lxcode SignUp(const Auth &);
     Lxcode SignIn(const Auth &);
 
+    Lxcode AddContact(const Contact &);
+
     void send(const absl::Cord &);
     void send(const Wrapper &);
 
@@ -46,6 +47,8 @@ class QuicClient : protected ClientPeerHandler {
 
   private:
 
+    bool ping();
+
     using ClientPeerHandler::HandlePeer;
     using ClientPeerHandler::onPeerShutdown;
 
@@ -57,7 +60,7 @@ class QuicClient : protected ClientPeerHandler {
 
     bool openTunnel();
 
-    bool AuthRequest(const Wrapper &);
+    bool ClientRequest(const Wrapper &);
 
     void ClientLoadConfiguration(const char *cert, const char *key);
 
