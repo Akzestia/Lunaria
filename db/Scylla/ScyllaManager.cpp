@@ -484,6 +484,9 @@ Lxcode ScyllaManager::createUser(const Sign_up &su) {
 
 Lxcode ScyllaManager::createContact(const Contact &contact) {
 
+    if(!contact.has_a_user_id_string() || !contact.has_b_user_id_string())
+        return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT, "Invalid input");
+
     CassSession *session = cass_session_new();
     CassCluster *cluster = cass_cluster_new();
     CassFuture *connect_future = nullptr;
@@ -512,6 +515,12 @@ Lxcode ScyllaManager::createContact(const Contact &contact) {
 
         cass_future_free(connect_future);
 
+        statement = cass_statement_new(
+            "SELECT user_name FROM lunnaria_service.Contacts "
+            "WHERE user_name = ?",
+            1);
+        cass_statement_bind_int32(statement, 0, contact.a_user_id_int());
+        cass_statement_bind_int32(statement, 1, contact.b_user_id_int());
 
         return Lxcode::OK(c);
     } catch (const std::exception e) {
