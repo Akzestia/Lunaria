@@ -126,67 +126,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         return false;
     }
-    case SEND_FRIEND_REQUEST: {
-
-        break;
-    }
-    case REMOVE_FRIEND: {
-
-        break;
-    }
-    case SEND_MESSAGE: {
-
-        break;
-    }
-    case RECEIVE_MESSAGE: {
-
-        break;
-    }
-    case CREATE_CHAT_GROUP: {
-
-        break;
-    }
-    case JOIN_CHAT_GROUP: {
-
-        break;
-    }
-    case LEAVE_CHAT_GROUP: {
-
-        break;
-    }
-    case ADD_GROUP_MEMBER: {
-
-        break;
-    }
-    case REMOVE_GROUP_MEMBER: {
-
-        break;
-    }
-    case TYPING_INDICATOR: {
-
-        break;
-    }
-    case READ_RECEIPT: {
-
-        break;
-    }
-    case DELETE_MESSAGE: {
-
-        break;
-    }
-    case EDIT_MESSAGE: {
-
-        break;
-    }
-    case FETCH_CHAT_HISTORY: {
-
-        break;
-    }
-    case USER_ONLINE_STATUS: {
-
-        break;
-    }
-    case USER_OFFLINE_STATUS: {
+    case CREATE_CONTACT: {
 
         break;
     }
