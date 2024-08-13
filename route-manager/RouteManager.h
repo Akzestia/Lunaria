@@ -33,7 +33,6 @@ class RouteManager {
     virtual ~RouteManager();
   private:
 
-    static Lxcode handleAuth(const Payload &);
     static Lxcode handleReport(const Payload &);
     static Lxcode handleSignUp(const Payload &);
     static Lxcode handleSignIn(const Payload &);
@@ -42,10 +41,10 @@ class RouteManager {
     static Lxcode getContacts(const Payload &, std::set<User> &);
     static Lxcode getServers(const Payload &, std::set<Server> &);
 
+    static Lxcode createContact(const Payload &);
+
     static Lxcode updateUser(const Payload &);
     static Lxcode updateServer(const Payload &);
-
-    static std::unordered_map<uint8_t, RouteFunction> *routes;
 
     // RouteManager() : DbManager() {};
 
