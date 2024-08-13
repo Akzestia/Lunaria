@@ -7,6 +7,8 @@
 #include <iostream>
 #include <memory>
 
+QuicResponse defaultQuicResponse = {false, nullptr};
+
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
 std::unordered_map<HQUIC, size_t> *ClientPeerHandler::peerDataSizes =
@@ -18,11 +20,32 @@ std::condition_variable_any ClientPeerHandler::login_Cv = {};
 std::mutex ClientPeerHandler::signupMutex = {};
 std::condition_variable_any ClientPeerHandler::signup_Cv = {};
 
-QuicResponse ClientPeerHandler::loginResponse = {false, nullptr};
+QuicResponse ClientPeerHandler::loginResponse = defaultQuicResponse;
 bool ClientPeerHandler::waitingForLogin = false;
 
-QuicResponse ClientPeerHandler::signUpResponse = {false, nullptr};
+QuicResponse ClientPeerHandler::signUpResponse = defaultQuicResponse;
 bool ClientPeerHandler::waitingForSignUp = false;
+
+QuicResponse ClientPeerHandler::contactResponse_POST = defaultQuicResponse;
+QuicResponse ClientPeerHandler::contactResponse_PUT = defaultQuicResponse;
+QuicResponse ClientPeerHandler::contactResponse_DELETE = defaultQuicResponse;
+QuicResponse ClientPeerHandler::contactResponse_GET = defaultQuicResponse;
+
+bool ClientPeerHandler::waitingForContact_POST = false;
+bool ClientPeerHandler::waitingForContact_PUT = false;
+bool ClientPeerHandler::waitingForContact_DELETE = false;
+bool ClientPeerHandler::waitingForContact_GET = false;
+
+
+QuicResponse ClientPeerHandler::serverResponse_POST = defaultQuicResponse;
+QuicResponse ClientPeerHandler::serverResponse_PUT = defaultQuicResponse;
+QuicResponse ClientPeerHandler::serverResponse_DELETE = defaultQuicResponse;
+QuicResponse ClientPeerHandler::serverResponse_GET = defaultQuicResponse;
+
+bool ClientPeerHandler::waitingForServer_POST = false;
+bool ClientPeerHandler::waitingForServer_PUT = false;
+bool ClientPeerHandler::waitingForServer_DELETE = false;
+bool ClientPeerHandler::waitingForServer_GET = false;
 
 ClientPeerHandler::~ClientPeerHandler() {
     std::cout << "\nPeers ~\n";

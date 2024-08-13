@@ -23,6 +23,12 @@ class ClientPeerHandler {
     static bool waitingForSignUp;
     static QuicResponse signUpResponse;
 
+    static bool waitingForContact_POST, waitingForContact_PUT, waitingForContact_DELETE, waitingForContact_GET;
+    static QuicResponse contactResponse_POST, contactResponse_PUT, contactResponse_DELETE, contactResponse_GET;
+
+    static bool waitingForServer_POST, waitingForServer_PUT, waitingForServer_DELETE, waitingForServer_GET;
+    static QuicResponse serverResponse_POST, serverResponse_PUT, serverResponse_DELETE, serverResponse_GET;
+
     static void HandlePeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static std::unordered_map<HQUIC, uint8_t *> *GetPeers();
     static void SetPeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
