@@ -1,6 +1,12 @@
 syntax = "proto3";
 
 message Contact {
-    int32 a_user_id = 1;
-    int32 b_user_id = 2;
+    oneof a_user_id {
+        int32 a_user_id_int = 1;
+        string a_user_id_string = 2;
+    }
+    oneof b_user_id {
+        int32 b_user_id_int = 3;
+        string b_user_id_string = 4;
+    }
 }

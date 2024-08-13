@@ -114,6 +114,16 @@ class Contact final : public ::google::protobuf::Message
   static const Contact& default_instance() {
     return *internal_default_instance();
   }
+  enum AUserIdCase {
+    kAUserIdInt = 1,
+    kAUserIdString = 2,
+    A_USER_ID_NOT_SET = 0,
+  };
+  enum BUserIdCase {
+    kBUserIdInt = 3,
+    kBUserIdString = 4,
+    B_USER_ID_NOT_SET = 0,
+  };
   static inline const Contact* internal_default_instance() {
     return reinterpret_cast<const Contact*>(
         &_Contact_default_instance_);
@@ -187,36 +197,86 @@ class Contact final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kAUserIdFieldNumber = 1,
-    kBUserIdFieldNumber = 2,
+    kAUserIdIntFieldNumber = 1,
+    kAUserIdStringFieldNumber = 2,
+    kBUserIdIntFieldNumber = 3,
+    kBUserIdStringFieldNumber = 4,
   };
-  // int32 a_user_id = 1;
-  void clear_a_user_id() ;
-  ::int32_t a_user_id() const;
-  void set_a_user_id(::int32_t value);
+  // int32 a_user_id_int = 1;
+  bool has_a_user_id_int() const;
+  void clear_a_user_id_int() ;
+  ::int32_t a_user_id_int() const;
+  void set_a_user_id_int(::int32_t value);
 
   private:
-  ::int32_t _internal_a_user_id() const;
-  void _internal_set_a_user_id(::int32_t value);
+  ::int32_t _internal_a_user_id_int() const;
+  void _internal_set_a_user_id_int(::int32_t value);
 
   public:
-  // int32 b_user_id = 2;
-  void clear_b_user_id() ;
-  ::int32_t b_user_id() const;
-  void set_b_user_id(::int32_t value);
+  // string a_user_id_string = 2;
+  bool has_a_user_id_string() const;
+  void clear_a_user_id_string() ;
+  const std::string& a_user_id_string() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_a_user_id_string(Arg_&& arg, Args_... args);
+  std::string* mutable_a_user_id_string();
+  PROTOBUF_NODISCARD std::string* release_a_user_id_string();
+  void set_allocated_a_user_id_string(std::string* value);
 
   private:
-  ::int32_t _internal_b_user_id() const;
-  void _internal_set_b_user_id(::int32_t value);
+  const std::string& _internal_a_user_id_string() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_a_user_id_string(
+      const std::string& value);
+  std::string* _internal_mutable_a_user_id_string();
 
   public:
+  // int32 b_user_id_int = 3;
+  bool has_b_user_id_int() const;
+  void clear_b_user_id_int() ;
+  ::int32_t b_user_id_int() const;
+  void set_b_user_id_int(::int32_t value);
+
+  private:
+  ::int32_t _internal_b_user_id_int() const;
+  void _internal_set_b_user_id_int(::int32_t value);
+
+  public:
+  // string b_user_id_string = 4;
+  bool has_b_user_id_string() const;
+  void clear_b_user_id_string() ;
+  const std::string& b_user_id_string() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_b_user_id_string(Arg_&& arg, Args_... args);
+  std::string* mutable_b_user_id_string();
+  PROTOBUF_NODISCARD std::string* release_b_user_id_string();
+  void set_allocated_b_user_id_string(std::string* value);
+
+  private:
+  const std::string& _internal_b_user_id_string() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_b_user_id_string(
+      const std::string& value);
+  std::string* _internal_mutable_b_user_id_string();
+
+  public:
+  void clear_a_user_id();
+  AUserIdCase a_user_id_case() const;
+  void clear_b_user_id();
+  BUserIdCase b_user_id_case() const;
   // @@protoc_insertion_point(class_scope:Contact)
  private:
   class _Internal;
+  void set_has_a_user_id_int();
+  void set_has_a_user_id_string();
+  void set_has_b_user_id_int();
+  void set_has_b_user_id_string();
+  inline bool has_a_user_id() const;
+  inline void clear_has_a_user_id();
+  inline bool has_b_user_id() const;
+  inline void clear_has_b_user_id();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      1, 2, 0,
-      0, 2>
+      0, 4, 0,
+      48, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -236,9 +296,20 @@ class Contact final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Contact& from_msg);
-    ::int32_t a_user_id_;
-    ::int32_t b_user_id_;
+    union AUserIdUnion {
+      constexpr AUserIdUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::int32_t a_user_id_int_;
+      ::google::protobuf::internal::ArenaStringPtr a_user_id_string_;
+    } a_user_id_;
+    union BUserIdUnion {
+      constexpr BUserIdUnion() : _constinit_{} {}
+      ::google::protobuf::internal::ConstantInitialized _constinit_;
+      ::int32_t b_user_id_int_;
+      ::google::protobuf::internal::ArenaStringPtr b_user_id_string_;
+    } b_user_id_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    ::uint32_t _oneof_case_[2];
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -261,50 +332,260 @@ class Contact final : public ::google::protobuf::Message
 
 // Contact
 
-// int32 a_user_id = 1;
-inline void Contact::clear_a_user_id() {
+// int32 a_user_id_int = 1;
+inline bool Contact::has_a_user_id_int() const {
+  return a_user_id_case() == kAUserIdInt;
+}
+inline void Contact::set_has_a_user_id_int() {
+  _impl_._oneof_case_[0] = kAUserIdInt;
+}
+inline void Contact::clear_a_user_id_int() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.a_user_id_ = 0;
+  if (a_user_id_case() == kAUserIdInt) {
+    _impl_.a_user_id_.a_user_id_int_ = 0;
+    clear_has_a_user_id();
+  }
 }
-inline ::int32_t Contact::a_user_id() const {
-  // @@protoc_insertion_point(field_get:Contact.a_user_id)
-  return _internal_a_user_id();
+inline ::int32_t Contact::a_user_id_int() const {
+  // @@protoc_insertion_point(field_get:Contact.a_user_id_int)
+  return _internal_a_user_id_int();
 }
-inline void Contact::set_a_user_id(::int32_t value) {
-  _internal_set_a_user_id(value);
-  // @@protoc_insertion_point(field_set:Contact.a_user_id)
+inline void Contact::set_a_user_id_int(::int32_t value) {
+  if (a_user_id_case() != kAUserIdInt) {
+    clear_a_user_id();
+    set_has_a_user_id_int();
+  }
+  _impl_.a_user_id_.a_user_id_int_ = value;
+  // @@protoc_insertion_point(field_set:Contact.a_user_id_int)
 }
-inline ::int32_t Contact::_internal_a_user_id() const {
-  ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.a_user_id_;
-}
-inline void Contact::_internal_set_a_user_id(::int32_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.a_user_id_ = value;
+inline ::int32_t Contact::_internal_a_user_id_int() const {
+  if (a_user_id_case() == kAUserIdInt) {
+    return _impl_.a_user_id_.a_user_id_int_;
+  }
+  return 0;
 }
 
-// int32 b_user_id = 2;
-inline void Contact::clear_b_user_id() {
+// string a_user_id_string = 2;
+inline bool Contact::has_a_user_id_string() const {
+  return a_user_id_case() == kAUserIdString;
+}
+inline void Contact::set_has_a_user_id_string() {
+  _impl_._oneof_case_[0] = kAUserIdString;
+}
+inline void Contact::clear_a_user_id_string() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.b_user_id_ = 0;
+  if (a_user_id_case() == kAUserIdString) {
+    _impl_.a_user_id_.a_user_id_string_.Destroy();
+    clear_has_a_user_id();
+  }
 }
-inline ::int32_t Contact::b_user_id() const {
-  // @@protoc_insertion_point(field_get:Contact.b_user_id)
-  return _internal_b_user_id();
+inline const std::string& Contact::a_user_id_string() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Contact.a_user_id_string)
+  return _internal_a_user_id_string();
 }
-inline void Contact::set_b_user_id(::int32_t value) {
-  _internal_set_b_user_id(value);
-  // @@protoc_insertion_point(field_set:Contact.b_user_id)
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Contact::set_a_user_id_string(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (a_user_id_case() != kAUserIdString) {
+    clear_a_user_id();
+
+    set_has_a_user_id_string();
+    _impl_.a_user_id_.a_user_id_string_.InitDefault();
+  }
+  _impl_.a_user_id_.a_user_id_string_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Contact.a_user_id_string)
 }
-inline ::int32_t Contact::_internal_b_user_id() const {
+inline std::string* Contact::mutable_a_user_id_string() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_a_user_id_string();
+  // @@protoc_insertion_point(field_mutable:Contact.a_user_id_string)
+  return _s;
+}
+inline const std::string& Contact::_internal_a_user_id_string() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.b_user_id_;
+  if (a_user_id_case() != kAUserIdString) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.a_user_id_.a_user_id_string_.Get();
 }
-inline void Contact::_internal_set_b_user_id(::int32_t value) {
+inline void Contact::_internal_set_a_user_id_string(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.b_user_id_ = value;
+  if (a_user_id_case() != kAUserIdString) {
+    clear_a_user_id();
+
+    set_has_a_user_id_string();
+    _impl_.a_user_id_.a_user_id_string_.InitDefault();
+  }
+  _impl_.a_user_id_.a_user_id_string_.Set(value, GetArena());
+}
+inline std::string* Contact::_internal_mutable_a_user_id_string() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (a_user_id_case() != kAUserIdString) {
+    clear_a_user_id();
+
+    set_has_a_user_id_string();
+    _impl_.a_user_id_.a_user_id_string_.InitDefault();
+  }
+  return _impl_.a_user_id_.a_user_id_string_.Mutable( GetArena());
+}
+inline std::string* Contact::release_a_user_id_string() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Contact.a_user_id_string)
+  if (a_user_id_case() != kAUserIdString) {
+    return nullptr;
+  }
+  clear_has_a_user_id();
+  return _impl_.a_user_id_.a_user_id_string_.Release();
+}
+inline void Contact::set_allocated_a_user_id_string(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_a_user_id()) {
+    clear_a_user_id();
+  }
+  if (value != nullptr) {
+    set_has_a_user_id_string();
+    _impl_.a_user_id_.a_user_id_string_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:Contact.a_user_id_string)
 }
 
+// int32 b_user_id_int = 3;
+inline bool Contact::has_b_user_id_int() const {
+  return b_user_id_case() == kBUserIdInt;
+}
+inline void Contact::set_has_b_user_id_int() {
+  _impl_._oneof_case_[1] = kBUserIdInt;
+}
+inline void Contact::clear_b_user_id_int() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (b_user_id_case() == kBUserIdInt) {
+    _impl_.b_user_id_.b_user_id_int_ = 0;
+    clear_has_b_user_id();
+  }
+}
+inline ::int32_t Contact::b_user_id_int() const {
+  // @@protoc_insertion_point(field_get:Contact.b_user_id_int)
+  return _internal_b_user_id_int();
+}
+inline void Contact::set_b_user_id_int(::int32_t value) {
+  if (b_user_id_case() != kBUserIdInt) {
+    clear_b_user_id();
+    set_has_b_user_id_int();
+  }
+  _impl_.b_user_id_.b_user_id_int_ = value;
+  // @@protoc_insertion_point(field_set:Contact.b_user_id_int)
+}
+inline ::int32_t Contact::_internal_b_user_id_int() const {
+  if (b_user_id_case() == kBUserIdInt) {
+    return _impl_.b_user_id_.b_user_id_int_;
+  }
+  return 0;
+}
+
+// string b_user_id_string = 4;
+inline bool Contact::has_b_user_id_string() const {
+  return b_user_id_case() == kBUserIdString;
+}
+inline void Contact::set_has_b_user_id_string() {
+  _impl_._oneof_case_[1] = kBUserIdString;
+}
+inline void Contact::clear_b_user_id_string() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (b_user_id_case() == kBUserIdString) {
+    _impl_.b_user_id_.b_user_id_string_.Destroy();
+    clear_has_b_user_id();
+  }
+}
+inline const std::string& Contact::b_user_id_string() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Contact.b_user_id_string)
+  return _internal_b_user_id_string();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Contact::set_b_user_id_string(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (b_user_id_case() != kBUserIdString) {
+    clear_b_user_id();
+
+    set_has_b_user_id_string();
+    _impl_.b_user_id_.b_user_id_string_.InitDefault();
+  }
+  _impl_.b_user_id_.b_user_id_string_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Contact.b_user_id_string)
+}
+inline std::string* Contact::mutable_b_user_id_string() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_b_user_id_string();
+  // @@protoc_insertion_point(field_mutable:Contact.b_user_id_string)
+  return _s;
+}
+inline const std::string& Contact::_internal_b_user_id_string() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  if (b_user_id_case() != kBUserIdString) {
+    return ::google::protobuf::internal::GetEmptyStringAlreadyInited();
+  }
+  return _impl_.b_user_id_.b_user_id_string_.Get();
+}
+inline void Contact::_internal_set_b_user_id_string(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (b_user_id_case() != kBUserIdString) {
+    clear_b_user_id();
+
+    set_has_b_user_id_string();
+    _impl_.b_user_id_.b_user_id_string_.InitDefault();
+  }
+  _impl_.b_user_id_.b_user_id_string_.Set(value, GetArena());
+}
+inline std::string* Contact::_internal_mutable_b_user_id_string() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (b_user_id_case() != kBUserIdString) {
+    clear_b_user_id();
+
+    set_has_b_user_id_string();
+    _impl_.b_user_id_.b_user_id_string_.InitDefault();
+  }
+  return _impl_.b_user_id_.b_user_id_string_.Mutable( GetArena());
+}
+inline std::string* Contact::release_b_user_id_string() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Contact.b_user_id_string)
+  if (b_user_id_case() != kBUserIdString) {
+    return nullptr;
+  }
+  clear_has_b_user_id();
+  return _impl_.b_user_id_.b_user_id_string_.Release();
+}
+inline void Contact::set_allocated_b_user_id_string(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (has_b_user_id()) {
+    clear_b_user_id();
+  }
+  if (value != nullptr) {
+    set_has_b_user_id_string();
+    _impl_.b_user_id_.b_user_id_string_.InitAllocated(value, GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:Contact.b_user_id_string)
+}
+
+inline bool Contact::has_a_user_id() const {
+  return a_user_id_case() != A_USER_ID_NOT_SET;
+}
+inline void Contact::clear_has_a_user_id() {
+  _impl_._oneof_case_[0] = A_USER_ID_NOT_SET;
+}
+inline bool Contact::has_b_user_id() const {
+  return b_user_id_case() != B_USER_ID_NOT_SET;
+}
+inline void Contact::clear_has_b_user_id() {
+  _impl_._oneof_case_[1] = B_USER_ID_NOT_SET;
+}
+inline Contact::AUserIdCase Contact::a_user_id_case() const {
+  return Contact::AUserIdCase(_impl_._oneof_case_[0]);
+}
+inline Contact::BUserIdCase Contact::b_user_id_case() const {
+  return Contact::BUserIdCase(_impl_._oneof_case_[1]);
+}
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
 #endif  // __GNUC__

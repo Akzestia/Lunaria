@@ -26,7 +26,23 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Server::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : id_{0},
+      : name_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        icon_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        banner_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        description_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        invite_url_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        member_count_{0},
+        online_count_{0},
         _cached_size_{0} {}
 
 template <typename>
@@ -57,7 +73,13 @@ const ::uint32_t
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
-        PROTOBUF_FIELD_OFFSET(::Server, _impl_.id_),
+        PROTOBUF_FIELD_OFFSET(::Server, _impl_.name_),
+        PROTOBUF_FIELD_OFFSET(::Server, _impl_.icon_),
+        PROTOBUF_FIELD_OFFSET(::Server, _impl_.banner_),
+        PROTOBUF_FIELD_OFFSET(::Server, _impl_.description_),
+        PROTOBUF_FIELD_OFFSET(::Server, _impl_.member_count_),
+        PROTOBUF_FIELD_OFFSET(::Server, _impl_.online_count_),
+        PROTOBUF_FIELD_OFFSET(::Server, _impl_.invite_url_),
 };
 
 static const ::_pbi::MigrationSchema
@@ -69,14 +91,17 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_server_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\014server.proto\"\024\n\006Server\022\n\n\002id\030\001 \001(\005b\006pr"
-    "oto3"
+    "\n\014server.proto\"\211\001\n\006Server\022\014\n\004name\030\001 \001(\t\022"
+    "\014\n\004icon\030\002 \001(\014\022\016\n\006banner\030\003 \001(\014\022\023\n\013descrip"
+    "tion\030\004 \001(\t\022\024\n\014member_count\030\005 \001(\005\022\024\n\014onli"
+    "ne_count\030\006 \001(\005\022\022\n\ninvite_url\030\007 \001(\tb\006prot"
+    "o3"
 };
 static ::absl::once_flag descriptor_table_server_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_server_2eproto = {
     false,
     false,
-    44,
+    162,
     descriptor_table_protodef_server_2eproto,
     "server.proto",
     &descriptor_table_server_2eproto_once,
@@ -100,19 +125,53 @@ Server::Server(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:Server)
 }
+inline PROTOBUF_NDEBUG_INLINE Server::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::Server& from_msg)
+      : name_(arena, from.name_),
+        icon_(arena, from.icon_),
+        banner_(arena, from.banner_),
+        description_(arena, from.description_),
+        invite_url_(arena, from.invite_url_),
+        _cached_size_{0} {}
+
 Server::Server(
-    ::google::protobuf::Arena* arena, const Server& from)
-    : Server(arena) {
-  MergeFrom(from);
+    ::google::protobuf::Arena* arena,
+    const Server& from)
+    : ::google::protobuf::Message(arena) {
+  Server* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, member_count_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, member_count_),
+           offsetof(Impl_, online_count_) -
+               offsetof(Impl_, member_count_) +
+               sizeof(Impl_::online_count_));
+
+  // @@protoc_insertion_point(copy_constructor:Server)
 }
 inline PROTOBUF_NDEBUG_INLINE Server::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
+      : name_(arena),
+        icon_(arena),
+        banner_(arena),
+        description_(arena),
+        invite_url_(arena),
+        _cached_size_{0} {}
 
 inline void Server::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  _impl_.id_ = {};
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, member_count_),
+           0,
+           offsetof(Impl_, online_count_) -
+               offsetof(Impl_, member_count_) +
+               sizeof(Impl_::online_count_));
 }
 Server::~Server() {
   // @@protoc_insertion_point(destructor:Server)
@@ -121,6 +180,11 @@ Server::~Server() {
 }
 inline void Server::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.name_.Destroy();
+  _impl_.icon_.Destroy();
+  _impl_.banner_.Destroy();
+  _impl_.description_.Destroy();
+  _impl_.invite_url_.Destroy();
   _impl_.~Impl_();
 }
 
@@ -145,15 +209,15 @@ Server::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Server::_table_ = {
+const ::_pbi::TcParseTable<3, 7, 0, 40, 2> Server::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    1, 0,  // max_field_number, fast_idx_mask
+    7, 56,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967294,  // skipmap
+    4294967168,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    1,  // num_field_entries
+    7,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_Server_default_instance_._instance,
@@ -163,18 +227,60 @@ const ::_pbi::TcParseTable<0, 1, 0, 0, 2> Server::_table_ = {
     ::_pbi::TcParser::GetTable<::Server>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // int32 id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Server, _impl_.id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.id_)}},
+    {::_pbi::TcParser::MiniParse, {}},
+    // string name = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.name_)}},
+    // bytes icon = 2;
+    {::_pbi::TcParser::FastBS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.icon_)}},
+    // bytes banner = 3;
+    {::_pbi::TcParser::FastBS1,
+     {26, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.banner_)}},
+    // string description = 4;
+    {::_pbi::TcParser::FastUS1,
+     {34, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.description_)}},
+    // int32 member_count = 5;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Server, _impl_.member_count_), 63>(),
+     {40, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.member_count_)}},
+    // int32 online_count = 6;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Server, _impl_.online_count_), 63>(),
+     {48, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.online_count_)}},
+    // string invite_url = 7;
+    {::_pbi::TcParser::FastUS1,
+     {58, 63, 0, PROTOBUF_FIELD_OFFSET(Server, _impl_.invite_url_)}},
   }}, {{
     65535, 65535
   }}, {{
-    // int32 id = 1;
-    {PROTOBUF_FIELD_OFFSET(Server, _impl_.id_), 0, 0,
+    // string name = 1;
+    {PROTOBUF_FIELD_OFFSET(Server, _impl_.name_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // bytes icon = 2;
+    {PROTOBUF_FIELD_OFFSET(Server, _impl_.icon_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
+    // bytes banner = 3;
+    {PROTOBUF_FIELD_OFFSET(Server, _impl_.banner_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kBytes | ::_fl::kRepAString)},
+    // string description = 4;
+    {PROTOBUF_FIELD_OFFSET(Server, _impl_.description_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // int32 member_count = 5;
+    {PROTOBUF_FIELD_OFFSET(Server, _impl_.member_count_), 0, 0,
     (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 online_count = 6;
+    {PROTOBUF_FIELD_OFFSET(Server, _impl_.online_count_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // string invite_url = 7;
+    {PROTOBUF_FIELD_OFFSET(Server, _impl_.invite_url_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\6\4\0\0\13\0\0\12"
+    "Server"
+    "name"
+    "description"
+    "invite_url"
   }},
 };
 
@@ -185,7 +291,14 @@ PROTOBUF_NOINLINE void Server::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.id_ = 0;
+  _impl_.name_.ClearToEmpty();
+  _impl_.icon_.ClearToEmpty();
+  _impl_.banner_.ClearToEmpty();
+  _impl_.description_.ClearToEmpty();
+  _impl_.invite_url_.ClearToEmpty();
+  ::memset(&_impl_.member_count_, 0, static_cast<::size_t>(
+      reinterpret_cast<char*>(&_impl_.online_count_) -
+      reinterpret_cast<char*>(&_impl_.member_count_)) + sizeof(_impl_.online_count_));
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -196,11 +309,54 @@ PROTOBUF_NOINLINE void Server::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
+  // string name = 1;
+  if (!this->_internal_name().empty()) {
+    const std::string& _s = this->_internal_name();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Server.name");
+    target = stream->WriteStringMaybeAliased(1, _s, target);
+  }
+
+  // bytes icon = 2;
+  if (!this->_internal_icon().empty()) {
+    const std::string& _s = this->_internal_icon();
+    target = stream->WriteBytesMaybeAliased(2, _s, target);
+  }
+
+  // bytes banner = 3;
+  if (!this->_internal_banner().empty()) {
+    const std::string& _s = this->_internal_banner();
+    target = stream->WriteBytesMaybeAliased(3, _s, target);
+  }
+
+  // string description = 4;
+  if (!this->_internal_description().empty()) {
+    const std::string& _s = this->_internal_description();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Server.description");
+    target = stream->WriteStringMaybeAliased(4, _s, target);
+  }
+
+  // int32 member_count = 5;
+  if (this->_internal_member_count() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt32ToArrayWithField<1>(
-            stream, this->_internal_id(), target);
+        WriteInt32ToArrayWithField<5>(
+            stream, this->_internal_member_count(), target);
+  }
+
+  // int32 online_count = 6;
+  if (this->_internal_online_count() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt32ToArrayWithField<6>(
+            stream, this->_internal_online_count(), target);
+  }
+
+  // string invite_url = 7;
+  if (!this->_internal_invite_url().empty()) {
+    const std::string& _s = this->_internal_invite_url();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Server.invite_url");
+    target = stream->WriteStringMaybeAliased(7, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -220,10 +376,47 @@ PROTOBUF_NOINLINE void Server::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // int32 id = 1;
-  if (this->_internal_id() != 0) {
+  ::_pbi::Prefetch5LinesFrom7Lines(reinterpret_cast<const void*>(this));
+  // string name = 1;
+  if (!this->_internal_name().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_name());
+  }
+
+  // bytes icon = 2;
+  if (!this->_internal_icon().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
+                                    this->_internal_icon());
+  }
+
+  // bytes banner = 3;
+  if (!this->_internal_banner().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::BytesSize(
+                                    this->_internal_banner());
+  }
+
+  // string description = 4;
+  if (!this->_internal_description().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_description());
+  }
+
+  // string invite_url = 7;
+  if (!this->_internal_invite_url().empty()) {
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_invite_url());
+  }
+
+  // int32 member_count = 5;
+  if (this->_internal_member_count() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_id());
+        this->_internal_member_count());
+  }
+
+  // int32 online_count = 6;
+  if (this->_internal_online_count() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+        this->_internal_online_count());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
@@ -238,8 +431,26 @@ void Server::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_id() != 0) {
-    _this->_impl_.id_ = from._impl_.id_;
+  if (!from._internal_name().empty()) {
+    _this->_internal_set_name(from._internal_name());
+  }
+  if (!from._internal_icon().empty()) {
+    _this->_internal_set_icon(from._internal_icon());
+  }
+  if (!from._internal_banner().empty()) {
+    _this->_internal_set_banner(from._internal_banner());
+  }
+  if (!from._internal_description().empty()) {
+    _this->_internal_set_description(from._internal_description());
+  }
+  if (!from._internal_invite_url().empty()) {
+    _this->_internal_set_invite_url(from._internal_invite_url());
+  }
+  if (from._internal_member_count() != 0) {
+    _this->_impl_.member_count_ = from._impl_.member_count_;
+  }
+  if (from._internal_online_count() != 0) {
+    _this->_impl_.online_count_ = from._impl_.online_count_;
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -254,8 +465,20 @@ void Server::CopyFrom(const Server& from) {
 
 void Server::InternalSwap(Server* PROTOBUF_RESTRICT other) {
   using std::swap;
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-        swap(_impl_.id_, other->_impl_.id_);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.name_, &other->_impl_.name_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.icon_, &other->_impl_.icon_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.banner_, &other->_impl_.banner_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.description_, &other->_impl_.description_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.invite_url_, &other->_impl_.invite_url_, arena);
+  ::google::protobuf::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(Server, _impl_.online_count_)
+      + sizeof(Server::_impl_.online_count_)
+      - PROTOBUF_FIELD_OFFSET(Server, _impl_.member_count_)>(
+          reinterpret_cast<char*>(&_impl_.member_count_),
+          reinterpret_cast<char*>(&other->_impl_.member_count_));
 }
 
 ::google::protobuf::Metadata Server::GetMetadata() const {

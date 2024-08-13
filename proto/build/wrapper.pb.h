@@ -37,6 +37,7 @@
 #include "server.pb.h"
 #include "vpn_graph.pb.h"
 #include "authResponse.pb.h"
+#include "contact.pb.h"
 // @@protoc_insertion_point(includes)
 
 // Must be included last.
@@ -133,6 +134,7 @@ class Wrapper final : public ::google::protobuf::Message
     kInviteLink = 9,
     kVpnGraph = 10,
     kAuthResponse = 11,
+    kContact = 12,
     PAYLOAD_NOT_SET = 0,
   };
   static inline const Wrapper* internal_default_instance() {
@@ -219,6 +221,7 @@ class Wrapper final : public ::google::protobuf::Message
     kInviteLinkFieldNumber = 9,
     kVpnGraphFieldNumber = 10,
     kAuthResponseFieldNumber = 11,
+    kContactFieldNumber = 12,
   };
   // optional string AuthToken = 2;
   bool has_authtoken() const;
@@ -418,6 +421,25 @@ class Wrapper final : public ::google::protobuf::Message
   ::AuthResponse* _internal_mutable_authresponse();
 
   public:
+  // .Contact contact = 12;
+  bool has_contact() const;
+  private:
+  bool _internal_has_contact() const;
+
+  public:
+  void clear_contact() ;
+  const ::Contact& contact() const;
+  PROTOBUF_NODISCARD ::Contact* release_contact();
+  ::Contact* mutable_contact();
+  void set_allocated_contact(::Contact* value);
+  void unsafe_arena_set_allocated_contact(::Contact* value);
+  ::Contact* unsafe_arena_release_contact();
+
+  private:
+  const ::Contact& _internal_contact() const;
+  ::Contact* _internal_mutable_contact();
+
+  public:
   void clear_payload();
   PayloadCase payload_case() const;
   // @@protoc_insertion_point(class_scope:Wrapper)
@@ -432,11 +454,12 @@ class Wrapper final : public ::google::protobuf::Message
   void set_has_invite_link();
   void set_has_vpn_graph();
   void set_has_authresponse();
+  void set_has_contact();
   inline bool has_payload() const;
   inline void clear_has_payload();
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      1, 11, 9,
+      1, 12, 10,
       33, 2>
       _table_;
 
@@ -473,6 +496,7 @@ class Wrapper final : public ::google::protobuf::Message
       ::Invite_link* invite_link_;
       ::Vpn_graph* vpn_graph_;
       ::AuthResponse* authresponse_;
+      ::Contact* contact_;
     } payload_;
     ::uint32_t _oneof_case_[1];
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -1199,6 +1223,74 @@ inline ::AuthResponse* Wrapper::_internal_mutable_authresponse() {
 inline ::AuthResponse* Wrapper::mutable_authresponse() ABSL_ATTRIBUTE_LIFETIME_BOUND {
   ::AuthResponse* _msg = _internal_mutable_authresponse();
   // @@protoc_insertion_point(field_mutable:Wrapper.authResponse)
+  return _msg;
+}
+
+// .Contact contact = 12;
+inline bool Wrapper::has_contact() const {
+  return payload_case() == kContact;
+}
+inline bool Wrapper::_internal_has_contact() const {
+  return payload_case() == kContact;
+}
+inline void Wrapper::set_has_contact() {
+  _impl_._oneof_case_[0] = kContact;
+}
+inline ::Contact* Wrapper::release_contact() {
+  // @@protoc_insertion_point(field_release:Wrapper.contact)
+  if (payload_case() == kContact) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.contact_;
+    if (GetArena() != nullptr) {
+      temp = ::google::protobuf::internal::DuplicateIfNonNull(temp);
+    }
+    _impl_.payload_.contact_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline const ::Contact& Wrapper::_internal_contact() const {
+  return payload_case() == kContact ? *_impl_.payload_.contact_ : reinterpret_cast<::Contact&>(::_Contact_default_instance_);
+}
+inline const ::Contact& Wrapper::contact() const ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Wrapper.contact)
+  return _internal_contact();
+}
+inline ::Contact* Wrapper::unsafe_arena_release_contact() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:Wrapper.contact)
+  if (payload_case() == kContact) {
+    clear_has_payload();
+    auto* temp = _impl_.payload_.contact_;
+    _impl_.payload_.contact_ = nullptr;
+    return temp;
+  } else {
+    return nullptr;
+  }
+}
+inline void Wrapper::unsafe_arena_set_allocated_contact(::Contact* value) {
+  // We rely on the oneof clear method to free the earlier contents
+  // of this oneof. We can directly use the pointer we're given to
+  // set the new value.
+  clear_payload();
+  if (value) {
+    set_has_contact();
+    _impl_.payload_.contact_ = value;
+  }
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:Wrapper.contact)
+}
+inline ::Contact* Wrapper::_internal_mutable_contact() {
+  if (payload_case() != kContact) {
+    clear_payload();
+    set_has_contact();
+    _impl_.payload_.contact_ =
+        ::google::protobuf::Message::DefaultConstruct<::Contact>(GetArena());
+  }
+  return _impl_.payload_.contact_;
+}
+inline ::Contact* Wrapper::mutable_contact() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  ::Contact* _msg = _internal_mutable_contact();
+  // @@protoc_insertion_point(field_mutable:Wrapper.contact)
   return _msg;
 }
 

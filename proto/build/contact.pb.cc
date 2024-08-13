@@ -26,9 +26,10 @@ namespace _fl = ::google::protobuf::internal::field_layout;
 
 inline constexpr Contact::Impl_::Impl_(
     ::_pbi::ConstantInitialized) noexcept
-      : a_user_id_{0},
-        b_user_id_{0},
-        _cached_size_{0} {}
+      : a_user_id_{},
+        b_user_id_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
 
 template <typename>
 PROTOBUF_CONSTEXPR Contact::Contact(::_pbi::ConstantInitialized)
@@ -53,11 +54,15 @@ const ::uint32_t
         ~0u,  // no _has_bits_
         PROTOBUF_FIELD_OFFSET(::Contact, _internal_metadata_),
         ~0u,  // no _extensions_
-        ~0u,  // no _oneof_case_
+        PROTOBUF_FIELD_OFFSET(::Contact, _impl_._oneof_case_[0]),
         ~0u,  // no _weak_field_map_
         ~0u,  // no _inlined_string_donated_
         ~0u,  // no _split_
         ~0u,  // no sizeof(Split)
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::Contact, _impl_.a_user_id_),
         PROTOBUF_FIELD_OFFSET(::Contact, _impl_.b_user_id_),
 };
@@ -71,14 +76,17 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 const char descriptor_table_protodef_contact_2eproto[] ABSL_ATTRIBUTE_SECTION_VARIABLE(
     protodesc_cold) = {
-    "\n\rcontact.proto\"/\n\007Contact\022\021\n\ta_user_id\030"
-    "\001 \001(\005\022\021\n\tb_user_id\030\002 \001(\005b\006proto3"
+    "\n\rcontact.proto\"\215\001\n\007Contact\022\027\n\ra_user_id"
+    "_int\030\001 \001(\005H\000\022\032\n\020a_user_id_string\030\002 \001(\tH\000"
+    "\022\027\n\rb_user_id_int\030\003 \001(\005H\001\022\032\n\020b_user_id_s"
+    "tring\030\004 \001(\tH\001B\013\n\ta_user_idB\013\n\tb_user_idb"
+    "\006proto3"
 };
 static ::absl::once_flag descriptor_table_contact_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_contact_2eproto = {
     false,
     false,
-    72,
+    167,
     descriptor_table_protodef_contact_2eproto,
     "contact.proto",
     &descriptor_table_contact_2eproto_once,
@@ -95,6 +103,8 @@ PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_contact_2eprot
 
 class Contact::_Internal {
  public:
+  static constexpr ::int32_t kOneofCaseOffset =
+      PROTOBUF_FIELD_OFFSET(::Contact, _impl_._oneof_case_);
 };
 
 Contact::Contact(::google::protobuf::Arena* arena)
@@ -102,24 +112,56 @@ Contact::Contact(::google::protobuf::Arena* arena)
   SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:Contact)
 }
+inline PROTOBUF_NDEBUG_INLINE Contact::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from, const ::Contact& from_msg)
+      : a_user_id_{},
+        b_user_id_{},
+        _cached_size_{0},
+        _oneof_case_{from._oneof_case_[0], from._oneof_case_[1]} {}
+
 Contact::Contact(
-    ::google::protobuf::Arena* arena, const Contact& from)
-    : Contact(arena) {
-  MergeFrom(from);
+    ::google::protobuf::Arena* arena,
+    const Contact& from)
+    : ::google::protobuf::Message(arena) {
+  Contact* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_, from);
+  switch (a_user_id_case()) {
+    case A_USER_ID_NOT_SET:
+      break;
+      case kAUserIdInt:
+        _impl_.a_user_id_.a_user_id_int_ = from._impl_.a_user_id_.a_user_id_int_;
+        break;
+      case kAUserIdString:
+        new (&_impl_.a_user_id_.a_user_id_string_) decltype(_impl_.a_user_id_.a_user_id_string_){arena, from._impl_.a_user_id_.a_user_id_string_};
+        break;
+  }
+  switch (b_user_id_case()) {
+    case B_USER_ID_NOT_SET:
+      break;
+      case kBUserIdInt:
+        _impl_.b_user_id_.b_user_id_int_ = from._impl_.b_user_id_.b_user_id_int_;
+        break;
+      case kBUserIdString:
+        new (&_impl_.b_user_id_.b_user_id_string_) decltype(_impl_.b_user_id_.b_user_id_string_){arena, from._impl_.b_user_id_.b_user_id_string_};
+        break;
+  }
+
+  // @@protoc_insertion_point(copy_constructor:Contact)
 }
 inline PROTOBUF_NDEBUG_INLINE Contact::Impl_::Impl_(
     ::google::protobuf::internal::InternalVisibility visibility,
     ::google::protobuf::Arena* arena)
-      : _cached_size_{0} {}
+      : a_user_id_{},
+        b_user_id_{},
+        _cached_size_{0},
+        _oneof_case_{} {}
 
 inline void Contact::SharedCtor(::_pb::Arena* arena) {
   new (&_impl_) Impl_(internal_visibility(), arena);
-  ::memset(reinterpret_cast<char *>(&_impl_) +
-               offsetof(Impl_, a_user_id_),
-           0,
-           offsetof(Impl_, b_user_id_) -
-               offsetof(Impl_, a_user_id_) +
-               sizeof(Impl_::b_user_id_));
 }
 Contact::~Contact() {
   // @@protoc_insertion_point(destructor:Contact)
@@ -128,8 +170,53 @@ Contact::~Contact() {
 }
 inline void Contact::SharedDtor() {
   ABSL_DCHECK(GetArena() == nullptr);
+  if (has_a_user_id()) {
+    clear_a_user_id();
+  }
+  if (has_b_user_id()) {
+    clear_b_user_id();
+  }
   _impl_.~Impl_();
 }
+
+void Contact::clear_a_user_id() {
+// @@protoc_insertion_point(one_of_clear_start:Contact)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (a_user_id_case()) {
+    case kAUserIdInt: {
+      // No need to clear
+      break;
+    }
+    case kAUserIdString: {
+      _impl_.a_user_id_.a_user_id_string_.Destroy();
+      break;
+    }
+    case A_USER_ID_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[0] = A_USER_ID_NOT_SET;
+}
+
+void Contact::clear_b_user_id() {
+// @@protoc_insertion_point(one_of_clear_start:Contact)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  switch (b_user_id_case()) {
+    case kBUserIdInt: {
+      // No need to clear
+      break;
+    }
+    case kBUserIdString: {
+      _impl_.b_user_id_.b_user_id_string_.Destroy();
+      break;
+    }
+    case B_USER_ID_NOT_SET: {
+      break;
+    }
+  }
+  _impl_._oneof_case_[1] = B_USER_ID_NOT_SET;
+}
+
 
 const ::google::protobuf::MessageLite::ClassData*
 Contact::GetClassData() const {
@@ -152,15 +239,15 @@ Contact::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 2, 0, 0, 2> Contact::_table_ = {
+const ::_pbi::TcParseTable<0, 4, 0, 48, 2> Contact::_table_ = {
   {
     0,  // no _has_bits_
     0, // no _extensions_
-    2, 8,  // max_field_number, fast_idx_mask
+    4, 0,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294967292,  // skipmap
+    4294967280,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    2,  // num_field_entries
+    4,  // num_field_entries
     0,  // num_aux_entries
     offsetof(decltype(_table_), field_names),  // no aux_entries
     &_Contact_default_instance_._instance,
@@ -170,24 +257,29 @@ const ::_pbi::TcParseTable<1, 2, 0, 0, 2> Contact::_table_ = {
     ::_pbi::TcParser::GetTable<::Contact>(),  // to_prefetch
     #endif  // PROTOBUF_PREFETCH_PARSE_TABLE
   }, {{
-    // int32 b_user_id = 2;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Contact, _impl_.b_user_id_), 63>(),
-     {16, 63, 0, PROTOBUF_FIELD_OFFSET(Contact, _impl_.b_user_id_)}},
-    // int32 a_user_id = 1;
-    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(Contact, _impl_.a_user_id_), 63>(),
-     {8, 63, 0, PROTOBUF_FIELD_OFFSET(Contact, _impl_.a_user_id_)}},
+    {::_pbi::TcParser::MiniParse, {}},
   }}, {{
     65535, 65535
   }}, {{
-    // int32 a_user_id = 1;
-    {PROTOBUF_FIELD_OFFSET(Contact, _impl_.a_user_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
-    // int32 b_user_id = 2;
-    {PROTOBUF_FIELD_OFFSET(Contact, _impl_.b_user_id_), 0, 0,
-    (0 | ::_fl::kFcSingular | ::_fl::kInt32)},
+    // int32 a_user_id_int = 1;
+    {PROTOBUF_FIELD_OFFSET(Contact, _impl_.a_user_id_.a_user_id_int_), _Internal::kOneofCaseOffset + 0, 0,
+    (0 | ::_fl::kFcOneof | ::_fl::kInt32)},
+    // string a_user_id_string = 2;
+    {PROTOBUF_FIELD_OFFSET(Contact, _impl_.a_user_id_.a_user_id_string_), _Internal::kOneofCaseOffset + 0, 0,
+    (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // int32 b_user_id_int = 3;
+    {PROTOBUF_FIELD_OFFSET(Contact, _impl_.b_user_id_.b_user_id_int_), _Internal::kOneofCaseOffset + 4, 0,
+    (0 | ::_fl::kFcOneof | ::_fl::kInt32)},
+    // string b_user_id_string = 4;
+    {PROTOBUF_FIELD_OFFSET(Contact, _impl_.b_user_id_.b_user_id_string_), _Internal::kOneofCaseOffset + 4, 0,
+    (0 | ::_fl::kFcOneof | ::_fl::kUtf8String | ::_fl::kRepAString)},
   }},
   // no aux_entries
   {{
+    "\7\0\20\0\20\0\0\0"
+    "Contact"
+    "a_user_id_string"
+    "b_user_id_string"
   }},
 };
 
@@ -198,9 +290,8 @@ PROTOBUF_NOINLINE void Contact::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&_impl_.a_user_id_, 0, static_cast<::size_t>(
-      reinterpret_cast<char*>(&_impl_.b_user_id_) -
-      reinterpret_cast<char*>(&_impl_.a_user_id_)) + sizeof(_impl_.b_user_id_));
+  clear_a_user_id();
+  clear_b_user_id();
   _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
@@ -211,20 +302,40 @@ PROTOBUF_NOINLINE void Contact::Clear() {
   ::uint32_t cached_has_bits = 0;
   (void)cached_has_bits;
 
-  // int32 a_user_id = 1;
-  if (this->_internal_a_user_id() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt32ToArrayWithField<1>(
-            stream, this->_internal_a_user_id(), target);
+  switch (a_user_id_case()) {
+    case kAUserIdInt: {
+      target = ::google::protobuf::internal::WireFormatLite::
+          WriteInt32ToArrayWithField<1>(
+              stream, this->_internal_a_user_id_int(), target);
+      break;
+    }
+    case kAUserIdString: {
+      const std::string& _s = this->_internal_a_user_id_string();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Contact.a_user_id_string");
+      target = stream->WriteStringMaybeAliased(2, _s, target);
+      break;
+    }
+    default:
+      break;
   }
-
-  // int32 b_user_id = 2;
-  if (this->_internal_b_user_id() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::
-        WriteInt32ToArrayWithField<2>(
-            stream, this->_internal_b_user_id(), target);
+  switch (b_user_id_case()) {
+    case kBUserIdInt: {
+      target = ::google::protobuf::internal::WireFormatLite::
+          WriteInt32ToArrayWithField<3>(
+              stream, this->_internal_b_user_id_int(), target);
+      break;
+    }
+    case kBUserIdString: {
+      const std::string& _s = this->_internal_b_user_id_string();
+      ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+          _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Contact.b_user_id_string");
+      target = stream->WriteStringMaybeAliased(4, _s, target);
+      break;
+    }
+    default:
+      break;
   }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target =
         ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
@@ -242,19 +353,40 @@ PROTOBUF_NOINLINE void Contact::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::_pbi::Prefetch5LinesFrom7Lines(reinterpret_cast<const void*>(this));
-  // int32 a_user_id = 1;
-  if (this->_internal_a_user_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_a_user_id());
+  switch (a_user_id_case()) {
+    // int32 a_user_id_int = 1;
+    case kAUserIdInt: {
+      total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+          this->_internal_a_user_id_int());
+      break;
+    }
+    // string a_user_id_string = 2;
+    case kAUserIdString: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this->_internal_a_user_id_string());
+      break;
+    }
+    case A_USER_ID_NOT_SET: {
+      break;
+    }
   }
-
-  // int32 b_user_id = 2;
-  if (this->_internal_b_user_id() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
-        this->_internal_b_user_id());
+  switch (b_user_id_case()) {
+    // int32 b_user_id_int = 3;
+    case kBUserIdInt: {
+      total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(
+          this->_internal_b_user_id_int());
+      break;
+    }
+    // string b_user_id_string = 4;
+    case kBUserIdString: {
+      total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                      this->_internal_b_user_id_string());
+      break;
+    }
+    case B_USER_ID_NOT_SET: {
+      break;
+    }
   }
-
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
@@ -262,16 +394,63 @@ PROTOBUF_NOINLINE void Contact::Clear() {
 void Contact::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google::protobuf::MessageLite& from_msg) {
   auto* const _this = static_cast<Contact*>(&to_msg);
   auto& from = static_cast<const Contact&>(from_msg);
+  ::google::protobuf::Arena* arena = _this->GetArena();
   // @@protoc_insertion_point(class_specific_merge_from_start:Contact)
   ABSL_DCHECK_NE(&from, _this);
   ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  if (from._internal_a_user_id() != 0) {
-    _this->_impl_.a_user_id_ = from._impl_.a_user_id_;
+  if (const uint32_t oneof_from_case = from._impl_._oneof_case_[0]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[0];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_a_user_id();
+      }
+      _this->_impl_._oneof_case_[0] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kAUserIdInt: {
+        _this->_impl_.a_user_id_.a_user_id_int_ = from._impl_.a_user_id_.a_user_id_int_;
+        break;
+      }
+      case kAUserIdString: {
+        if (oneof_needs_init) {
+          _this->_impl_.a_user_id_.a_user_id_string_.InitDefault();
+        }
+        _this->_impl_.a_user_id_.a_user_id_string_.Set(from._internal_a_user_id_string(), arena);
+        break;
+      }
+      case A_USER_ID_NOT_SET:
+        break;
+    }
   }
-  if (from._internal_b_user_id() != 0) {
-    _this->_impl_.b_user_id_ = from._impl_.b_user_id_;
+  if (const uint32_t oneof_from_case = from._impl_._oneof_case_[1]) {
+    const uint32_t oneof_to_case = _this->_impl_._oneof_case_[1];
+    const bool oneof_needs_init = oneof_to_case != oneof_from_case;
+    if (oneof_needs_init) {
+      if (oneof_to_case != 0) {
+        _this->clear_b_user_id();
+      }
+      _this->_impl_._oneof_case_[1] = oneof_from_case;
+    }
+
+    switch (oneof_from_case) {
+      case kBUserIdInt: {
+        _this->_impl_.b_user_id_.b_user_id_int_ = from._impl_.b_user_id_.b_user_id_int_;
+        break;
+      }
+      case kBUserIdString: {
+        if (oneof_needs_init) {
+          _this->_impl_.b_user_id_.b_user_id_string_.InitDefault();
+        }
+        _this->_impl_.b_user_id_.b_user_id_string_.Set(from._internal_b_user_id_string(), arena);
+        break;
+      }
+      case B_USER_ID_NOT_SET:
+        break;
+    }
   }
   _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -287,12 +466,10 @@ void Contact::CopyFrom(const Contact& from) {
 void Contact::InternalSwap(Contact* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::google::protobuf::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(Contact, _impl_.b_user_id_)
-      + sizeof(Contact::_impl_.b_user_id_)
-      - PROTOBUF_FIELD_OFFSET(Contact, _impl_.a_user_id_)>(
-          reinterpret_cast<char*>(&_impl_.a_user_id_),
-          reinterpret_cast<char*>(&other->_impl_.a_user_id_));
+  swap(_impl_.a_user_id_, other->_impl_.a_user_id_);
+  swap(_impl_.b_user_id_, other->_impl_.b_user_id_);
+  swap(_impl_._oneof_case_[0], other->_impl_._oneof_case_[0]);
+  swap(_impl_._oneof_case_[1], other->_impl_._oneof_case_[1]);
 }
 
 ::google::protobuf::Metadata Contact::GetMetadata() const {

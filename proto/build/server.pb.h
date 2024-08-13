@@ -187,16 +187,112 @@ class Server final : public ::google::protobuf::Message
 
   // accessors -------------------------------------------------------
   enum : int {
-    kIdFieldNumber = 1,
+    kNameFieldNumber = 1,
+    kIconFieldNumber = 2,
+    kBannerFieldNumber = 3,
+    kDescriptionFieldNumber = 4,
+    kInviteUrlFieldNumber = 7,
+    kMemberCountFieldNumber = 5,
+    kOnlineCountFieldNumber = 6,
   };
-  // int32 id = 1;
-  void clear_id() ;
-  ::int32_t id() const;
-  void set_id(::int32_t value);
+  // string name = 1;
+  void clear_name() ;
+  const std::string& name() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_name(Arg_&& arg, Args_... args);
+  std::string* mutable_name();
+  PROTOBUF_NODISCARD std::string* release_name();
+  void set_allocated_name(std::string* value);
 
   private:
-  ::int32_t _internal_id() const;
-  void _internal_set_id(::int32_t value);
+  const std::string& _internal_name() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_name(
+      const std::string& value);
+  std::string* _internal_mutable_name();
+
+  public:
+  // bytes icon = 2;
+  void clear_icon() ;
+  const std::string& icon() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_icon(Arg_&& arg, Args_... args);
+  std::string* mutable_icon();
+  PROTOBUF_NODISCARD std::string* release_icon();
+  void set_allocated_icon(std::string* value);
+
+  private:
+  const std::string& _internal_icon() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_icon(
+      const std::string& value);
+  std::string* _internal_mutable_icon();
+
+  public:
+  // bytes banner = 3;
+  void clear_banner() ;
+  const std::string& banner() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_banner(Arg_&& arg, Args_... args);
+  std::string* mutable_banner();
+  PROTOBUF_NODISCARD std::string* release_banner();
+  void set_allocated_banner(std::string* value);
+
+  private:
+  const std::string& _internal_banner() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_banner(
+      const std::string& value);
+  std::string* _internal_mutable_banner();
+
+  public:
+  // string description = 4;
+  void clear_description() ;
+  const std::string& description() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_description(Arg_&& arg, Args_... args);
+  std::string* mutable_description();
+  PROTOBUF_NODISCARD std::string* release_description();
+  void set_allocated_description(std::string* value);
+
+  private:
+  const std::string& _internal_description() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_description(
+      const std::string& value);
+  std::string* _internal_mutable_description();
+
+  public:
+  // string invite_url = 7;
+  void clear_invite_url() ;
+  const std::string& invite_url() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_invite_url(Arg_&& arg, Args_... args);
+  std::string* mutable_invite_url();
+  PROTOBUF_NODISCARD std::string* release_invite_url();
+  void set_allocated_invite_url(std::string* value);
+
+  private:
+  const std::string& _internal_invite_url() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_invite_url(
+      const std::string& value);
+  std::string* _internal_mutable_invite_url();
+
+  public:
+  // int32 member_count = 5;
+  void clear_member_count() ;
+  ::int32_t member_count() const;
+  void set_member_count(::int32_t value);
+
+  private:
+  ::int32_t _internal_member_count() const;
+  void _internal_set_member_count(::int32_t value);
+
+  public:
+  // int32 online_count = 6;
+  void clear_online_count() ;
+  ::int32_t online_count() const;
+  void set_online_count(::int32_t value);
+
+  private:
+  ::int32_t _internal_online_count() const;
+  void _internal_set_online_count(::int32_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:Server)
@@ -204,8 +300,8 @@ class Server final : public ::google::protobuf::Message
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
   static const ::google::protobuf::internal::TcParseTable<
-      0, 1, 0,
-      0, 2>
+      3, 7, 0,
+      40, 2>
       _table_;
 
   static constexpr const void* _raw_default_instance_ =
@@ -225,7 +321,13 @@ class Server final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const Server& from_msg);
-    ::int32_t id_;
+    ::google::protobuf::internal::ArenaStringPtr name_;
+    ::google::protobuf::internal::ArenaStringPtr icon_;
+    ::google::protobuf::internal::ArenaStringPtr banner_;
+    ::google::protobuf::internal::ArenaStringPtr description_;
+    ::google::protobuf::internal::ArenaStringPtr invite_url_;
+    ::int32_t member_count_;
+    ::int32_t online_count_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -249,26 +351,298 @@ class Server final : public ::google::protobuf::Message
 
 // Server
 
-// int32 id = 1;
-inline void Server::clear_id() {
+// string name = 1;
+inline void Server::clear_name() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = 0;
+  _impl_.name_.ClearToEmpty();
 }
-inline ::int32_t Server::id() const {
-  // @@protoc_insertion_point(field_get:Server.id)
-  return _internal_id();
+inline const std::string& Server::name() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Server.name)
+  return _internal_name();
 }
-inline void Server::set_id(::int32_t value) {
-  _internal_set_id(value);
-  // @@protoc_insertion_point(field_set:Server.id)
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Server::set_name(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Server.name)
 }
-inline ::int32_t Server::_internal_id() const {
+inline std::string* Server::mutable_name() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_name();
+  // @@protoc_insertion_point(field_mutable:Server.name)
+  return _s;
+}
+inline const std::string& Server::_internal_name() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.id_;
+  return _impl_.name_.Get();
 }
-inline void Server::_internal_set_id(::int32_t value) {
+inline void Server::_internal_set_name(const std::string& value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.id_ = value;
+  _impl_.name_.Set(value, GetArena());
+}
+inline std::string* Server::_internal_mutable_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.name_.Mutable( GetArena());
+}
+inline std::string* Server::release_name() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Server.name)
+  return _impl_.name_.Release();
+}
+inline void Server::set_allocated_name(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.name_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.name_.IsDefault()) {
+          _impl_.name_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Server.name)
+}
+
+// bytes icon = 2;
+inline void Server::clear_icon() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.icon_.ClearToEmpty();
+}
+inline const std::string& Server::icon() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Server.icon)
+  return _internal_icon();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Server::set_icon(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.icon_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Server.icon)
+}
+inline std::string* Server::mutable_icon() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_icon();
+  // @@protoc_insertion_point(field_mutable:Server.icon)
+  return _s;
+}
+inline const std::string& Server::_internal_icon() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.icon_.Get();
+}
+inline void Server::_internal_set_icon(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.icon_.Set(value, GetArena());
+}
+inline std::string* Server::_internal_mutable_icon() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.icon_.Mutable( GetArena());
+}
+inline std::string* Server::release_icon() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Server.icon)
+  return _impl_.icon_.Release();
+}
+inline void Server::set_allocated_icon(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.icon_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.icon_.IsDefault()) {
+          _impl_.icon_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Server.icon)
+}
+
+// bytes banner = 3;
+inline void Server::clear_banner() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.banner_.ClearToEmpty();
+}
+inline const std::string& Server::banner() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Server.banner)
+  return _internal_banner();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Server::set_banner(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.banner_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Server.banner)
+}
+inline std::string* Server::mutable_banner() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_banner();
+  // @@protoc_insertion_point(field_mutable:Server.banner)
+  return _s;
+}
+inline const std::string& Server::_internal_banner() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.banner_.Get();
+}
+inline void Server::_internal_set_banner(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.banner_.Set(value, GetArena());
+}
+inline std::string* Server::_internal_mutable_banner() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.banner_.Mutable( GetArena());
+}
+inline std::string* Server::release_banner() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Server.banner)
+  return _impl_.banner_.Release();
+}
+inline void Server::set_allocated_banner(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.banner_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.banner_.IsDefault()) {
+          _impl_.banner_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Server.banner)
+}
+
+// string description = 4;
+inline void Server::clear_description() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.description_.ClearToEmpty();
+}
+inline const std::string& Server::description() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Server.description)
+  return _internal_description();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Server::set_description(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.description_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Server.description)
+}
+inline std::string* Server::mutable_description() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_description();
+  // @@protoc_insertion_point(field_mutable:Server.description)
+  return _s;
+}
+inline const std::string& Server::_internal_description() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.description_.Get();
+}
+inline void Server::_internal_set_description(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.description_.Set(value, GetArena());
+}
+inline std::string* Server::_internal_mutable_description() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.description_.Mutable( GetArena());
+}
+inline std::string* Server::release_description() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Server.description)
+  return _impl_.description_.Release();
+}
+inline void Server::set_allocated_description(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.description_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.description_.IsDefault()) {
+          _impl_.description_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Server.description)
+}
+
+// int32 member_count = 5;
+inline void Server::clear_member_count() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.member_count_ = 0;
+}
+inline ::int32_t Server::member_count() const {
+  // @@protoc_insertion_point(field_get:Server.member_count)
+  return _internal_member_count();
+}
+inline void Server::set_member_count(::int32_t value) {
+  _internal_set_member_count(value);
+  // @@protoc_insertion_point(field_set:Server.member_count)
+}
+inline ::int32_t Server::_internal_member_count() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.member_count_;
+}
+inline void Server::_internal_set_member_count(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.member_count_ = value;
+}
+
+// int32 online_count = 6;
+inline void Server::clear_online_count() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.online_count_ = 0;
+}
+inline ::int32_t Server::online_count() const {
+  // @@protoc_insertion_point(field_get:Server.online_count)
+  return _internal_online_count();
+}
+inline void Server::set_online_count(::int32_t value) {
+  _internal_set_online_count(value);
+  // @@protoc_insertion_point(field_set:Server.online_count)
+}
+inline ::int32_t Server::_internal_online_count() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.online_count_;
+}
+inline void Server::_internal_set_online_count(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.online_count_ = value;
+}
+
+// string invite_url = 7;
+inline void Server::clear_invite_url() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.invite_url_.ClearToEmpty();
+}
+inline const std::string& Server::invite_url() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:Server.invite_url)
+  return _internal_invite_url();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void Server::set_invite_url(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.invite_url_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:Server.invite_url)
+}
+inline std::string* Server::mutable_invite_url() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_invite_url();
+  // @@protoc_insertion_point(field_mutable:Server.invite_url)
+  return _s;
+}
+inline const std::string& Server::_internal_invite_url() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.invite_url_.Get();
+}
+inline void Server::_internal_set_invite_url(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.invite_url_.Set(value, GetArena());
+}
+inline std::string* Server::_internal_mutable_invite_url() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.invite_url_.Mutable( GetArena());
+}
+inline std::string* Server::release_invite_url() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:Server.invite_url)
+  return _impl_.invite_url_.Release();
+}
+inline void Server::set_allocated_invite_url(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.invite_url_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.invite_url_.IsDefault()) {
+          _impl_.invite_url_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:Server.invite_url)
 }
 
 #ifdef __GNUC__

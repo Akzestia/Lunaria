@@ -73,9 +73,11 @@ const ::uint32_t
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
         ::_pbi::kInvalidFieldOffsetTag,
+        ::_pbi::kInvalidFieldOffsetTag,
         PROTOBUF_FIELD_OFFSET(::Wrapper, _impl_.payload_),
         ~0u,
         0,
+        ~0u,
         ~0u,
         ~0u,
         ~0u,
@@ -89,7 +91,7 @@ const ::uint32_t
 
 static const ::_pbi::MigrationSchema
     schemas[] ABSL_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-        {0, 20, -1, sizeof(::Wrapper)},
+        {0, 21, -1, sizeof(::Wrapper)},
 };
 static const ::_pb::Message* const file_default_instances[] = {
     &::_Wrapper_default_instance_._instance,
@@ -99,21 +101,23 @@ const char descriptor_table_protodef_wrapper_2eproto[] ABSL_ATTRIBUTE_SECTION_VA
     "\n\rwrapper.proto\032\nuser.proto\032\ntest.proto\032"
     "\rmessage.proto\032\nauth.proto\032\014report.proto"
     "\032\021invite_link.proto\032\014server.proto\032\017vpn_g"
-    "raph.proto\032\022authResponse.proto\"\322\002\n\007Wrapp"
-    "er\022\r\n\005route\030\001 \001(\r\022\026\n\tAuthToken\030\002 \001(\tH\001\210\001"
-    "\001\022\025\n\004user\030\003 \001(\0132\005.UserH\000\022\031\n\006person\030\004 \001(\013"
-    "2\007.PersonH\000\022\033\n\007message\030\005 \001(\0132\010.MessageH\000"
-    "\022\025\n\004auth\030\006 \001(\0132\005.AuthH\000\022\031\n\006report\030\007 \001(\0132"
-    "\007.ReportH\000\022\031\n\006serevr\030\010 \001(\0132\007.ServerH\000\022#\n"
-    "\013invite_link\030\t \001(\0132\014.Invite_linkH\000\022\037\n\tvp"
-    "n_graph\030\n \001(\0132\n.Vpn_graphH\000\022%\n\014authRespo"
-    "nse\030\013 \001(\0132\r.AuthResponseH\000B\t\n\007payloadB\014\n"
-    "\n_AuthTokenb\006proto3"
+    "raph.proto\032\022authResponse.proto\032\rcontact."
+    "proto\"\357\002\n\007Wrapper\022\r\n\005route\030\001 \001(\r\022\026\n\tAuth"
+    "Token\030\002 \001(\tH\001\210\001\001\022\025\n\004user\030\003 \001(\0132\005.UserH\000\022"
+    "\031\n\006person\030\004 \001(\0132\007.PersonH\000\022\033\n\007message\030\005 "
+    "\001(\0132\010.MessageH\000\022\025\n\004auth\030\006 \001(\0132\005.AuthH\000\022\031"
+    "\n\006report\030\007 \001(\0132\007.ReportH\000\022\031\n\006serevr\030\010 \001("
+    "\0132\007.ServerH\000\022#\n\013invite_link\030\t \001(\0132\014.Invi"
+    "te_linkH\000\022\037\n\tvpn_graph\030\n \001(\0132\n.Vpn_graph"
+    "H\000\022%\n\014authResponse\030\013 \001(\0132\r.AuthResponseH"
+    "\000\022\033\n\007contact\030\014 \001(\0132\010.ContactH\000B\t\n\007payloa"
+    "dB\014\n\n_AuthTokenb\006proto3"
 };
-static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[9] =
+static const ::_pbi::DescriptorTable* const descriptor_table_wrapper_2eproto_deps[10] =
     {
         &::descriptor_table_auth_2eproto,
         &::descriptor_table_authResponse_2eproto,
+        &::descriptor_table_contact_2eproto,
         &::descriptor_table_invite_5flink_2eproto,
         &::descriptor_table_message_2eproto,
         &::descriptor_table_report_2eproto,
@@ -126,12 +130,12 @@ static ::absl::once_flag descriptor_table_wrapper_2eproto_once;
 PROTOBUF_CONSTINIT const ::_pbi::DescriptorTable descriptor_table_wrapper_2eproto = {
     false,
     false,
-    499,
+    543,
     descriptor_table_protodef_wrapper_2eproto,
     "wrapper.proto",
     &descriptor_table_wrapper_2eproto_once,
     descriptor_table_wrapper_2eproto_deps,
-    9,
+    10,
     1,
     schemas,
     file_default_instances,
@@ -367,6 +371,30 @@ void Wrapper::clear_authresponse() {
     clear_has_payload();
   }
 }
+void Wrapper::set_allocated_contact(::Contact* contact) {
+  ::google::protobuf::Arena* message_arena = GetArena();
+  clear_payload();
+  if (contact) {
+    ::google::protobuf::Arena* submessage_arena = reinterpret_cast<::google::protobuf::MessageLite*>(contact)->GetArena();
+    if (message_arena != submessage_arena) {
+      contact = ::google::protobuf::internal::GetOwnedMessage(message_arena, contact, submessage_arena);
+    }
+    set_has_contact();
+    _impl_.payload_.contact_ = contact;
+  }
+  // @@protoc_insertion_point(field_set_allocated:Wrapper.contact)
+}
+void Wrapper::clear_contact() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (payload_case() == kContact) {
+    if (GetArena() == nullptr) {
+      delete _impl_.payload_.contact_;
+    } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+      ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.contact_);
+    }
+    clear_has_payload();
+  }
+}
 Wrapper::Wrapper(::google::protobuf::Arena* arena)
     : ::google::protobuf::Message(arena) {
   SharedCtor(arena);
@@ -420,6 +448,9 @@ Wrapper::Wrapper(
         break;
       case kAuthResponse:
         _impl_.payload_.authresponse_ = ::google::protobuf::Message::CopyConstruct<::AuthResponse>(arena, *from._impl_.payload_.authresponse_);
+        break;
+      case kContact:
+        _impl_.payload_.contact_ = ::google::protobuf::Message::CopyConstruct<::Contact>(arena, *from._impl_.payload_.contact_);
         break;
   }
 
@@ -527,6 +558,14 @@ void Wrapper::clear_payload() {
       }
       break;
     }
+    case kContact: {
+      if (GetArena() == nullptr) {
+        delete _impl_.payload_.contact_;
+      } else if (::google::protobuf::internal::DebugHardenClearOneofMessageOnArena()) {
+        ::google::protobuf::internal::MaybePoisonAfterClear(_impl_.payload_.contact_);
+      }
+      break;
+    }
     case PAYLOAD_NOT_SET: {
       break;
     }
@@ -556,16 +595,16 @@ Wrapper::GetClassData() const {
   return _data_.base();
 }
 PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
-const ::_pbi::TcParseTable<1, 11, 9, 33, 2> Wrapper::_table_ = {
+const ::_pbi::TcParseTable<1, 12, 10, 33, 2> Wrapper::_table_ = {
   {
     PROTOBUF_FIELD_OFFSET(Wrapper, _impl_._has_bits_),
     0, // no _extensions_
-    11, 8,  // max_field_number, fast_idx_mask
+    12, 8,  // max_field_number, fast_idx_mask
     offsetof(decltype(_table_), field_lookup_table),
-    4294965248,  // skipmap
+    4294963200,  // skipmap
     offsetof(decltype(_table_), field_entries),
-    11,  // num_field_entries
-    9,  // num_aux_entries
+    12,  // num_field_entries
+    10,  // num_aux_entries
     offsetof(decltype(_table_), aux_entries),
     &_Wrapper_default_instance_._instance,
     nullptr,  // post_loop_handler
@@ -616,6 +655,9 @@ const ::_pbi::TcParseTable<1, 11, 9, 33, 2> Wrapper::_table_ = {
     // .AuthResponse authResponse = 11;
     {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.authresponse_), _Internal::kOneofCaseOffset + 0, 8,
     (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
+    // .Contact contact = 12;
+    {PROTOBUF_FIELD_OFFSET(Wrapper, _impl_.payload_.contact_), _Internal::kOneofCaseOffset + 0, 9,
+    (0 | ::_fl::kFcOneof | ::_fl::kMessage | ::_fl::kTvTable)},
   }}, {{
     {::_pbi::TcParser::GetTable<::User>()},
     {::_pbi::TcParser::GetTable<::Person>()},
@@ -626,6 +668,7 @@ const ::_pbi::TcParseTable<1, 11, 9, 33, 2> Wrapper::_table_ = {
     {::_pbi::TcParser::GetTable<::Invite_link>()},
     {::_pbi::TcParser::GetTable<::Vpn_graph>()},
     {::_pbi::TcParser::GetTable<::AuthResponse>()},
+    {::_pbi::TcParser::GetTable<::Contact>()},
   }}, {{
     "\7\0\11\0\0\0\0\0\0\0\0\0\0\0\0\0"
     "Wrapper"
@@ -719,6 +762,11 @@ PROTOBUF_NOINLINE void Wrapper::Clear() {
           11, *_impl_.payload_.authresponse_, _impl_.payload_.authresponse_->GetCachedSize(), target, stream);
       break;
     }
+    case kContact: {
+      target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+          12, *_impl_.payload_.contact_, _impl_.payload_.contact_->GetCachedSize(), target, stream);
+      break;
+    }
     default:
       break;
   }
@@ -806,6 +854,12 @@ PROTOBUF_NOINLINE void Wrapper::Clear() {
     case kAuthResponse: {
       total_size +=
           1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.authresponse_);
+      break;
+    }
+    // .Contact contact = 12;
+    case kContact: {
+      total_size +=
+          1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_.contact_);
       break;
     }
     case PAYLOAD_NOT_SET: {
@@ -922,6 +976,15 @@ void Wrapper::MergeImpl(::google::protobuf::MessageLite& to_msg, const ::google:
               ::google::protobuf::Message::CopyConstruct<::AuthResponse>(arena, *from._impl_.payload_.authresponse_);
         } else {
           _this->_impl_.payload_.authresponse_->MergeFrom(from._internal_authresponse());
+        }
+        break;
+      }
+      case kContact: {
+        if (oneof_needs_init) {
+          _this->_impl_.payload_.contact_ =
+              ::google::protobuf::Message::CopyConstruct<::Contact>(arena, *from._impl_.payload_.contact_);
+        } else {
+          _this->_impl_.payload_.contact_->MergeFrom(from._internal_contact());
         }
         break;
       }
