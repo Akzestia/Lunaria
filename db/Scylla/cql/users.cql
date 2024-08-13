@@ -16,5 +16,5 @@ CREATE TABLE IF NOT EXISTS Users (
     joined_at TIMESTAMP,
     last_activity TIMESTAMP,
 
-    PRIMARY KEY((user_name))
+    PRIMARY KEY((user_name), id)
 );

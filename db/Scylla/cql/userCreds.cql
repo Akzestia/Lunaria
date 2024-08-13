@@ -7,6 +7,7 @@ WITH replication = {
 USE lunnaria_service;
 
 CREATE TABLE IF NOT EXISTS UserCredentials (
+    id UUID,
     user_name TEXT PRIMARY KEY,
     user_password TEXT,
     user_email TEXT,
