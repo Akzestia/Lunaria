@@ -1,93 +1,102 @@
+# Lunaria
+
 <p align="center">
-  <img src="./github-pages/images/tenor-nibutani.gif" alt="Example" width="200" height="200">
+  <img src="./github-pages/images/tenor-nibutani.gif" alt="Lunaria Logo" width="200" height="200">
 </p>
 
 <h3 align="center">Welcome to Lunaria</h3>
 
 [English](README.md) | [日本語](README_ja.md) | [Українська](README_ua.md)
 
+Lunaria is an open-source chat application built around the QUIC protocol, aiming for secure and efficient communication.
+
+## Status
+
+🚧 **Active Development** 🚧
+
+This project has been in active development for about 2 months by a solo developer. Many core features are being implemented, and a pre-alpha release is targeted for the end of August. Your interest and feedback are appreciated as the application progresses.
+
 ## About
 
-Lunaria is an open-source chat application built around the QUIC protocol, designed for secure and efficient communication.
+Lunaria is a chat application that prioritizes security and efficiency. It's being developed to leverage the QUIC protocol and provide a communication platform that can potentially be self-hosted and customized.
 
-<br/>
+## Features in Development
 
-## Features
-- Enhanced security with QUIC protocol
+- Security enhancements using QUIC protocol
 - Self-hostable server
 - Peer-to-peer communication within VPN networks
-- Extensive client customization using Lua scripts
+- Client customization using Lua scripts
 - CLI/chatbot functionality powered by Lua
 
-<br/>
+## Technologies Being Implemented
 
-## Technologies Used
-This project utilizes various technologies including:
+This project is actively using or integrating the following technologies:
 
 - **Programming Languages**
-  - [C++](https://en.cppreference.com/w/cpp)
-  - [C](https://en.cppreference.com/w/c)
-  - [Python](https://www.python.org/)
-  - [Shell](https://www.gnu.org/software/bash/)
-  - [Lua](https://www.lua.org/)
-
+  - C++
+  - C
+  - Shell
+  - Lua
 - **Libraries/Frameworks**
-  - [Qt](https://www.qt.io/) - C++ GUI Framework
-  - [pqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ Library
-  - [cassandra](https://opensource.docs.scylladb.com/stable/using-scylla/drivers/cql-drivers/scylla-cpp-driver.html) - C++ driver for ScyllaDB
-  - [Protobuf](https://developers.google.com/protocol-buffers) - Protocol Buffers
-  - [NetBird](https://netbird.io/) - VPN solution
-  - [MsQuic](https://github.com/microsoft/msquic) - Cross-platform QUIC protocol implementation
-  - [Abseil](https://abseil.io/docs/cpp/quickstart-cmake.html) - C++ Common Library by Google, offering essential components for modern C++ development.
-  - [OpenSSL](https://www.openssl.org/) - Open Source cryptographic library that implements SSL/TLS protocols and provides cryptographic algorithms.
-
+  - Qt - for GUI development
+  - pqxx - PostgreSQL C++ Library
+  - cassandra - C++ driver for ScyllaDB
+  - Protobuf - for data serialization
+  - NetBird - VPN solution
+  - MsQuic - Cross-platform QUIC protocol implementation
+  - Abseil - C++ Common Library by Google
+  - OpenSSL - for cryptographic operations
 - **Databases**
-  - [PostgreSQL](https://www.postgresql.org/)
-  - [ScyllaDB](https://www.scylladb.com/) Migrating to Scylla
-
+  - PostgreSQL
+  - ScyllaDB (migration in progress)
 - **Tools**
-  - [g++](https://gcc.gnu.org/) - Compiler
-  - [CMake](https://cmake.org/) - Build system
-  - [Git](https://git-scm.com/) - Version control
+  - g++ - Compiler
+  - CMake - Build system
+  - Git - Version control
 
-<br/>
+## Target Platforms
 
-## Supported Platforms
-Lunaria supports:
+Lunaria is being developed to support:
 - Linux (x11 | Wayland)
 - Windows
 
-<br/>
+## Planned Language Support
 
-## Supported Languages
-Localization support includes:
+Localization is planned for:
 - Ukrainian
 - Japanese
 - English
 
-<br/>
+## Building from Source
 
-## GUI
+As the project is approaching its first pre-alpha release, build instructions are being finalized. This README will be updated with detailed build instructions when the pre-alpha version is released at the end of August.
 
-Here are some snapshots of the graphical user interface (GUI):
+## GUI Preview
 
-<img src="./GUI/Server.png" alt="Example">
-<br/>
+Here are preview images of the current graphical user interface (GUI):
+
+<img src="./GUI/Server.png" alt="Server GUI Preview">
+
 <div align="center">
-    <img width=390 src="./GUI/Sign in(1).png" alt="Example">
+    <img width=390 src="./GUI/Sign in(1).png" alt="Sign In Preview">
     &nbsp; &nbsp; &nbsp; &nbsp;
-    <img width=390 src="./GUI/Sign up(1).png" alt="Example">
+    <img width=390 src="./GUI/Sign up(1).png" alt="Sign Up Preview">
 </div>
-<br/>
-<img src="./GUI/Group 56.png" alt="Example">
-<br/>
-<img src="./GUI/Group 58.png" alt="Example">
-<br/>
-<img src="./GUI/Group 57.png" alt="Example">
-<br/>
-<div align="center">
-    <img width=390 src="./GUI/Sign in.png" alt="Example">
-    &nbsp; &nbsp; &nbsp; &nbsp;
-    <img width=390 src="./GUI/Sign up.png" alt="Example">
-</div>
-<br/>
+
+<img src="./GUI/Group 56.png" alt="Chat Interface Preview">
+
+<img src="./GUI/Group 58.png" alt="Settings Preview">
+
+<img src="./GUI/Group 57.png" alt="User Profile Preview">
+
+## Contributing
+
+As the project is nearing its first pre-alpha release, contribution guidelines are being established. If you're interested in contributing, please watch this repository for updates on when and how you can get involved.
+
+## Contact
+
+For any questions, feedback, or interest in Lunaria, please feel free to reach out:
+
+[Email](mailto:akzestia@gmail.com)
+
+Thank you for your interest in Lunaria! Your support and feedback are invaluable to this project's development.
