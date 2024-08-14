@@ -91,7 +91,23 @@ Here are preview images of the current graphical user interface (GUI):
 
 ## Contributing
 
-As the project is nearing its first pre-alpha release, contribution guidelines are being established. If you're interested in contributing, please watch this repository for updates on when and how you can get involved.
+As a solo project in active development, Lunaria is not currently open for general contributions. However, your interest is greatly appreciated. 
+
+### Future Plans for Collaboration
+
+If there's significant interest in contributing to the project, I'm considering a complete rewrite with the following goals:
+
+1. Implementing coding conventions and standardization
+2. Establishing a structured development workflow
+3. Creating a more collaborative-friendly architecture
+
+This rewrite would aim to make Lunaria more accessible for multiple developers to work on simultaneously.
+
+If you're passionate about the project and would like to discuss potential involvement in its future development, please feel free to reach out directly:
+
+[Email](mailto:akzestia@gmail.com)
+
+To stay updated on the project's progress and any announcements regarding collaboration opportunities, please star and watch this repository.
 
 ## Contact
 
