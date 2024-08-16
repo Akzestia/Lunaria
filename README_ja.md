@@ -1,92 +1,103 @@
+# Lunaria
 <p align="center">
-  <img src="./github-pages/images/tenor-nibutani.gif" alt="Example" width="200" height="200">
+  <img src="./github-pages/images/tenor-nibutani.gif" alt="Lunaria ロゴ" width="200" height="200">
 </p>
-
 <h3 align="center">Lunariaへようこそ</h3>
 
 [English](README.md) | [日本語](README_ja.md) | [Українська](README_ua.md)
 
-## について
+Lunariaは、QUICプロトコルを中心に構築された、安全で効率的な通信を目指すオープンソースのチャットアプリケーションです。
 
-Lunariaは、安全で効率的な通信のために設計されたQUICプロトコルを中心に構築されたオープンソースのチャットアプリケーションです。
+## ステータス
+🚧 **活発な開発中** 🚧
 
-<br/>
+このプロジェクトは、個人開発者によって約2ヶ月間活発に開発されています。多くのコア機能が実装中で、8月末にはプレアルファリリースを予定しています。アプリケーションの進行に伴い、皆様のご関心とフィードバックを大切にしています。
 
-## 特徴
-- QUICプロトコルによるセキュリティ強化
-- セルフホストサーバー
+## 概要
+Lunariaは、セキュリティと効率性を重視したチャットアプリケーションです。QUICプロトコルを活用し、自己ホスト可能でカスタマイズ可能な通信プラットフォームを提供することを目指して開発されています。
+
+## 開発中の機能
+- QUICプロトコルを使用したセキュリティ強化
+- 自己ホスト可能なサーバー
 - VPNネットワーク内でのピアツーピア通信
-- Luaスクリプトによるクライアントのカスタマイズが可能
-- LuaによるCLI/チャットボット機能
+- Luaスクリプトを使用したクライアントのカスタマイズ
+- Luaを利用したCLI/チャットボット機能
 
-<br/>
-
-## 使用技術
-このプロジェクトは、以下のような様々な技術を利用している：
+## 実装中の技術
+このプロジェクトでは、以下の技術を積極的に使用または統合しています：
 
 - **プログラミング言語**
-  - [C++](https://en.cppreference.com/w/cpp)
-  - [C](https://en.cppreference.com/w/c)
-  - [Python](https://www.python.org/)
-  - [Shell](https://www.gnu.org/software/bash/)
-  - [Lua](https://www.lua.org/)
-
+  - C++
+  - C
+  - Shell
+  - Lua
 - **ライブラリ/フレームワーク**
-  - [Qt](https://www.qt.io/) - C++GUIフレームワーク
-  - [libpqxx](https://libpqxx.readthedocs.io/) - PostgreSQL C++ライブラリ
-  - [cassandra](https://opensource.docs.scylladb.com/stable/using-scylla/drivers/cql-drivers/scylla-cpp-driver.html) - ScyllaDB用C++ドライバ
-  - [Protobuf](https://developers.google.com/protocol-buffers) - プロトコル・バッファ
-  - [NetBird](https://netbird.io/) - VPNソリューション
-  - [MsQuic](https://github.com/microsoft/msquic) - クロスプラットフォームQUICプロトコル実装
-  - [Abseil](https://abseil.io/docs/cpp/quickstart-cmake.html) - GoogleによるC++コモン・ライブラリは、最新のC++開発に不可欠なコンポーネントを提供する。
-  - [OpenSSL](https://www.openssl.org/) - SSL/TLSプロトコルを実装し、暗号アルゴリズムを提供するオープンソースの暗号ライブラリ。
-
+  - Qt - GUI開発用
+  - pqxx - PostgreSQL C++ライブラリ
+  - cassandra - ScyllaDB用C++ドライバ
+  - Protobuf - データシリアライゼーション用
+  - NetBird - VPNソリューション
+  - MsQuic - クロスプラットフォームQUICプロトコル実装
+  - Abseil - GoogleによるC++共通ライブラリ
+  - OpenSSL - 暗号化操作用
 - **データベース**
-  - [PostgreSQL](https://www.postgresql.org/)
-
+  - PostgreSQL
+  - ScyllaDB（移行中）
 - **ツール**
-  - [g++](https://gcc.gnu.org/) - コンパイラ
-  - [CMake](https://cmake.org/) - システム構築
-  - [Git](https://git-scm.com/) - バージョン管理
+  - g++ - コンパイラ
+  - CMake - ビルドシステム
+  - Git - バージョン管理
 
-<br/>
-
-## 対応プラットフォーム
-Lunariaがサポートしている：
+## 対象プラットフォーム
+Lunariaは以下のプラットフォームをサポートするよう開発されています：
 - Linux (x11 | Wayland)
 - Windows
 
-<br/>
-
-## 対応言語
-ローカライゼーションサポート:
+## 計画中の言語サポート
+以下の言語のローカライズを計画しています：
 - ウクライナ語
 - 日本語
 - 英語
 
-<br/>
+## ソースからのビルド
+プロジェクトが最初のプレアルファリリースに近づいているため、ビルド手順を最終調整中です。8月末のプレアルファバージョンリリース時に、このREADMEは詳細なビルド手順で更新される予定です。
 
-## GUI
+## GUIプレビュー
+現在のグラフィカルユーザーインターフェース（GUI）のプレビュー画像です：
 
-以下は、グラフィカル・ユーザー・インターフェース（GUI）のスナップショットである：
+<img src="./GUI/Server.png" alt="サーバーGUIプレビュー">
 
-<img src="./GUI/Server.png" alt="Example">
-<br/>
 <div align="center">
-    <img width=390 src="./GUI/Sign in(1).png" alt="Example">
+    <img width=390 src="./GUI/Sign in(1).png" alt="サインインプレビュー">
     &nbsp; &nbsp; &nbsp; &nbsp;
-    <img width=390 src="./GUI/Sign up(1).png" alt="Example">
+    <img width=390 src="./GUI/Sign up(1).png" alt="サインアッププレビュー">
 </div>
-<br/>
-<img src="./GUI/Group 56.png" alt="Example">
-<br/>
-<img src="./GUI/Group 58.png" alt="Example">
-<br/>
-<img src="./GUI/Group 57.png" alt="Example">
-<br/>
-<div align="center">
-    <img width=390 src="./GUI/Sign in.png" alt="Example">
-    &nbsp; &nbsp; &nbsp; &nbsp;
-    <img width=390 src="./GUI/Sign up.png" alt="Example">
-</div>
-<br/>
+
+<img src="./GUI/Group 56.png" alt="チャットインターフェースプレビュー">
+<img src="./GUI/Group 58.png" alt="設定プレビュー">
+<img src="./GUI/Group 57.png" alt="ユーザープロフィールプレビュー">
+
+## 貢献について
+個人開発中のプロジェクトのため、現在Lunariaは一般的な貢献を受け付けていません。しかし、皆様のご関心を大変ありがたく思っています。
+
+### 将来のコラボレーション計画
+プロジェクトへの貢献に大きな関心がある場合、以下の目標を持って完全な書き直しを検討しています：
+
+1. コーディング規約と標準化の実装
+2. 構造化された開発ワークフローの確立
+3. より協力的なアーキテクチャの作成
+
+この書き直しは、複数の開発者が同時に作業できるようLunariaをより利用しやすくすることを目指しています。
+
+プロジェクトに情熱を持ち、将来の開発への参加について議論したい方は、直接ご連絡ください：
+
+[メール](mailto:akzestia@gmail.com)
+
+プロジェクトの進捗状況やコラボレーションの機会に関するお知らせを受け取るには、このリポジトリをスターし、ウォッチしてください。
+
+## お問い合わせ
+Lunariaに関するご質問、フィードバック、または興味がある方は、お気軽にご連絡ください：
+
+[メール](mailto:akzestia@gmail.com)
+
+Lunariaにご関心いただき、ありがとうございます！皆様のサポートとフィードバックは、このプロジェクトの開発に非常に重要です。
