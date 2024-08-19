@@ -320,8 +320,8 @@ bool DbManager::addContact(const Contact &contact) {
 
         std::string query =
             "INSERT INTO Contacts (a_user_id, b_user_id) VALUES (" +
-            txn.quote(contact.a_user_id()) + ", " +
-            txn.quote(contact.b_user_id()) + ");";
+            txn.quote(contact.a_user_id_int()) + ", " +
+            txn.quote(contact.b_user_id_int()) + ");";
 
         txn.exec(query);
 
