@@ -7,7 +7,7 @@
 #include <iostream>
 #include <memory>
 
-QuicResponse defaultQuicResponse = {false, nullptr};
+QuicResponse defaultQuicResponse = {false};
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -19,6 +19,9 @@ std::condition_variable_any ClientPeerHandler::login_Cv = {};
 
 std::mutex ClientPeerHandler::signupMutex = {};
 std::condition_variable_any ClientPeerHandler::signup_Cv = {};
+
+std::mutex ClientPeerHandler::contactMutex = {};
+std::condition_variable_any ClientPeerHandler::contact_Cv = {};
 
 QuicResponse ClientPeerHandler::loginResponse = defaultQuicResponse;
 bool ClientPeerHandler::waitingForLogin = false;
@@ -35,7 +38,6 @@ bool ClientPeerHandler::waitingForContact_POST = false;
 bool ClientPeerHandler::waitingForContact_PUT = false;
 bool ClientPeerHandler::waitingForContact_DELETE = false;
 bool ClientPeerHandler::waitingForContact_GET = false;
-
 
 QuicResponse ClientPeerHandler::serverResponse_POST = defaultQuicResponse;
 QuicResponse ClientPeerHandler::serverResponse_PUT = defaultQuicResponse;
@@ -94,6 +96,12 @@ std::condition_variable_any &ClientPeerHandler::GetSignUpCv() {
     return signup_Cv;
 }
 
+std::mutex &ClientPeerHandler::GetContactMutex() { return contactMutex; }
+
+std::condition_variable_any &ClientPeerHandler::GetContactCv() {
+    return contact_Cv;
+}
+
 void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
                                          std::condition_variable_any &Cv,
                                          AuthType authType, bool success,
@@ -103,7 +111,8 @@ void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
     case T_SIGN_IN:
         ClientPeerHandler::loginResponse.success = success;
         if (success) {
-            ClientPeerHandler::loginResponse.payload = new AuthResponse(authResponse);
+            ClientPeerHandler::loginResponse.payload =
+                new AuthResponse(authResponse);
         }
         Cv.notify_one();
         ClientPeerHandler::waitingForLogin = false;
@@ -111,13 +120,42 @@ void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
     case T_SIGN_UP:
         ClientPeerHandler::signUpResponse.success = success;
         if (success) {
-            ClientPeerHandler::signUpResponse.payload = new AuthResponse(authResponse);
+            ClientPeerHandler::signUpResponse.payload =
+                new AuthResponse(authResponse);
         }
         Cv.notify_one();
         ClientPeerHandler::waitingForSignUp = false;
         break;
     }
     std::cout << "NotifiedX\n";
+}
+
+void ClientPeerHandler::ReleaseAnyMutex(std::mutex &lock,
+                                        std::condition_variable_any &Cv,
+                                        ReleaseMutexType type, bool success,
+                                        const QuicResponse &quicResponse) {
+    std::unique_lock<std::mutex> ulock(lock);
+    switch (type) {
+    case T_CONTACT_POST: {
+        ClientPeerHandler::contactResponse_POST.success = success;
+        if (success) {
+            ClientPeerHandler::contactResponse_POST =
+                QuicResponse(quicResponse);
+        }
+        Cv.notify_one();
+        ClientPeerHandler::waitingForContact_POST = false;
+    } break;
+    case T_CONTACT_PUT: {
+
+    } break;
+    case T_CONTACT_GET: {
+
+    } break;
+    case T_CONTACT_DELETE: {
+
+    } break;
+    }
+    printf("\nNotifiedY\n");
 }
 
 bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
@@ -138,7 +176,8 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         if (wrapper->authresponse().is_successful()) {
             std::cout << "Auth successful SU\n";
 
-            std::cout << "Auth user: " << wrapper->authresponse().user().user_name() << "\n";
+            std::cout << "Auth user: "
+                      << wrapper->authresponse().user().user_name() << "\n";
             std::cout << wrapper->authresponse().token() << "\n";
             ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, 1,
                              wrapper->authresponse());
