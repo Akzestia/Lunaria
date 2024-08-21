@@ -24,4 +24,5 @@ enum Routes : uint8_t {
     AUTH_RESPONSE_SIGN_IN = 0x14,
     SERVER_BINDING_REQUEST = 0x15,
     CREATE_CONTACT = 0x16,
+    POST_RESPONSE_CONTACT = 0x17,
 };
