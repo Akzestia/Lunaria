@@ -14,13 +14,9 @@
 
 bool QuicClient::disconnected = false;
 
-QuicClient& QuicClient::getRef() {
-    return *this;
-}
+QuicClient &QuicClient::getRef() { return *this; }
 
-bool QuicClient::ping() {
-    return Connection != NULL;
-}
+bool QuicClient::ping() { return Connection != NULL; }
 
 // Test
 typedef struct QUIC_CREDENTIAL_CONFIG_HELPER {
@@ -533,23 +529,26 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
         std::cout << "Waiting for respons\n";
         ClientPeerHandler::waitingForSignUp = true;
 
-        if (ClientPeerHandler::GetSignUpCv().wait_for(lock, std::chrono::seconds(5), [this] { return !ClientPeerHandler::waitingForSignUp; })) {
+        if (ClientPeerHandler::GetSignUpCv().wait_for(
+                lock, std::chrono::seconds(5),
+                [this] { return !ClientPeerHandler::waitingForSignUp; })) {
             std::cout << "Response received\n";
 
             if (ClientPeerHandler::signUpResponse.success) {
-                try{
-                    AuthResponse* ar = std::get<AuthResponse*>(ClientPeerHandler::signUpResponse.payload);
+                try {
+                    AuthResponse *ar = std::get<AuthResponse *>(
+                        ClientPeerHandler::signUpResponse.payload);
                     auto response = Lxcode::OK(ar);
                     return response;
-                }
-                catch(const std::exception& e){
+                } catch (const std::exception &e) {
                     std::cerr << e.what() << '\n';
-                    return Lxcode::DB_ERROR(DB_ERROR_SIGNUP_FAILED, "Login failed");
+                    return Lxcode::DB_ERROR(DB_ERROR_SIGNUP_FAILED,
+                                            "Login failed");
                 }
-            }
-            else{
+            } else {
                 std::cout << "SignUp failed\n";
-                return Lxcode::DB_ERROR(DB_ERROR_SIGNUP_FAILED, "SignUp failed");
+                return Lxcode::DB_ERROR(DB_ERROR_SIGNUP_FAILED,
+                                        "SignUp failed");
             }
         } else {
             std::cout << "Timeout waiting for response\n";
@@ -578,24 +577,26 @@ Lxcode QuicClient::SignIn(const Auth &auth) {
         std::cout << "Waiting for respons\n";
         ClientPeerHandler::waitingForLogin = true;
 
-        if (ClientPeerHandler::GetLoginCv().wait_for(lock, std::chrono::seconds(5), [this] { return !ClientPeerHandler::waitingForLogin; })) {
+        if (ClientPeerHandler::GetLoginCv().wait_for(
+                lock, std::chrono::seconds(5),
+                [this] { return !ClientPeerHandler::waitingForLogin; })) {
             std::cout << "Response received\n";
 
             if (ClientPeerHandler::loginResponse.success) {
                 std::cout << "Login success\n";
 
-                try{
-                    AuthResponse* ar = std::get<AuthResponse*>(ClientPeerHandler::loginResponse.payload);
+                try {
+                    AuthResponse *ar = std::get<AuthResponse *>(
+                        ClientPeerHandler::loginResponse.payload);
                     auto response = Lxcode::OK(ar);
                     return response;
-                }
-                catch(const std::exception& e){
+                } catch (const std::exception &e) {
                     std::cerr << e.what() << '\n';
-                    return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Login failed");
+                    return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                            "Login failed");
                 }
 
-            }
-            else{
+            } else {
                 std::cout << "Login failed\n";
                 return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Login failed");
             }
@@ -650,14 +651,44 @@ Error:
 #pragma endregion
 
 #pragma region AddContact
-Lxcode QuicClient::AddContact(const Contact &contact){
+Lxcode QuicClient::AddContact(const Contact &contact) {
     Wrapper w;
     *w.mutable_contact() = contact;
     w.set_route(CREATE_CONTACT);
-    if(ClientRequest(w)){
+    if (ClientRequest(w)) {
 
+        std::cout << "Request started\n";
+        std::unique_lock<std::mutex> lock(ClientPeerHandler::GetContactMutex());
+        std::cout << "Waiting for respons\n";
+        ClientPeerHandler::waitingForContact_POST = true;
 
-        return Lxcode::OK();
+        if (ClientPeerHandler::GetContactCv().wait_for(
+                lock, std::chrono::seconds(5),
+                [this] { return !ClientPeerHandler::waitingForContact_POST; })) {
+            std::cout << "Response received\n";
+
+            if (ClientPeerHandler::contactResponse_POST.success) {
+                std::cout << "Contact post success\n";
+
+                try {
+                    Contact *qr = std::get<Contact*>(ClientPeerHandler::contactResponse_POST.payload);
+                    auto response = Lxcode::OK(qr);
+                    return response;
+                } catch (const std::exception &e) {
+                    std::cerr << e.what() << '\n';
+                    return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                            "Contact post failed");
+                }
+
+            } else {
+                std::cout << "Contact post failed\n";
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Contact post failed");
+            }
+        } else {
+            std::cout << "Timeout waiting for response\n";
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect");
+        }
     }
 
     return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to send");

@@ -30,7 +30,6 @@ class QuicClient : protected ClientPeerHandler {
 
     Lxcode SignUp(const Auth &);
     Lxcode SignIn(const Auth &);
-
     Lxcode AddContact(const Contact &);
 
     void send(const absl::Cord &);
