@@ -7,9 +7,11 @@
 #include "../proto/build/message.pb.h"
 #include "../proto/build/contact.pb.h"
 
+using QuicResponsePayload = std::variant<AuthResponse*, std::set<Message*>, std::vector<Contact*>, Contact*>;
+
 struct QuicResponse {
     bool success;
-    std::variant<AuthResponse*, std::set<Message*>, std::vector<Contact*>> payload;
+    QuicResponsePayload payload;
 };
 
 #endif // QUICRESPONSE_H
