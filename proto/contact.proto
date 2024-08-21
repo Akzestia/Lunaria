@@ -9,4 +9,7 @@ message Contact {
         int32 b_user_id_int = 3;
         string b_user_id_string = 4;
     }
+
+    string a_user_name = 5;
+    string b_user_name = 6;
 }
