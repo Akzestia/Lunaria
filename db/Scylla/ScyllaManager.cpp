@@ -484,7 +484,7 @@ Lxcode ScyllaManager::createUser(const Sign_up &su) {
 
 Lxcode ScyllaManager::createContact(const Contact &contact) {
 
-    if(!contact.has_a_user_id_string() || !contact.has_b_user_id_string())
+    if (!contact.has_a_user_id_string() || !contact.has_b_user_id_string())
         return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT, "Invalid input");
 
     CassSession *session = cass_session_new();
@@ -496,6 +496,9 @@ Lxcode ScyllaManager::createContact(const Contact &contact) {
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
     Contact *c = nullptr;
+
+    std::string a_user_id;
+    std::string b_user_id;
 
     try {
         // Set the contact points and authentication for the Scylla cluster
@@ -515,31 +518,89 @@ Lxcode ScyllaManager::createContact(const Contact &contact) {
 
         cass_future_free(connect_future);
 
-        statement = cass_statement_new(
-            "SELECT user_name FROM lunnaria_service.Contacts "
-            "WHERE user_name = ?",
-            1);
-        cass_statement_bind_int32(statement, 0, contact.a_user_id_int());
-        cass_statement_bind_int32(statement, 1, contact.b_user_id_int());
+        statement = cass_statement_new("SELECT * FROM lunnaria_service.Users "
+                                       "WHERE user_name = ? OR user_name = ?",
+                                       2);
+        cass_statement_bind_string(statement, 0, contact.a_user_name().c_str());
+        cass_statement_bind_string(statement, 1, contact.b_user_name().c_str());
 
-        return Lxcode::OK(c);
+        result_future = cass_session_execute(session, statement);
+        if (cass_future_error_code(result_future) != CASS_OK) {
+            const char *error_message;
+            size_t error_message_length;
+            cass_future_error_message(result_future, &error_message,
+                                      &error_message_length);
+            std::cerr << "Error executing query: "
+                      << std::string(error_message, error_message_length)
+                      << std::endl;
+            cass_future_free(result_future);
+            cass_statement_free(statement);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED,
+                                    "Failed to execute query");
+        }
+
+        result = cass_future_get_result(result_future);
+        iterator = cass_iterator_from_result(result);
+
+        int row_count = 0;
+        while (cass_iterator_next(iterator)) {
+            row_count++;
+            row = cass_iterator_get_row(iterator);
+
+            const char *user_id;
+            size_t user_id_length;
+            cass_value_get_string(cass_row_get_column(row, 0), &user_id,
+                                  &user_id_length);
+            if (row_count == 1) {
+                a_user_id = std::string(user_id, user_id_length);
+            } else if (row_count == 2) {
+                b_user_id = std::string(user_id, user_id_length);
+            }
+        }
+
+        printf("\nUser count %d \n", row_count);
+
+        if (!(row_count == 2)) {
+            cass_future_free(result_future);
+            cass_statement_free(statement);
+            cass_result_free(result);
+            cass_iterator_free(iterator);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+
+            return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED, "Failed to find users");
+        }
+
+        // cass_future_free(result_future);
+        // cass_statement_free(statement);
+
+        cass_future_free(result_future);
+        cass_statement_free(statement);
+        cass_result_free(result);
+        cass_iterator_free(iterator);
+        cass_session_free(session);
+        cass_cluster_free(cluster);
+
+        return Lxcode::OK();
     } catch (const std::exception e) {
 
-        if(c)
+        if (c)
             delete c;
-        if(session)
+        if (session)
             cass_session_free(session);
-        if(cluster)
+        if (cluster)
             cass_cluster_free(cluster);
-        if(connect_future)
+        if (connect_future)
             cass_future_free(connect_future);
-        if(statement)
+        if (statement)
             cass_statement_free(statement);
-        if(result_future)
+        if (result_future)
             cass_future_free(result_future);
-        if(result)
+        if (result)
             cass_result_free(result);
-        if(iterator)
+        if (iterator)
             cass_iterator_free(iterator);
 
         std::cout << e.what() << "\n";
@@ -547,8 +608,7 @@ Lxcode ScyllaManager::createContact(const Contact &contact) {
     }
 }
 
-
-Lxcode ScyllaManager::createServer(const Server& server){
+Lxcode ScyllaManager::createServer(const Server &server) {
     CassSession *session = cass_session_new();
     CassCluster *cluster = cass_cluster_new();
     CassFuture *connect_future = nullptr;
@@ -577,25 +637,58 @@ Lxcode ScyllaManager::createServer(const Server& server){
 
         cass_future_free(connect_future);
 
+        int row_count = 0;
+        while (cass_iterator_next(iterator)) {
+            row_count++;
+            row = cass_iterator_get_row(iterator);
+
+            // Retrieve the user IDs
+            const char *user_id;
+            size_t user_id_length;
+            cass_value_get_string(cass_row_get_column(row, 0), &user_id,
+                                  &user_id_length);
+            if (row_count == 1) {
+                //a_user_id = std::string(user_id, user_id_length);
+            } else if (row_count == 2) {
+                //b_user_id = std::string(user_id, user_id_length);
+            }
+        }
+
+        // Check if both user IDs were found
+        if (row_count == 2) {
+            // Use the retrieved user IDs to create the contact
+            // ...
+        } else {
+            // Handle the case where the expected number of users was not found
+            // ...
+        }
+
+        // Clean up resources
+        cass_future_free(result_future);
+        cass_statement_free(statement);
+        cass_result_free(result);
+        cass_iterator_free(iterator);
+        cass_session_free(session);
+        cass_cluster_free(cluster);
 
         return Lxcode::OK(s);
     } catch (const std::exception e) {
 
-        if(s)
+        if (s)
             delete s;
-        if(session)
+        if (session)
             cass_session_free(session);
-        if(cluster)
+        if (cluster)
             cass_cluster_free(cluster);
-        if(connect_future)
+        if (connect_future)
             cass_future_free(connect_future);
-        if(statement)
+        if (statement)
             cass_statement_free(statement);
-        if(result_future)
+        if (result_future)
             cass_future_free(result_future);
-        if(result)
+        if (result)
             cass_result_free(result);
-        if(iterator)
+        if (iterator)
             cass_iterator_free(iterator);
 
         std::cout << e.what() << "\n";
