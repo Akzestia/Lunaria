@@ -17,6 +17,21 @@ Get client submodule by running this command:
 git submodule update --init --recursive
 ```
 
+Create config.ini file inside db/config.ini
+```
+DB_HOST=
+DB_USER=
+DB_NAME=
+DB_PASSWORD=
+
+SCYLLA_HOST=
+SCYLLA_PORT=
+SCYLLA_KEYSPACE=lunnaria_service
+SCYLLA_USER=
+SCYLLA_PASSWORD=
+```
+> Replace with your values. DB_ is used for psql, and SCYLLA_ for scylladb. If u didn't modify any of cql scripts, don't change the KEYSPACE. 
+
 ### Build Image
 ```sh
 docker build -t lunaria-server .
