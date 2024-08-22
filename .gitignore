@@ -4,7 +4,6 @@ output/
 .clang-format
 .clangd
 gdk/
-db/config.ini
 --disable-gpu
 --ozone-platform-hint=wayland
 github-pages/pages/Akzestia.html
@@ -13,5 +12,6 @@ build/
 **/build/
 bx/
 lunaria-server.tar
+*.ini
 
 !github-pages/images/
