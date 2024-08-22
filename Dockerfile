@@ -1,7 +1,7 @@
 # Best OS ^_^
 FROM archlinux:latest
 
-# Install dependencies
+# Install dependencies (Openssl-1.1 is used to avoid conflicts in msquic libs)
 RUN pacman -Syu --noconfirm && \
     pacman -S --noconfirm cmake \
     protobuf \
