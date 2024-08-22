@@ -4,6 +4,7 @@
 #include <ctime>
 #include <exception>
 #include <iostream>
+#include <iomanip>
 
 std::string ScyllaManager::_host = "";
 std::string ScyllaManager::_keyspace = "";

@@ -127,7 +127,15 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return false;
     }
     case CREATE_CONTACT: {
+        Lxcode response = RouteManager::createContact(wrapper->contact());
 
+        std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
+
+        responseWrapper->set_route(POST_RESPONSE_CONTACT);
+
+        if(response == Lxcode::OK()){
+
+        }
         break;
     }
     default:
