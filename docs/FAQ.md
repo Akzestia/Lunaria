@@ -31,7 +31,7 @@ As a solo developer, I've currently opted for a single branch workflow to simpli
 
 ### Why can't I build the project from source?
 The project is currently under active development and doesn't fully support building from source. Here's the current status:
-- Server: Can be built using Docker. Please refer to BUILD.md for detailed instructions. Note that you'll need to set up a ScyllaDb cluster.
+- Server: Can be built using Docker. Please refer to [BUILD.md](../BUILD.md) for detailed instructions. Note that you'll need to set up a ScyllaDb cluster.
 - Client: Not yet ready for building from source, as it's currently configured for my local environment.
 
 I'm working on making the build process more accessible in future releases.
