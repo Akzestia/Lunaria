@@ -18,6 +18,7 @@ This project has been in active development for about 2 months by a solo develop
 
 ## About
 
+[FAQ](docs/FAQ.md)
 Lunaria is a chat application that prioritizes security and efficiency. It's being developed to leverage the QUIC protocol and provide a communication platform that can potentially be self-hosted and customized.
 
 ## Features in Development
@@ -91,7 +92,7 @@ Here are preview images of the current graphical user interface (GUI):
 
 ## Contributing
 
-As a solo project in active development, Lunaria is not currently open for general contributions. However, your interest is greatly appreciated. 
+As a solo project in active development, Lunaria is not currently open for general contributions. However, your interest is greatly appreciated.
 
 ### Future Plans for Collaboration
 
