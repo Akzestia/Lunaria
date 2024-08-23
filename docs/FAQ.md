@@ -18,6 +18,7 @@ Lunaria currently utilizes a range of technologies, including:
 - C/C++
 - Qt
 - Lua
+- Protobuf
 - PostgreSQL
 - ScyllaDb (Migrating to Scylla)
 - MsQuic (Microsoft's implementation of the QUIC protocol)
