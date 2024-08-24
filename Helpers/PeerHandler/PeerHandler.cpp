@@ -1,6 +1,7 @@
 #include "PeerHandler.h"
 #include "../../route-manager/Routes.hpp"
 #include "../../server/QuicServer.h"
+#include <iostream>
 
 std::unordered_map<HQUIC, uint8_t *> *PeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -47,18 +48,24 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return false;
     }
 
+    delete [] data;
+    peers->erase(Stream);
+    peerDataSizes->erase(Stream);
+
     std::cout << "\nRoute: " << wrapper->route() << "\n";
 
     switch (wrapper->route()) {
     case SIGN_UP: {
         Lxcode response = RouteManager::handleSignUp(wrapper->auth().sign_up());
-        std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
 
-        responseWrapper->set_route(AUTH_RESPONSE_SIGN_UP);
-
-        AuthResponse authResponse;
+        Response rpc_response;
         if (response == Lxcode::OK()) {
             std::cout << "Sign up successful\n";
+            std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
+
+            responseWrapper->set_route(AUTH_RESPONSE_SIGN_UP);
+
+            AuthResponse authResponse;
 
             try {
                 authResponse.set_is_successful(true);
@@ -68,8 +75,10 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
                 *responseWrapper->mutable_authresponse() = authResponse;
 
+                rpc_response.set_allocated_result(responseWrapper.release());
+
                 reinterpret_cast<QuicServer *>(context)->SendResponse(
-                    Stream, *responseWrapper);
+                    Stream, rpc_response);
                 delete std::get<User *>(response.payload);
                 return true;
             } catch (const std::exception &e) {
@@ -80,24 +89,23 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         std::cout << "Sign up failed\n";
 
-        authResponse.set_is_successful(false);
-
-        *responseWrapper->mutable_authresponse() = authResponse;
+        *rpc_response.mutable_error() = Error();
 
         reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
-                                                              *responseWrapper);
+            rpc_response);
 
         return false;
     }
     case SIGN_IN: {
         Lxcode response = RouteManager::handleSignIn(wrapper->auth().sign_in());
 
-        std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
-
-        responseWrapper->set_route(AUTH_RESPONSE_SIGN_IN);
-
-        AuthResponse authResponse;
+        Response rpc_response;
         if (response == Lxcode::OK()) {
+            AuthResponse authResponse;
+            std::unique_ptr<Wrapper> responseWrapper =
+                std::make_unique<Wrapper>();
+
+            responseWrapper->set_route(AUTH_RESPONSE_SIGN_IN);
 
             std::cout << "Sign in successful\n";
 
@@ -108,8 +116,10 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             *responseWrapper->mutable_authresponse() = authResponse;
 
+            rpc_response.set_allocated_result(responseWrapper.release());
+
             reinterpret_cast<QuicServer *>(context)->SendResponse(
-                Stream, *responseWrapper);
+                Stream, rpc_response);
 
             delete std::get<User *>(response.payload);
             return true;
@@ -117,26 +127,34 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         std::cout << "Sign in failed\n";
 
-        authResponse.set_is_successful(false);
+        *rpc_response.mutable_error() = Error();
 
-        *responseWrapper->mutable_authresponse() = authResponse;
-
-        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
-                                                              *responseWrapper);
-
+        reinterpret_cast<QuicServer *>(context)->SendResponse(
+            Stream, rpc_response);
         return false;
     }
     case CREATE_CONTACT: {
         Lxcode response = RouteManager::createContact(wrapper->contact());
+        Response rpc_response;
+        if (response == Lxcode::OK()) {
+            std::cout << "Contact created\n";
 
-        std::unique_ptr<Wrapper> responseWrapper = std::make_unique<Wrapper>();
+            std::unique_ptr<Wrapper> responseWrapper =
+                std::make_unique<Wrapper>();
+            responseWrapper->set_route(POST_RESPONSE_CONTACT);
+            rpc_response.set_allocated_result(responseWrapper.release());
 
-        responseWrapper->set_route(POST_RESPONSE_CONTACT);
-
-        if(response == Lxcode::OK()){
-
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, rpc_response);
         }
-        break;
+
+        *rpc_response.mutable_error() = Error();
+
+        reinterpret_cast<QuicServer *>(context)->SendResponse(
+            Stream, rpc_response);
+        std::cout << "Contact creation failed\n";
+
+        return false;
     }
     default:
         std::cerr << "Error: Unknown route" << std::endl;
