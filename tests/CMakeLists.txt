@@ -46,6 +46,7 @@ add_executable(server
     ${PROTO_BUILD_DIR}/sign_up.pb.cc
     ${PROTO_BUILD_DIR}/wrapper.pb.cc
     ${PROTO_BUILD_DIR}/authResponse.pb.cc
+    ${PROTO_BUILD_DIR}/rpc_response.pb.cc
     ${HELPERS_DIR}/ConnectionManager/ConnectionManager.cpp
     ${HELPERS_DIR}/AuthManager/AuthManager.cpp
     ${HELPERS_DIR}/Encryption/EncryptionManager.cpp
