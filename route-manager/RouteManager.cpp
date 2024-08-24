@@ -1,5 +1,6 @@
 #include "RouteManager.h"
 #include "../error-manager/ErrorManager.h"
+#include <cstdio>
 #include <variant>
 
 void RouteManager::InitScyllaDb() { ScyllaManager::initScyllaManager(); }
@@ -104,8 +105,11 @@ Lxcode RouteManager::createContact(const Payload &payload) {
 
     Lxcode code = ScyllaManager::createContact(contact);
 
-    if (code == Lxcode::OK())
+    if (code == Lxcode::OK()) {
+        printf("Successfully added contact");
+        printf("Alpha id: %s", std::get<Contact*>(code.payload)->a_user_id_string().c_str());
         return code;
+    }
 
     return code;
 }
