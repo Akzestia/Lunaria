@@ -1,9 +1,11 @@
 #include "ClientPeerHandler.h"
 #include "../../proto/build/authResponse.pb.h"
+#include "../../proto/build/rpc_response.pb.h"
 #include "../../proto/build/wrapper.pb.h"
 #include "../../route-manager/Routes.hpp"
 #include "../clientListenerModule/ClientListener.h"
 #include <condition_variable>
+#include <cstdio>
 #include <iostream>
 #include <memory>
 
@@ -162,25 +164,34 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
 
-    std::unique_ptr<Wrapper> wrapper = std::make_unique<Wrapper>();
-    if (!wrapper->ParseFromArray(data, dataSize)) {
-        std::cerr << "Error: Failed to parse the Cord into a Wrapper"
+    // std::unique_ptr<Wrapper> wrapper = std::make_unique<Wrapper>();
+    // if (!wrapper->ParseFromArray(data, dataSize)) {
+    //     std::cerr << "Error: Failed to parse the Cord into a Wrapper"
+    //               << std::endl;
+    //     return false;
+    // }
+
+    std::unique_ptr<Response> response = std::make_unique<Response>();
+    if (!response->ParseFromArray(data, dataSize)) {
+        std::cerr << "Error: Failed to parse the Cord into a response"
                   << std::endl;
         return false;
     }
 
-    std::cout << "\nRoute: " << wrapper->route() << "\n";
+    if (response->has_error()) {
+        printf("Error code: %d", response->error().code());
+        return false;
+    }
 
-    switch (wrapper->route()) {
+    std::cout << "\nRoute: " << response->result().route() << "\n";
+
+    switch (response->result().route()) {
     case AUTH_RESPONSE_SIGN_UP: {
-        if (wrapper->authresponse().is_successful()) {
+        if (response->result().authresponse().is_successful()) {
             std::cout << "Auth successful SU\n";
 
-            std::cout << "Auth user: "
-                      << wrapper->authresponse().user().user_name() << "\n";
-            std::cout << wrapper->authresponse().token() << "\n";
             ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, 1,
-                             wrapper->authresponse());
+                             response->result().authresponse());
             return true;
         }
         std::cout << "Auth failed\n";
@@ -189,12 +200,10 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return false;
     }
     case AUTH_RESPONSE_SIGN_IN: {
-        if (wrapper->authresponse().is_successful()) {
+        if (response->result().authresponse().is_successful()) {
             std::cout << "Auth successful SI\n";
-
-            std::cout << wrapper->authresponse().token() << "\n";
             ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, 1,
-                             wrapper->authresponse());
+                             response->result().authresponse());
             return true;
         }
         std::cout << "Auth failed\n";
@@ -207,6 +216,18 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         auto listener = reinterpret_cast<ClientListener *>(context);
 
         return true;
+    }
+    case POST_RESPONSE_CONTACT: {
+        if(response->result().has_contact()){
+            std::cout << "Contact response\n";
+            QuicResponse quicResponse;
+            quicResponse.payload = new Contact(response->result().contact());
+            ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, true, quicResponse);
+            return true;
+        }
+        ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, false);
+        printf("Failed to add contact");
+        return false;
     }
     default:
         std::cerr << "Error: Unknown route\n";
