@@ -257,13 +257,13 @@ Error:
     return nullptr;
 }
 
-void QuicServer::SendResponse(HQUIC Stream, const Wrapper &w) {
+void QuicServer::SendResponse(const HQUIC &Stream, const Response &response) {
     QUIC_BUFFER *SendBuffer;
 
-    size_t size = w.ByteSizeLong();
+    size_t size = response.ByteSizeLong();
     std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
-    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
-        std::cerr << "Failed to serialize Wrapper\n";
+    if (!response.SerializeToArray(buffer->data(), buffer->size())) {
+        std::cerr << "Failed to serialize response\n";
         goto Error;
     }
 
@@ -287,7 +287,7 @@ Error:
     }
 }
 
-void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
+void QuicServer::SendResponse(const Response &response, const HQUIC &Connection) {
     HQUIC Stream = NULL;
     QUIC_BUFFER *SendBuffer;
 
@@ -308,10 +308,10 @@ void QuicServer::SendResponse(const Wrapper &w, const HQUIC &Connection) {
         std::cerr << "Failed to get client address\n";
     }
 
-    size_t size = w.ByteSizeLong();
+    size_t size = response.ByteSizeLong();
     std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
-    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
-        std::cerr << "Failed to serialize Wrapper\n";
+    if (!response.SerializeToArray(buffer->data(), buffer->size())) {
+        std::cerr << "Failed to serialize response\n";
         goto Error;
     }
 
@@ -462,10 +462,12 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
 
         printf("[conn][%p] Connected\n", Connection);
 
+        Response response;
         Wrapper w;
         w.set_route(SERVER_BINDING_REQUEST);
+        *response.mutable_result() = w;
 
-        SendResponse(w, Connection);
+        SendResponse(response, Connection);
 
         MsQuic->ConnectionSendResumptionTicket(
             Connection, QUIC_SEND_RESUMPTION_FLAG_NONE, 0, NULL);
