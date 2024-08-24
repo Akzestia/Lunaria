@@ -8,8 +8,8 @@ USE lunnaria_service;
 
 CREATE TABLE IF NOT EXISTS Contacts (
     id UUID,
-    a_user_id UUID,
-    b_user_id UUID,
+    a_user_id TEXT,
+    b_user_id TEXT,
     created_at TIMESTAMP,
     PRIMARY KEY (a_user_id, b_user_id)
 );
