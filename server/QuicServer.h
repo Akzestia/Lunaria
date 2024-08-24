@@ -7,6 +7,7 @@
 #include "../Helpers/PeerHandler/PeerHandler.h"
 #include "../MsQuic/Linux_x64/include/msquic.h"
 #include "../proto/build/user.pb.h"
+#include "../proto/build/rpc_response.pb.h"
 #include "../tokio-cpp/ThreadPool.h"
 #include <absl/strings/cord.h>
 #include <atomic>
@@ -32,11 +33,11 @@ class QuicServer : protected ConnectionManager, protected PeerHandler {
 
     ~QuicServer();
 
-    void SendResponse(HQUIC, const Wrapper &, void *);
+    void SendResponse(const HQUIC &, const Response &, void *);
 
-    void SendResponse(HQUIC, const Wrapper &);
+    void SendResponse(const HQUIC &, const Response &);
 
-    void SendResponse(const Wrapper &, const HQUIC &);
+    void SendResponse(const Response &, const HQUIC &);
 
   private:
     using ConnectionManager::addUser;
