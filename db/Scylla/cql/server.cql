@@ -13,14 +13,14 @@ CREATE TABLE IF NOT EXISTS Servers(
     banner BLOB,
     description TEXT,
 
-    PRIMARY KEY((name)id)
+    PRIMARY KEY((name), id)
 );
 
 CREATE TABLE IF NOT EXISTS UserServers(
     user_id UUID,
     server_id UUID,
     role TEXT,
-    PRIMARY KEY((user_id)server_id)
+    PRIMARY KEY((user_id), server_id)
 );
 
 CREATE TABLE IF NOT EXISTS Roles(
@@ -30,19 +30,19 @@ CREATE TABLE IF NOT EXISTS Roles(
     color INT,
     permissions INT,
     position INT,
-    PRIMARY KEY((server_id)id)
+    PRIMARY KEY((server_id), id)
 );
 
 CREATE TABLE IF NOT EXISTS RoleMembers(
     role_id UUID,
     user_id UUID,
-    PRIMARY KEY((role_id)user_id)
+    PRIMARY KEY((role_id), user_id)
 );
 
 CREATE TABLE IF NOT EXISTS OwnerServers(
     owner_id UUID,
     server_id UUID,
-    PRIMARY KEY((owner_id)server_id)
+    PRIMARY KEY((owner_id), server_id)
 );
 
 CREATE TABLE IF NOT EXISTS Channels(
@@ -52,5 +52,5 @@ CREATE TABLE IF NOT EXISTS Channels(
     type TEXT,
     position INT,
     nsfw BOOLEAN,
-    PRIMARY KEY((server_id)id)
+    PRIMARY KEY((server_id), id)
 );
