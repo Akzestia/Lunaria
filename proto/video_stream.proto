@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+message VideoStreamInit {
+  int32 width = 1;
+  int32 height = 2;
+  string codec = 3;
+  float target_framerate = 4;
+}
+
+message VideoFrame {
+  int64 timestamp = 1;
+  int32 frame_number = 2;
+  bytes encoded_data = 3;
+  bool is_keyframe = 4;
+  int32 width = 5;
+  int32 height = 6;
+}
+
+message VideoStreamEnd {
+  string reason = 1;
+}
+
+message VideoStreamMessage {
+  oneof message {
+    VideoStreamInit init = 1;
+    VideoFrame frame = 2;
+    VideoStreamEnd end = 3;
+  }
+}

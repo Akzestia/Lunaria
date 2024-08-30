@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+message AudioStreamInit {
+  int32 sample_rate = 1;
+  string codec = 2;
+  int32 frame_size = 3;
+  int32 channels = 4;
+}
+
+message AudioPacket {
+  int64 timestamp = 1;
+  int32 sequence_number = 2;
+  bytes encoded_audio = 3;
+  bool is_silent = 4;
+}
+
+message AudioStreamEnd {
+  string reason = 1;
+}
+
+message AudioStreamMessage {
+  oneof message {
+    VoiceStreamInit init = 1;
+    VoicePacket packet = 2;
+    VoiceStreamEnd end = 3;
+  }
+}
