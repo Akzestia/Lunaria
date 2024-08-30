@@ -79,4 +79,14 @@ if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/rpc_respon
     exit 1
 fi
 
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/audio_stream.proto; then
+    echo "Error: Proto failed \`audio stream\`";
+    exit 1
+fi
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/video_stream.proto; then
+    echo "Error: Proto failed \`video stream\`";
+    exit 1
+fi
+
 echo "Proto files were successfully compiled";
