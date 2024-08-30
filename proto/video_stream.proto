@@ -1,4 +1,4 @@
-syntax = "proto3";
+ syntax = "proto3";
 
 message VideoStreamInit {
   int32 width = 1;
