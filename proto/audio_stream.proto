@@ -20,8 +20,8 @@ message AudioStreamEnd {
 
 message AudioStreamMessage {
   oneof message {
-    VoiceStreamInit init = 1;
-    VoicePacket packet = 2;
-    VoiceStreamEnd end = 3;
+    AudioStreamInit init = 1;
+    AudioPacket packet = 2;
+    AudioStreamEnd end = 3;
   }
 }
