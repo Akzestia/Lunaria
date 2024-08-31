@@ -197,6 +197,13 @@ Lxcode ScyllaManager::getUser(const Sign_in &si) {
         cass_value_get_string(cass_row_get_column(row, 3), &user_email,
                               &user_email_length);
 
+        const char *user_id;
+        size_t user_id_length;
+        cass_value_get_string(cass_row_get_column(row, 0), &user_id,
+                              &user_id_length);
+
+
+        u->set_user_id(std::string(user_id, user_id_length));
         u->set_user_name(user_name);
         u->set_user_email(std::string(user_email, user_email_length));
         u->set_display_name(std::string(display_name, display_name_length));
