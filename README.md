@@ -49,8 +49,8 @@ This project is actively using or integrating the following technologies:
   - Abseil - C++ Common Library by Google
   - OpenSSL - for cryptographic operations
 - **Databases**
-  - PostgreSQL
-  - ScyllaDB (migration in progress)
+  - PostgreSQL (Support for postgreSQL will be discontinued)
+  - ScyllaDB (Full transition to ScyllaDb)
 - **Tools**
   - g++ - Compiler
   - CMake - Build system
