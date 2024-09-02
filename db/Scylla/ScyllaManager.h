@@ -20,7 +20,7 @@ class ScyllaManager {
 #pragma region GET
     static Lxcode getUser(const Sign_in &);
     // Lxcode getMembers(const Server &);
-    static Lxcode getContacts(const User &);
+    static Lxcode getContacts(const char* &);
     static Lxcode getMessages(const User &);
     static Lxcode getServers(const User &);
 #pragma endregion
