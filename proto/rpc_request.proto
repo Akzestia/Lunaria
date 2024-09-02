@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+import "wrapper.proto";
+
+message Error {
+  string message = 1;
+  int32 code = 2;
+}
+
+message Request {
+  oneof request {
+    Wrapper result = 1;
+    Error error = 2;
+  }
+}
