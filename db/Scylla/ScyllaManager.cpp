@@ -202,7 +202,6 @@ Lxcode ScyllaManager::getUser(const Sign_in &si) {
         cass_value_get_string(cass_row_get_column(row, 0), &user_id,
                               &user_id_length);
 
-
         u->set_user_id(std::string(user_id, user_id_length));
         u->set_user_name(user_name);
         u->set_user_email(std::string(user_email, user_email_length));
@@ -820,6 +819,93 @@ Lxcode ScyllaManager::createServer(const Server &server) {
 
         if (s)
             delete s;
+        if (session)
+            cass_session_free(session);
+        if (cluster)
+            cass_cluster_free(cluster);
+        if (connect_future)
+            cass_future_free(connect_future);
+        if (statement)
+            cass_statement_free(statement);
+        if (result_future)
+            cass_future_free(result_future);
+        if (result)
+            cass_result_free(result);
+        if (iterator)
+            cass_iterator_free(iterator);
+
+        std::cout << e.what() << "\n";
+        return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
+    }
+}
+
+Lxcode ScyllaManager::getContacts(const char *&usser_id) {
+    CassSession *session = cass_session_new();
+    CassCluster *cluster = cass_cluster_new();
+    CassFuture *connect_future = nullptr;
+    CassStatement *statement = nullptr;
+    CassFuture *result_future = nullptr;
+    const CassResult *result = nullptr;
+    CassIterator *iterator = nullptr;
+    const CassRow *row = nullptr;
+
+    try {
+
+        // Set the contact points and authentication for the Scylla cluster
+        cass_cluster_set_contact_points(cluster, _host.c_str());
+        cass_cluster_set_port(cluster, _port);
+        cass_cluster_set_credentials(cluster, _user.c_str(), _password.c_str());
+
+        // Connect to the cluster
+        connect_future = cass_session_connect(session, cluster);
+        if (cass_future_error_code(connect_future) != CASS_OK) {
+            cass_future_free(connect_future);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect to Scylla cluster");
+        }
+
+        cass_future_free(connect_future);
+
+        statement = cass_statement_new(
+            "SELECT user_password FROM lunnaria_service.UserCredentials "
+            "WHERE user_name = ?",
+            1);
+        cass_statement_bind_string(statement, 0, usser_id);
+
+        result_future = cass_session_execute(session, statement);
+        if (cass_future_error_code(result_future) != CASS_OK) {
+            const char *error_message;
+            size_t error_message_length;
+            cass_future_error_message(result_future, &error_message,
+                                      &error_message_length);
+            std::cerr << "Error executing query: "
+                      << std::string(error_message, error_message_length)
+                      << std::endl;
+            cass_future_free(result_future);
+            cass_statement_free(statement);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED,
+                                    "Failed to execute query");
+        }
+
+        result = cass_future_get_result(result_future);
+        iterator = cass_iterator_from_result(result);
+        if (!cass_iterator_next(iterator)) {
+            std::cerr << "User not found" << std::endl;
+            cass_iterator_free(iterator);
+            cass_result_free(result);
+            cass_future_free(result_future);
+            cass_statement_free(statement);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_USER_NOT_FOUND, "User not found");
+        }
+
+        return Lxcode::OK();
+    } catch (const std::exception e) {
         if (session)
             cass_session_free(session);
         if (cluster)
