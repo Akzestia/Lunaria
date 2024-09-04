@@ -1,29 +1,21 @@
 syntax = "proto3";
 
 import "user.proto";
-import "test.proto";
 import "message.proto";
 import "auth.proto";
-import "report.proto";
-import "invite_link.proto";
-import "server.proto";
-import "vpn_graph.proto";
 import "authResponse.proto";
 import "contact.proto";
+import "fetch_response.proto";
 
 message Wrapper {
     uint32 route = 1;
     optional string AuthToken = 2;
     oneof payload {
         User user = 3;
-        Person person = 4;
-        Message message = 5;
-        Auth auth = 6;
-        Report report = 7;
-        Server serevr = 8;
-        Invite_link invite_link = 9;
-        Vpn_graph vpn_graph = 10;
-        AuthResponse authResponse = 11;
-        Contact contact = 12;
+        Message message = 4;
+        Auth auth = 5;
+        AuthResponse authResponse = 6;
+        Contact contact = 7;
+        f_servers res_servers = 8;
     }
 }
