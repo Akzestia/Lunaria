@@ -3,11 +3,6 @@
 export SRC_PROTO_DIR=./proto
 export DST_PROTO_DIR=./proto/build
 
-if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/test.proto; then
-    echo "Error: Proto failed \`test\`";
-    exit 1
-fi
-
 if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/user.proto; then
     echo "Error: Proto failed \`user\`";
     exit 1
@@ -91,6 +86,21 @@ fi
 
 if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/rpc_request.proto; then
     echo "Error: Proto failed \`rpc request\`";
+    exit 1
+fi
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/rpc_body.proto; then
+    echo "Error: Proto failed \`rpc request\`";
+    exit 1
+fi
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/fetch_response.proto; then
+    echo "Error: Proto failed \`rpc request\`";
+    exit 1
+fi
+
+if ! protoc -I=$SRC_PROTO_DIR --cpp_out=$DST_PROTO_DIR $SRC_PROTO_DIR/error.proto; then
+    echo "Error: Proto failed \`error\`";
     exit 1
 fi
 
