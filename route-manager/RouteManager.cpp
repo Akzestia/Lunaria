@@ -20,24 +20,19 @@ Lxcode RouteManager::handleReport(const Payload &payload) {
     }
 }
 
-Lxcode RouteManager::handleSignUp(const Payload &payload) {
-
-    if (!std::holds_alternative<Sign_up>(payload))
-        return Lxcode::AUTH_ERROR(AUTH_ERROR_INCORRECT_PAYLOAD_FORMAT,
-                                  "Incorect payload format");
+Lxcode RouteManager::handleSignUp(const SignUpRequest &sign_up) {
 
     Lxcode return_code = Lxcode::OK();
-    const Sign_up &sign_up = std::get<Sign_up>(payload);
 
 #ifdef USE_SCYLLA_DB
     return_code = ScyllaManager::createUser(sign_up);
 #else
-    User u;
-    u.set_user_name(sign_up.user_name());
-    u.set_user_email(sign_up.user_email());
-    u.set_user_password(sign_up.user_password());
+    // User u;
+    // u.set_user_name(sign_up.user_name());
+    // u.set_user_email(sign_up.user_email());
+    // u.set_user_password(sign_up.user_password());
 
-    return_code = DbManager::addUser(u);
+    // return_code = DbManager::addUser(u);
 #endif
 
     if (return_code == Lxcode::OK()) {
@@ -50,19 +45,12 @@ Lxcode RouteManager::handleSignUp(const Payload &payload) {
     return return_code;
 }
 
-Lxcode RouteManager::handleSignIn(const Payload &payload) {
-
-    if (!std::holds_alternative<Sign_in>(payload))
-        return Lxcode::AUTH_ERROR(AUTH_ERROR_INCORRECT_PAYLOAD_FORMAT,
-                                  "Incorect payload format");
-
-    const Sign_in &si = std::get<Sign_in>(payload);
-
+Lxcode RouteManager::handleSignIn(const SignInRequest &si) {
     Lxcode return_code = Lxcode::OK();
 #ifdef USE_SCYLLA_DB
     return_code = ScyllaManager::getUser(si);
 #else
-    return_code = DbManager::getUser(si);
+    // return_code = DbManager::getUser(si);
 #endif
 
     if (return_code == Lxcode::OK()) {
