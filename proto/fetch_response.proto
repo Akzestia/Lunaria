@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "server.proto";
+import "message.proto";
+import "user.proto";
+
+message f_servers {
+    repeated Server servers = 1;
+}
+
+message f_dmMessages {
+    repeated Message messages = 1;
+}
+
+message f_contacts {
+    repeated User contacts = 1;
+}
+
+message f_channelMessages {
+    repeated Message messages = 1;
+}
+
+message f_serverMembers {
+    repeated User members = 1;
+}
