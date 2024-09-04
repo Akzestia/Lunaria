@@ -463,9 +463,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         printf("[conn][%p] Connected\n", Connection);
 
         Response response;
-        Wrapper w;
-        w.set_route(SERVER_BINDING_REQUEST);
-        *response.mutable_result() = w;
+        response.set_route(SERVER_BINDING_REQUEST);
 
         SendResponse(response, Connection);
 
