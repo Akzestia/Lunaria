@@ -1,15 +1,12 @@
 syntax = "proto3";
 
-import "wrapper.proto";
-
-message Error {
-  string message = 1;
-  int32 code = 2;
-}
+import "rpc_body.proto";
+import "error.proto";
 
 message Response {
+    uint32 route = 1;
   oneof response {
-    Wrapper result = 1;
     Error error = 2;
+    Body body = 3;
   }
 }
