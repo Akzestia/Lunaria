@@ -5,6 +5,7 @@
 #include "clientListenerModule/ClientListener.h"
 #include "clientPeerHandler/ClientPeerHandler.h"
 #include <cstdint>
+#include <cstdio>
 #include <iostream>
 #include <mutex>
 
@@ -306,115 +307,6 @@ QUIC_STATUS QUIC_API QuicClient::StaticClientConnectionCallback(
         Connection, Context, Event);
 }
 
-#pragma region send(const absl::Cord &message)
-void QuicClient::send(const absl::Cord &message) {
-    HQUIC Stream = NULL;
-    QUIC_BUFFER *SendBuffer;
-
-    absl::Cord::ChunkIterator start = message.chunk_begin();
-    absl::Cord::ChunkIterator end = message.chunk_end();
-    std::vector<uint8_t> buffer;
-    for (auto it = start; it != end; ++it) {
-        buffer.insert(buffer.end(), it->data(), it->data() + it->size());
-    }
-
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer.size();
-    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
-
-    std::copy(buffer.begin(), buffer.end(), SendBuffer->Buffer);
-
-    if (QUIC_FAILED(
-            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
-                                        QuicClient::StaticClientStreamCallback,
-                                        this, &Stream))) {
-        printf("StreamOpen failed, 0x%x!\n", Status);
-        goto Error;
-    }
-
-    printf("[strm][%p] Starting...\n", Stream);
-
-    if (QUIC_FAILED(Status = MsQuic->StreamStart(
-                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
-        printf("StreamStart failed, 0x%x!\n", Status);
-        MsQuic->StreamClose(Stream);
-        goto Error;
-    }
-
-    printf("[strm][%p] Sending data...\n", Stream);
-
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("StreamSend failed, 0x%x!\n", Status);
-        goto Error;
-    }
-    std::cout << "\nSucces"
-              << "\n";
-Error:
-    if (QUIC_FAILED(Status)) {
-        MsQuic->ConnectionShutdown(Connection,
-                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
-        free(SendBuffer);
-    }
-}
-
-void QuicClient::send(const Wrapper &w) {
-    HQUIC Stream = NULL;
-    QUIC_BUFFER *SendBuffer;
-
-    size_t size = w.ByteSizeLong();
-    std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
-    if (!w.SerializeToArray(buffer->data(), buffer->size())) {
-        std::cerr << "Failed to serialize Wrapper\n";
-        goto Error;
-    }
-
-    SendBuffer = (QUIC_BUFFER *)malloc(sizeof(QUIC_BUFFER));
-    SendBuffer->Length = buffer->size();
-    SendBuffer->Buffer = (uint8_t *)malloc(SendBuffer->Length);
-
-    std::copy(buffer->begin(), buffer->end(), SendBuffer->Buffer);
-
-    if (QUIC_FAILED(
-            Status = MsQuic->StreamOpen(Connection, QUIC_STREAM_OPEN_FLAG_NONE,
-                                        QuicClient::StaticClientStreamCallback,
-                                        this, &Stream))) {
-        printf("StreamOpen failed, 0x%x!\n", Status);
-        goto Error;
-    }
-
-    printf("[strm][%p] Starting...\n", Stream);
-
-    if (QUIC_FAILED(Status = MsQuic->StreamStart(
-                        Stream, QUIC_STREAM_START_FLAG_NONE))) {
-        printf("StreamStart failed, 0x%x!\n", Status);
-        MsQuic->StreamClose(Stream);
-        goto Error;
-    }
-
-    printf("[strm][%p] Sending data...\n", Stream);
-
-    if (QUIC_FAILED(Status =
-                        MsQuic->StreamSend(Stream, SendBuffer, 1,
-                                           QUIC_SEND_FLAG_FIN, SendBuffer))) {
-        printf("StreamSend failed, 0x%x!\n", Status);
-        goto Error;
-    }
-
-    std::cout << "\nSuccess" << "\n";
-
-    delete buffer;
-
-Error:
-    if (QUIC_FAILED(Status)) {
-        MsQuic->ConnectionShutdown(Connection,
-                                   QUIC_CONNECTION_SHUTDOWN_FLAG_NONE, 0);
-        free(SendBuffer);
-        delete buffer;
-    }
-};
-
 HQUIC QuicClient::getConnection() { return Connection; }
 
 #pragma region openTunnel()
@@ -456,15 +348,15 @@ QuicClient::~QuicClient() {
     }
 }
 
-#pragma region AuthRequest()
-bool QuicClient::ClientRequest(const Wrapper &auth_request) {
+#pragma region ClientRequest()
+bool QuicClient::ClientRequest(const Request &rpc_request) {
 
     QUIC_BUFFER *SendBuffer;
     HQUIC Stream = NULL;
 
-    size_t size = auth_request.ByteSizeLong();
+    size_t size = rpc_request.ByteSizeLong();
     std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
-    if (!auth_request.SerializeToArray(buffer->data(), buffer->size())) {
+    if (!rpc_request.SerializeToArray(buffer->data(), buffer->size())) {
         std::cerr << "Failed to serialize Wrapper\n";
         goto Error;
     }
@@ -517,12 +409,14 @@ Error:
 
 #pragma region SignUp()
 
-Lxcode QuicClient::SignUp(const Auth &auth) {
-    Wrapper wrapper;
-    *wrapper.mutable_auth() = auth;
-    wrapper.set_route(SIGN_UP);
+Lxcode QuicClient::SignUp(const SignUpRequest &auth) {
+    Request request;
+    Body rpc_body;
+    *rpc_body.mutable_su_request() = auth;
+    request.set_route(SIGN_UP);
+    *request.mutable_body() = rpc_body;
 
-    if (ClientRequest(wrapper)) {
+    if (ClientRequest(request)) {
 
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetSignUpMutex());
@@ -565,12 +459,15 @@ Lxcode QuicClient::SignUp(const Auth &auth) {
 
 #pragma region SignIn()
 
-Lxcode QuicClient::SignIn(const Auth &auth) {
+Lxcode QuicClient::SignIn(const SignInRequest &auth) {
+    Request request;
+    Body rpc_body;
+    *rpc_body.mutable_si_request() = auth;
+    request.set_route(SIGN_IN);
+    *request.mutable_body() = rpc_body;
 
-    Wrapper wrapper;
-    *wrapper.mutable_auth() = auth;
-    wrapper.set_route(SIGN_IN);
-    if (ClientRequest(wrapper)) {
+    printf("Route %d", request.route());
+    if (ClientRequest(request)) {
 
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetLoginMutex());
@@ -652,10 +549,56 @@ Error:
 
 #pragma region AddContact
 Lxcode QuicClient::AddContact(const Contact &contact) {
-    Wrapper w;
-    *w.mutable_contact() = contact;
-    w.set_route(CREATE_CONTACT);
-    if (ClientRequest(w)) {
+
+    Request request;
+    Body rpc_body;
+    *rpc_body.mutable_ct_request() = contact;
+    request.set_route(CREATE_CONTACT);
+    if (ClientRequest(request)) {
+
+        std::cout << "Request started\n";
+        std::unique_lock<std::mutex> lock(ClientPeerHandler::GetContactMutex());
+        std::cout << "Waiting for respons\n";
+        ClientPeerHandler::waitingForContact_POST = true;
+
+        if (ClientPeerHandler::GetContactCv().wait_for(
+                lock, std::chrono::seconds(5),
+                [this] { return !ClientPeerHandler::waitingForContact_POST; })) {
+            std::cout << "Response received\n";
+
+            if (ClientPeerHandler::contactResponse_POST.success) {
+                std::cout << "Contact post success\n";
+
+                try {
+                    Contact *qr = std::get<Contact*>(ClientPeerHandler::contactResponse_POST.payload);
+                    auto response = Lxcode::OK(qr);
+                    return response;
+                } catch (const std::exception &e) {
+                    std::cerr << e.what() << '\n';
+                    return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                            "Contact post failed");
+                }
+
+            } else {
+                std::cout << "Contact post failed\n";
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Contact post failed");
+            }
+        } else {
+            std::cout << "Timeout waiting for response\n";
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect");
+        }
+    }
+
+    return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to send");
+}
+#pragma endregion
+
+
+#pragma region AddContact
+Lxcode QuicClient::getContacts(const Request &rpc_request) {
+
+    if (ClientRequest(rpc_request)) {
 
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetContactMutex());
