@@ -2,7 +2,8 @@
 #define QUIC_CLIENT_H
 #include "../MsQuic/Linux_x64/include/msquic.h"
 #include "../proto/build/user.pb.h"
-#include "../proto/build/wrapper.pb.h"
+#include "../proto/build/rpc_request.pb.h"
+#include "../proto/build/rpc_body.pb.h"
 #include <absl/strings/cord.h>
 #include <condition_variable>
 #include <cstdio>
@@ -28,12 +29,11 @@ class QuicClient : protected ClientPeerHandler {
 
     QuicClient& getRef();
 
-    Lxcode SignUp(const Auth &);
-    Lxcode SignIn(const Auth &);
+    Lxcode SignUp(const SignUpRequest &);
+    Lxcode SignIn(const SignInRequest &);
     Lxcode AddContact(const Contact &);
 
-    void send(const absl::Cord &);
-    void send(const Wrapper &);
+    Lxcode getContacts(const Request &);
 
     void openPeer(const char* PeerIp, uint16_t UdpPort);
     void sendToPeer();
@@ -59,7 +59,7 @@ class QuicClient : protected ClientPeerHandler {
 
     bool openTunnel();
 
-    bool ClientRequest(const Wrapper &);
+    bool ClientRequest(const Request &);
 
     void ClientLoadConfiguration(const char *cert, const char *key);
 
