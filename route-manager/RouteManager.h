@@ -2,7 +2,7 @@
 #ifndef ROUTE_MANAGER_H
 #define ROUTE_MANAGER_H
 
-#include "../db/Postgress/DbManager.h"
+// #include "../db/Postgress/DbManager.h"
 #include "../db/Scylla/ScyllaManager.h"
 #include "../proto/build/auth.pb.h"
 #include "../proto/build/contact.pb.h"
@@ -16,6 +16,8 @@
 #include "../proto/build/wrapper.pb.h"
 #include "../proto/build/sign_in.pb.h"
 #include "../proto/build/sign_up.pb.h"
+#include "../proto/build/rpc_request.pb.h"
+#include "../proto/build/rpc_body.pb.h"
 #include "../Helpers/AuthManager/AuthManager.h"
 #include <functional>
 #include <set>
@@ -34,8 +36,8 @@ class RouteManager {
   private:
 
     static Lxcode handleReport(const Payload &);
-    static Lxcode handleSignUp(const Payload &);
-    static Lxcode handleSignIn(const Payload &);
+    static Lxcode handleSignUp(const SignUpRequest &);
+    static Lxcode handleSignIn(const SignInRequest &);
 
     static Lxcode getMessages(const Payload &, std::set<Message> &);
     static Lxcode getContacts(const Payload &, std::set<User> &);
