@@ -8,6 +8,9 @@
 #include "../../proto/build/sign_in.pb.h"
 #include "../../proto/build/user.pb.h"
 #include "../../proto/build/server.pb.h"
+#include "../../proto/build/rpc_request.pb.h"
+#include "../../proto/build/rpc_body.pb.h"
+#include "../../proto/build/server.pb.h"
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <condition_variable>
@@ -18,7 +21,7 @@ class ScyllaManager {
   protected:
     static void initScyllaManager();
 #pragma region GET
-    static Lxcode getUser(const Sign_in &);
+    static Lxcode getUser(const SignInRequest &);
     // Lxcode getMembers(const Server &);
     static Lxcode getContacts(const char* &);
     static Lxcode getMessages(const User &);
@@ -26,7 +29,7 @@ class ScyllaManager {
 #pragma endregion
 
 #pragma region POST
-    static Lxcode createUser(const Sign_up &);
+    static Lxcode createUser(const SignUpRequest &);
     static Lxcode createContact(const Contact &);
     static Lxcode createMessage(const Message &);
     static Lxcode createServer(const Server &);

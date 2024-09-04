@@ -53,7 +53,7 @@ void ScyllaManager::initScyllaManager() {
     }
 }
 
-Lxcode ScyllaManager::getUser(const Sign_in &si) {
+Lxcode ScyllaManager::getUser(const SignInRequest &si) {
     const std::string &user_name = si.user_name();
     const std::string &user_password = si.user_password();
 
@@ -238,7 +238,7 @@ Lxcode ScyllaManager::getUser(const Sign_in &si) {
     }
 }
 
-Lxcode ScyllaManager::createUser(const Sign_up &su) {
+Lxcode ScyllaManager::createUser(const SignUpRequest &su) {
     if (su.user_name().length() < 3 || su.user_email().length() < 3 ||
         su.user_password().length() < 3)
         return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT, "Invalid input");
