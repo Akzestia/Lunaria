@@ -1,7 +1,6 @@
 #include "ClientPeerHandler.h"
 #include "../../proto/build/authResponse.pb.h"
 #include "../../proto/build/rpc_response.pb.h"
-#include "../../proto/build/wrapper.pb.h"
 #include "../../route-manager/Routes.hpp"
 #include "../clientListenerModule/ClientListener.h"
 #include <condition_variable>
@@ -164,13 +163,6 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
 
-    // std::unique_ptr<Wrapper> wrapper = std::make_unique<Wrapper>();
-    // if (!wrapper->ParseFromArray(data, dataSize)) {
-    //     std::cerr << "Error: Failed to parse the Cord into a Wrapper"
-    //               << std::endl;
-    //     return false;
-    // }
-
     std::unique_ptr<Response> response = std::make_unique<Response>();
     if (!response->ParseFromArray(data, dataSize)) {
         std::cerr << "Error: Failed to parse the Cord into a response"
@@ -178,20 +170,18 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return false;
     }
 
-    if (response->has_error()) {
+    if (response->has_error() || !response->has_body()) {
         printf("Error code: %d", response->error().code());
         return false;
     }
 
-    std::cout << "\nRoute: " << response->result().route() << "\n";
-
-    switch (response->result().route()) {
+    switch (response->route()) {
     case AUTH_RESPONSE_SIGN_UP: {
-        if (response->result().authresponse().is_successful()) {
+        if (response->body().au_response().is_successful()) {
             std::cout << "Auth successful SU\n";
 
             ReleaseAuthMutex(signupMutex, signup_Cv, T_SIGN_UP, 1,
-                             response->result().authresponse());
+                             response->body().au_response());
             return true;
         }
         std::cout << "Auth failed\n";
@@ -200,10 +190,10 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return false;
     }
     case AUTH_RESPONSE_SIGN_IN: {
-        if (response->result().authresponse().is_successful()) {
+        if (response->body().au_response().is_successful()) {
             std::cout << "Auth successful SI\n";
             ReleaseAuthMutex(loginMutex, login_Cv, T_SIGN_IN, 1,
-                             response->result().authresponse());
+                             response->body().au_response());
             return true;
         }
         std::cout << "Auth failed\n";
@@ -218,10 +208,10 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return true;
     }
     case POST_RESPONSE_CONTACT: {
-        if(response->result().has_contact()){
+        if(response->body().has_ct_response()){
             std::cout << "Contact response\n";
             QuicResponse quicResponse;
-            quicResponse.payload = new Contact(response->result().contact());
+            quicResponse.payload = new Contact(response->body().ct_response());
             ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, true, quicResponse);
             return true;
         }
