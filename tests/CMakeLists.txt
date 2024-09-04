@@ -32,7 +32,6 @@ add_executable(server
     ${CMAKE_SOURCE_DIR}/../server/QuicServer.cpp
     ${ROUTE_MANAGER_DIR}/RouteManager.cpp
     ${TOKIO_CPP_DIR}/ThreadPool.cpp
-    ${PROTO_BUILD_DIR}/test.pb.cc
     ${PROTO_BUILD_DIR}/user.pb.cc
     ${PROTO_BUILD_DIR}/message.pb.cc
     ${PROTO_BUILD_DIR}/auth.pb.cc
@@ -47,10 +46,13 @@ add_executable(server
     ${PROTO_BUILD_DIR}/wrapper.pb.cc
     ${PROTO_BUILD_DIR}/authResponse.pb.cc
     ${PROTO_BUILD_DIR}/rpc_response.pb.cc
+    ${PROTO_BUILD_DIR}/rpc_request.pb.cc
+    ${PROTO_BUILD_DIR}/rpc_body.pb.cc
+    ${PROTO_BUILD_DIR}/error.pb.cc
+    ${PROTO_BUILD_DIR}/fetch_response.pb.cc
     ${HELPERS_DIR}/ConnectionManager/ConnectionManager.cpp
     ${HELPERS_DIR}/AuthManager/AuthManager.cpp
     ${HELPERS_DIR}/Encryption/EncryptionManager.cpp
-    ${DB_DIR}/Postgress/DbManager.cpp
     ${DB_DIR}/Scylla/ScyllaManager.cpp
     ${HELPERS_DIR}/PeerHandler/PeerHandler.cpp
 )
@@ -62,7 +64,6 @@ target_link_libraries(server
     absl::log_internal_check_op
     absl::log_internal_message
     absl::cord
-    pqxx
     crypto
     ssl
     numa
