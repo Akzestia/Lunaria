@@ -2,6 +2,8 @@ syntax = "proto3";
 
 import "authResponse.proto";
 import "contact.proto";
+import "message.proto";
+import "server.proto";
 
 message FetchContacts {
     string user_id = 1;
@@ -37,6 +39,18 @@ message SignUpRequest {
     string user_password = 4;
 }
 
+message FetchResponseContacts {
+    repeated Contact response = 1;
+}
+
+message FetchResponseServers {
+    repeated Server response = 1;
+}
+
+message FetchResponseMessages {
+    repeated Message response = 1;
+}
+
 message Body {
     oneof payload {
         FetchContacts f_contacts = 1;
@@ -49,5 +63,8 @@ message Body {
         AuthResponse au_response = 8;
         Contact ct_request = 9;
         Contact ct_response = 10;
+        FetchResponseContacts f_contacts_response = 11;
+        FetchResponseContacts f_servers_response = 12;
+        FetchResponseContacts f_messages_response = 13;
     }
 }
