@@ -42,7 +42,7 @@ Lxcode RouteManager::handleSignUp(const SignUpRequest &sign_up) {
         return return_code;
     }
 
-    return return_code;
+    return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED, "");;
 }
 
 Lxcode RouteManager::handleSignIn(const SignInRequest &si) {
@@ -61,22 +61,11 @@ Lxcode RouteManager::handleSignIn(const SignInRequest &si) {
         return return_code;
     }
 
-    return return_code;
+    return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED, "");;
 }
 
-Lxcode RouteManager::getMessages(const Payload &payload, std::set<Message> &) {
-    Lxcode return_code;
-    return_code.error_code = 0x00;
-    return_code.is_successful = true;
-    if (std::holds_alternative<User>(payload)) {
-        const User &user = std::get<User>(payload);
-
-        return return_code;
-    } else {
-        return_code.error_code = 0x01;
-        return_code.is_successful = false;
-        return return_code;
-    }
+Lxcode RouteManager::getMessages(const char* &user_id) {
+    return Lxcode::UNKNOWN_ERROR("Not implemented");
 }
 
 Lxcode RouteManager::createContact(const Payload &payload) {
@@ -99,7 +88,17 @@ Lxcode RouteManager::createContact(const Payload &payload) {
         return code;
     }
 
-    return code;
+    return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED, "");
+}
+
+Lxcode RouteManager::getContacts(const char* &user_id){
+    Lxcode code = ScyllaManager::getContacts(user_id);
+
+    if(code == Lxcode::OK()){
+        return code;
+    }
+
+    return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED, "");
 }
 
 RouteManager::~RouteManager() {}
