@@ -25,4 +25,5 @@ enum Routes : uint8_t {
     SERVER_BINDING_REQUEST = 0x15,
     CREATE_CONTACT = 0x16,
     POST_RESPONSE_CONTACT = 0x17,
+    FETCH_CONTACTS_BY_ID = 0x18,
 };
