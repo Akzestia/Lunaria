@@ -4,6 +4,7 @@
 #include "../../proto/build/rpc_body.pb.h"
 #include "../../server/QuicServer.h"
 #include <iostream>
+#include <memory>
 
 std::unordered_map<HQUIC, uint8_t *> *PeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -168,6 +169,15 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         std::cout << "Contact creation failed\n";
 
         return false;
+    }
+    case FETCH_CONTACTS_BY_ID:{
+        if(!request->has_body() || !request->body().has_f_contacts())
+            return false;
+
+        std::unique_ptr<std::set<User*>*> output = std::make_unique<std::set<User*>*>();
+
+        const char* user_id = request->body().f_contacts().user_id().c_str();
+        Lxcode response = RouteManager::getContacts(user_id);
     }
     default:
         std::cerr << "Error: Unknown route" << std::endl;
