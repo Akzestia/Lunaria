@@ -1,15 +1,17 @@
 #ifndef ERROR_MANAGER_H
 #define ERROR_MANAGER_H
-#include <cstdint>
-#include <variant>
-#include <string_view>
-#include "../proto/build/user.pb.h"
-#include "../proto/build/contact.pb.h"
 #include "../proto/build/authResponse.pb.h"
-#include "../proto/build/server.pb.h"
+#include "../proto/build/contact.pb.h"
 #include "../proto/build/message.pb.h"
+#include "../proto/build/server.pb.h"
+#include "../proto/build/user.pb.h"
+#include <cstdint>
+#include <set>
+#include <string_view>
+#include <variant>
 
-using LxPayload = std::variant<User*, Contact*, Server*, Message*, AuthResponse*>;
+using LxPayload = std::variant<User *, Contact *, Server *, Message *,
+                               AuthResponse *, std::set<User *> *, std::set<Message*>*>;
 
 enum class LxcodeType : uint8_t {
     OK = 0x00,
@@ -29,37 +31,63 @@ struct Lxcode {
         return {LxcodeType::OK, true, 0x00, "Success", payload};
     }
 
-    static Lxcode AUTH_ERROR(uint8_t code, const std::string& message, LxPayload payload = {}) {
+    static Lxcode AUTH_ERROR(uint8_t code, const std::string &message,
+                             LxPayload payload = {}) {
         return {LxcodeType::AUTH_ERROR, false, code, message, payload};
     }
 
-    static Lxcode DB_ERROR(uint8_t code, const std::string& message, LxPayload payload = {}) {
+    static Lxcode DB_ERROR(uint8_t code, const std::string &message,
+                           LxPayload payload = {}) {
         return {LxcodeType::DB_ERROR, false, code, message, payload};
     }
 
-    static Lxcode UNKNOWN_ERROR(const std::string& message, LxPayload payload = {}) {
+    static Lxcode UNKNOWN_ERROR(const std::string &message,
+                                LxPayload payload = {}) {
         return {LxcodeType::UNKNOWN_ERROR, false, 0xFF, message, payload};
     }
 
-    bool operator==(const Lxcode& other) const {
-        return type == other.type && is_successful == other.is_successful && error_code == other.error_code;
+    bool operator==(const Lxcode &other) const {
+        return type == other.type && is_successful == other.is_successful &&
+               error_code == other.error_code;
     }
 
-    bool operator==(LxcodeType other) const {
-        return type == other;
+    bool operator==(LxcodeType other) const { return type == other; }
+
+    Lxcode &operator=(const Lxcode &other) = default;
+
+    template <typename Container> void cleanupContainer(Container *container) {
+        for (auto &item : *container)
+            delete item;
+        delete container;
     }
 
-    Lxcode& operator=(const Lxcode& other) = default;
+    void cleanup() {
+        std::visit(
+            [this](auto ptr) {
+                using PtrType = std::decay_t<decltype(ptr)>;
+
+                if constexpr (std::is_pointer_v<PtrType>)
+                    delete ptr;
+                else if constexpr (std::is_same_v<PtrType,
+                                                  std::set<User *> *> ||
+                                   std::is_same_v<PtrType,
+                                                  std::set<Message *> *>) {
+                    cleanupContainer(ptr);
+                }
+            },
+            payload);
+    }
+
+    ~Lxcode() { cleanup(); }
 };
 
-
 enum Lxcodes : uint8_t {
-    //0x00 Success
+    // 0x00 Success
     SUCCESS = 0x00,
-    //0x01 -> 0x10 Auth errors
+    // 0x01 -> 0x10 Auth errors
     AUTH_ERROR_INCORRECT_PAYLOAD_FORMAT = 0x01,
     AUTH_ERROR_INCORRECT_USER_PASSWORD = 0x02,
-    //0x31 -> 0x40 Db errors
+    // 0x31 -> 0x40 Db errors
     DB_ERROR_STD_EXCEPTION = 0x31,
     DB_ERROR_USER_NOT_FOUND = 0x32,
     DB_ERROR_FAILED_TO_ADD_USER = 0x33,
@@ -74,7 +102,7 @@ enum Lxcodes : uint8_t {
 };
 
 class ErrorManager {
-public:
+  public:
     operator bool() const;
 };
 
