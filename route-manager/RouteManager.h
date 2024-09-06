@@ -39,9 +39,9 @@ class RouteManager {
     static Lxcode handleSignUp(const SignUpRequest &);
     static Lxcode handleSignIn(const SignInRequest &);
 
-    static Lxcode getMessages(const Payload &, std::set<Message> &);
-    static Lxcode getContacts(const Payload &, std::set<User> &);
-    static Lxcode getServers(const Payload &, std::set<Server> &);
+    static Lxcode getMessages(const char* &);
+    static Lxcode getContacts(const char* &);
+    static Lxcode getServers(const char* &);
 
     static Lxcode createContact(const Payload &);
 
