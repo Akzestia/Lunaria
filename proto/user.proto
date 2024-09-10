@@ -5,7 +5,7 @@ message User {
     string display_name = 2;
     string user_name = 3;
     string user_email = 4;
-    string user_password = 5;
+    bytes user_password = 5;
     bytes user_avatar = 6;
     sint32 online_status = 7;
 }
