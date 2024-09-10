@@ -3,6 +3,8 @@
 #include "../../proto/build/rpc_request.pb.h"
 #include "../../proto/build/rpc_body.pb.h"
 #include "../../server/QuicServer.h"
+#include <cstdio>
+#include <google/protobuf/arena.h>
 #include <iostream>
 #include <memory>
 
@@ -45,7 +47,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
 
-    std::unique_ptr<Request> request = std::make_unique<Request>();
+    std::shared_ptr<Request> request = std::make_unique<Request>();
     if (!request->ParseFromArray(data, dataSize)) {
         std::cerr << "Error: Failed to parse the Cord into a request"
                   << std::endl;
@@ -61,6 +63,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     }
 
     std::cout << "\nRoute: " << request->route() << "\n";
+    std::cout << "\nPassword " << request->body().si_request().user_password() << "\n";
 
     switch (request->route()) {
     case SIGN_UP: {
@@ -69,7 +72,8 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
             return false;
         SignUpRequest su = request->body().su_request();
 
-        Lxcode response = RouteManager::handleSignUp(su);
+        Arena arena;
+        Lxcode response = RouteManager::handleSignUp(su, arena);
 
         Response rpc_response;
         if (response == Lxcode::OK()) {
@@ -80,8 +84,7 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
             try {
                 authResponse.set_is_successful(true);
                 authResponse.set_token(response.response);
-                *authResponse.mutable_user() =
-                    *std::get<User *>(response.payload);
+                *authResponse.mutable_user() = *std::get<User*>(response.payload);
 
                 Body rpc_body;
                 *rpc_body.mutable_au_response() = authResponse;
@@ -89,11 +92,9 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
                 reinterpret_cast<QuicServer *>(context)->SendResponse(
                     Stream, rpc_response);
-                delete std::get<User *>(response.payload);
                 return true;
             } catch (const std::exception &e) {
                 std::cerr << e.what() << '\n';
-                delete std::get<User *>(response.payload);
             }
         }
 
@@ -111,7 +112,9 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         if(!request->has_body() || !request->body().has_si_request())
             return false;
 
-        Lxcode response = RouteManager::handleSignIn(request->body().si_request());
+        printf("SignInX");
+        Arena arena;
+        Lxcode response = RouteManager::handleSignIn(request->body().si_request(), arena);
 
         Response rpc_response;
         if (response == Lxcode::OK()) {
@@ -132,8 +135,6 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
             reinterpret_cast<QuicServer *>(context)->SendResponse(
                 Stream, rpc_response);
-
-            delete std::get<User *>(response.payload);
             return true;
         }
 
@@ -150,7 +151,8 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         if(!request->has_body() || !request->body().has_ct_request())
             return false;
 
-        Lxcode response = RouteManager::createContact(request->body().ct_request());
+        Arena arena;
+        Lxcode response = RouteManager::createContact(request->body().ct_request(), arena);
         Response rpc_response;
         if (response == Lxcode::OK()) {
             std::cout << "Contact created\n";
@@ -174,10 +176,9 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         if(!request->has_body() || !request->body().has_f_contacts())
             return false;
 
-        std::unique_ptr<std::set<User*>*> output = std::make_unique<std::set<User*>*>();
-
+        Arena arena;
         const char* user_id = request->body().f_contacts().user_id().c_str();
-        Lxcode response = RouteManager::getContacts(user_id);
+        Lxcode response = RouteManager::getContacts(user_id, arena);
     }
     default:
         std::cerr << "Error: Unknown route" << std::endl;
