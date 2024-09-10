@@ -5,10 +5,9 @@
 #include "../clientListenerModule/ClientListener.h"
 #include <condition_variable>
 #include <cstdio>
+#include <google/protobuf/arena.h>
 #include <iostream>
 #include <memory>
-
-QuicResponse defaultQuicResponse = {false};
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -49,6 +48,10 @@ bool ClientPeerHandler::waitingForServer_POST = false;
 bool ClientPeerHandler::waitingForServer_PUT = false;
 bool ClientPeerHandler::waitingForServer_DELETE = false;
 bool ClientPeerHandler::waitingForServer_GET = false;
+
+Arena* ClientPeerHandler::signInArenaRef = nullptr;
+Arena* ClientPeerHandler::signUpArenaRef = nullptr;
+Arena* ClientPeerHandler::contactPostArenaRef = nullptr;
 
 ClientPeerHandler::~ClientPeerHandler() {
     std::cout << "\nPeers ~\n";
@@ -113,7 +116,8 @@ void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
         ClientPeerHandler::loginResponse.success = success;
         if (success) {
             ClientPeerHandler::loginResponse.payload =
-                new AuthResponse(authResponse);
+                google::protobuf::Arena::Create<AuthResponse>(signInArenaRef,
+                                                              authResponse);
         }
         Cv.notify_one();
         ClientPeerHandler::waitingForLogin = false;
@@ -122,7 +126,8 @@ void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
         ClientPeerHandler::signUpResponse.success = success;
         if (success) {
             ClientPeerHandler::signUpResponse.payload =
-                new AuthResponse(authResponse);
+                google::protobuf::Arena::Create<AuthResponse>(signUpArenaRef,
+                                                              authResponse);
         }
         Cv.notify_one();
         ClientPeerHandler::waitingForSignUp = false;
@@ -208,15 +213,29 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return true;
     }
     case POST_RESPONSE_CONTACT: {
-        if(response->body().has_ct_response()){
+        if (response->body().has_ct_response()) {
             std::cout << "Contact response\n";
             QuicResponse quicResponse;
-            quicResponse.payload = new Contact(response->body().ct_response());
-            ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, true, quicResponse);
+            quicResponse.payload = google::protobuf::Arena::Create<Contact>(
+                contactPostArenaRef, response->body().ct_response());
+            ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, true,
+                            quicResponse);
             return true;
         }
         ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, false);
         printf("Failed to add contact");
+        return false;
+    }
+    case FETCH_CONTACTS_RESPONSE: {
+        if (response->body().has_f_contacts_response()) {
+
+            QuicResponse quicResponse;
+
+            ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_GET, true,
+                            quicResponse);
+            return true;
+        }
+        ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_GET, false);
         return false;
     }
     default:
@@ -229,4 +248,16 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 void ClientPeerHandler::HandlePeer(HQUIC Stream, const uint8_t &data,
                                    size_t dataSize) {
     SetPeer(Stream, data, dataSize);
+}
+
+void ClientPeerHandler::SetSignInArena(Arena *arena){
+    signInArenaRef = arena;
+}
+
+void ClientPeerHandler::SetSignUpArena(Arena *arena){
+    signUpArenaRef = arena;
+}
+
+void ClientPeerHandler::SetContactPostArena(Arena *arena){
+    contactPostArenaRef = arena;
 }
