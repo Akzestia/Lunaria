@@ -1,17 +1,23 @@
 #ifndef ERROR_MANAGER_H
 #define ERROR_MANAGER_H
+
 #include "../proto/build/authResponse.pb.h"
 #include "../proto/build/contact.pb.h"
 #include "../proto/build/message.pb.h"
 #include "../proto/build/server.pb.h"
 #include "../proto/build/user.pb.h"
+
 #include <cstdint>
+#include <cstdio>
+#include <google/protobuf/arena.h>
+#include <memory>
 #include <set>
 #include <string_view>
 #include <variant>
 
-using LxPayload = std::variant<User *, Contact *, Server *, Message *,
-                               AuthResponse *, std::set<User *> *, std::set<Message*>*>;
+using LxPayload =
+    std::variant<User*, Contact*, Server*, Message*, AuthResponse*,
+                 std::set<User>*, std::set<Message>*>;
 
 enum class LxcodeType : uint8_t {
     OK = 0x00,
@@ -27,58 +33,55 @@ struct Lxcode {
     std::string response;
     LxPayload payload;
 
-    static Lxcode OK(LxPayload payload = {}) {
-        return {LxcodeType::OK, true, 0x00, "Success", payload};
+    Lxcode(LxcodeType type, bool is_successful, uint8_t error_code,
+           std::string response, LxPayload payload = {})
+        : type(type), is_successful(is_successful), error_code(error_code),
+          response(std::move(response)), payload(std::move(payload)) {}
+
+    // OK template for arena-allocated payload
+    template <typename T>
+    static Lxcode OK(T* payload) {
+        return Lxcode(LxcodeType::OK, true, 0x00, "Success", LxPayload(payload));
     }
 
-    static Lxcode AUTH_ERROR(uint8_t code, const std::string &message,
-                             LxPayload payload = {}) {
-        return {LxcodeType::AUTH_ERROR, false, code, message, payload};
+    static Lxcode OK() { return Lxcode(LxcodeType::OK, true, 0x00, "Success"); }
+
+    template <typename T>
+    static Lxcode AUTH_ERROR(google::protobuf::Arena* arena, uint8_t code,
+                             const std::string& message, T* payload) {
+        return Lxcode(LxcodeType::AUTH_ERROR, false, code, message, LxPayload(payload));
     }
 
-    static Lxcode DB_ERROR(uint8_t code, const std::string &message,
-                           LxPayload payload = {}) {
-        return {LxcodeType::DB_ERROR, false, code, message, payload};
+    static Lxcode AUTH_ERROR(uint8_t code, const std::string& message) {
+        return Lxcode(LxcodeType::AUTH_ERROR, false, code, message);
     }
 
-    static Lxcode UNKNOWN_ERROR(const std::string &message,
-                                LxPayload payload = {}) {
-        return {LxcodeType::UNKNOWN_ERROR, false, 0xFF, message, payload};
+    template <typename T>
+    static Lxcode DB_ERROR(google::protobuf::Arena* arena, uint8_t code,
+                           const std::string& message, T* payload) {
+        return Lxcode(LxcodeType::DB_ERROR, false, code, message, LxPayload(payload));
     }
 
-    bool operator==(const Lxcode &other) const {
+    static Lxcode DB_ERROR(uint8_t code, const std::string& message) {
+        return Lxcode(LxcodeType::DB_ERROR, false, code, message);
+    }
+
+    template <typename T>
+    static Lxcode UNKNOWN_ERROR(google::protobuf::Arena* arena, const std::string& message,
+                                T* payload) {
+        return Lxcode(LxcodeType::UNKNOWN_ERROR, false, 0xFF, message, LxPayload(payload));
+    }
+
+    static Lxcode UNKNOWN_ERROR(const std::string& message) {
+        return Lxcode(LxcodeType::UNKNOWN_ERROR, false, 0xFF, message);
+    }
+
+    bool operator==(const Lxcode& other) const {
         return type == other.type && is_successful == other.is_successful &&
                error_code == other.error_code;
     }
 
     bool operator==(LxcodeType other) const { return type == other; }
-
-    Lxcode &operator=(const Lxcode &other) = default;
-
-    template <typename Container> void cleanupContainer(Container *container) {
-        for (auto &item : *container)
-            delete item;
-        delete container;
-    }
-
-    void cleanup() {
-        std::visit(
-            [this](auto ptr) {
-                using PtrType = std::decay_t<decltype(ptr)>;
-
-                if constexpr (std::is_pointer_v<PtrType>)
-                    delete ptr;
-                else if constexpr (std::is_same_v<PtrType,
-                                                  std::set<User *> *> ||
-                                   std::is_same_v<PtrType,
-                                                  std::set<Message *> *>) {
-                    cleanupContainer(ptr);
-                }
-            },
-            payload);
-    }
-
-    ~Lxcode() { cleanup(); }
 };
 
 enum Lxcodes : uint8_t {
