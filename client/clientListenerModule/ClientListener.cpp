@@ -312,5 +312,5 @@ void ClientListener::Close() {
 Lxcode ClientListener::SendResponseToServer(HQUIC Stream, const Wrapper& wrapper) {
     Lxcode code = Lxcode::OK();
 
-    return {};
+    return code;
 }
