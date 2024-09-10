@@ -4,40 +4,75 @@
 #include "../proto/build/authResponse.pb.h"
 #include "../proto/build/contact.pb.h"
 #include "../proto/build/message.pb.h"
+#include <google/protobuf/arena.h>
 #include <set>
 #include <variant>
+#include <optional>
 
-using QuicResponsePayload = std::variant<AuthResponse *, std::set<Message *>,
-                                         std::set<Contact *>, Contact *>;
+using QuicResponsePayload =
+    std::variant<AuthResponse*,
+                std::set<Message*>,
+                std::set<Contact*>, Contact*>;
 
 struct QuicResponse {
     bool success;
     QuicResponsePayload payload;
+    google::protobuf::Arena* arena;
 
-    template <typename Container> void cleanupContainer(Container *container) {
-        for (auto &item : *container)
-            delete item;
-        delete container;
+    QuicResponse() : success(false), payload(), arena(nullptr) {}
+
+    explicit QuicResponse(bool success, google::protobuf::Arena* arena = nullptr)
+        : success(success), payload(), arena(arena) {}
+
+    QuicResponse(const QuicResponse &other) : success(other.success), arena(other.arena) {
+        payload = other.payload;
     }
 
-    void cleanup() {
-        std::visit(
-            [this](auto ptr) {
-                using PtrType = std::decay_t<decltype(ptr)>;
-
-                if constexpr (std::is_pointer_v<PtrType>)
-                    delete ptr;
-                else if constexpr (std::is_same_v<PtrType,
-                                                  std::set<User *> *> ||
-                                   std::is_same_v<PtrType,
-                                                  std::set<Message *> *>) {
-                    cleanupContainer(ptr);
-                }
-            },
-            payload);
+    QuicResponse(QuicResponse &&other) noexcept
+        : success(other.success), payload(std::move(other.payload)), arena(other.arena) {
+        other.arena = nullptr;
     }
 
-    ~QuicResponse() { cleanup(); }
+    QuicResponse &operator=(const QuicResponse &other) {
+        if (this != &other) {
+            success = other.success;
+            payload = other.payload;
+            arena = other.arena;
+        }
+        return *this;
+    }
+
+    QuicResponse &operator=(QuicResponse &&other) noexcept {
+        if (this != &other) {
+            success = other.success;
+            payload = std::move(other.payload);
+            arena = other.arena;
+            other.arena = nullptr;
+        }
+        return *this;
+    }
+
+    template <typename T>
+    void set_payload(T* message) {
+        payload = message;
+    }
+
+    template <typename T>
+    std::optional<T*> get_payload() const {
+        if (auto ptr = std::get_if<T*>(&payload)) {
+            return *ptr;
+        }
+        return std::nullopt;
+    }
+
+    template <typename T>
+    std::optional<T*> extract_payload() {
+        return get_payload<T>();
+    }
+
+    ~QuicResponse() = default;
 };
+
+inline const QuicResponse defaultQuicResponse{false};
 
 #endif // QUICRESPONSE_H
