@@ -15,22 +15,25 @@
 #include <boost/property_tree/ptree.hpp>
 #include <condition_variable>
 #include <cstdint>
+#include <google/protobuf/arena.h>
 #include <iostream>
+
+using Arena = google::protobuf::Arena;
 
 class ScyllaManager {
   protected:
     static void initScyllaManager();
 #pragma region GET
-    static Lxcode getUser(const SignInRequest &);
+    static Lxcode getUser(const SignInRequest &, Arena &);
     // Lxcode getMembers(const Server &);
-    static Lxcode getContacts(const char* &);
+    static Lxcode getContacts(const char* &, Arena &);
     static Lxcode getMessages(const User &);
     static Lxcode getServers(const User &);
 #pragma endregion
 
 #pragma region POST
-    static Lxcode createUser(const SignUpRequest &);
-    static Lxcode createContact(const Contact &);
+    static Lxcode createUser(const SignUpRequest &, Arena &);
+    static Lxcode createContact(const Contact &, Arena &);
     static Lxcode createMessage(const Message &);
     static Lxcode createServer(const Server &);
 #pragma endregion
