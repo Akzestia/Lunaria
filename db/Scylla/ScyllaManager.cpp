@@ -1,12 +1,13 @@
 #include "ScyllaManager.h"
+#include "../../Helpers/Encryption/EncryptionManager.h"
 #include <cassandra.h>
 #include <cstdint>
 #include <cstdio>
 #include <ctime>
 #include <exception>
+#include <google/protobuf/arena.h>
 #include <iomanip>
 #include <iostream>
-#include <memory>
 
 std::string ScyllaManager::_host = "";
 std::string ScyllaManager::_keyspace = "";
@@ -53,7 +54,7 @@ void ScyllaManager::initScyllaManager() {
     }
 }
 
-Lxcode ScyllaManager::getUser(const SignInRequest &si) {
+Lxcode ScyllaManager::getUser(const SignInRequest &si, Arena &arena) {
     const std::string &user_name = si.user_name();
     const std::string &user_password = si.user_password();
 
@@ -69,7 +70,7 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    User *u = nullptr;
+    User* u = nullptr;
 
     try {
         cass_cluster_set_contact_points(cluster, _host.c_str());
@@ -87,7 +88,7 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si) {
         }
         cass_future_free(connect_future);
 
-        // Check the user credentials
+        // Check the user credentialsuser_pas
         statement = cass_statement_new(
             "SELECT user_password FROM lunnaria_service.UserCredentials "
             "WHERE user_name = ?",
@@ -130,7 +131,10 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si) {
         cass_value_get_string(cass_row_get_column(row, 0), &retrieved_password,
                               &retrieved_password_length);
 
-        if (user_password !=
+        std::string output;
+        EncryptionManager::ToSHA256(user_password, output);
+
+        if (output !=
             std::string(retrieved_password, retrieved_password_length)) {
             cass_iterator_free(iterator);
             cass_result_free(result);
@@ -186,7 +190,7 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si) {
         }
 
         row = cass_iterator_get_row(iterator);
-        u = new User();
+        u = google::protobuf::Arena::Create<User>(&arena);
         const char *display_name;
         size_t display_name_length;
         cass_value_get_string(cass_row_get_column(row, 1), &display_name,
@@ -230,15 +234,13 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si) {
             cass_result_free(result);
         if (iterator)
             cass_iterator_free(iterator);
-        if (u)
-            delete u;
 
         std::cerr << e.what() << std::endl;
         return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
     }
 }
 
-Lxcode ScyllaManager::createUser(const SignUpRequest &su) {
+Lxcode ScyllaManager::createUser(const SignUpRequest &su, Arena &arena) {
     if (su.user_name().length() < 3 || su.user_email().length() < 3 ||
         su.user_password().length() < 3)
         return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT, "Invalid input");
@@ -251,7 +253,7 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    User *u = nullptr;
+    User* u = nullptr;
 
     try {
         // Set the contact points and authentication for the Scylla cluster
@@ -398,13 +400,16 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su) {
 
         std::cout << "Executing query AFTER EMAIIL" << std::endl;
         // Insert into UserCredentials table
+
+        std::string output;
+        EncryptionManager::ToSHA256(su.user_password(), output);
         statement =
             cass_statement_new("INSERT INTO lunnaria_service.UserCredentials "
                                "(user_name, user_password, user_email) "
                                "VALUES (?, ?, ?)",
                                3);
         cass_statement_bind_string(statement, 0, su.user_name().c_str());
-        cass_statement_bind_string(statement, 1, su.user_password().c_str());
+        cass_statement_bind_string(statement, 1, output.c_str());
         cass_statement_bind_string(statement, 2, su.user_email().c_str());
 
         result_future = cass_session_execute(session, statement);
@@ -455,7 +460,7 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su) {
 
         std::cout << "FINAL AFTER E INSERT\n";
 
-        u = new User();
+        u = google::protobuf::Arena::Create<User>(&arena);
         u->set_display_name("User");
         u->set_user_name(su.user_name());
         u->set_user_email(su.user_email());
@@ -468,6 +473,7 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su) {
         cass_cluster_free(cluster);
 
         return Lxcode::OK(u);
+
     } catch (const std::exception &e) {
         if (session)
             cass_session_free(session);
@@ -483,15 +489,13 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su) {
             cass_result_free(result);
         if (iterator)
             cass_iterator_free(iterator);
-        if (u)
-            delete u;
 
         std::cerr << e.what() << std::endl;
         return Lxcode::DB_ERROR(DB_ERROR_STD_EXCEPTION, e.what());
     }
 }
 
-Lxcode ScyllaManager::createContact(const Contact &contact) {
+Lxcode ScyllaManager::createContact(const Contact &contact, Arena &arena) {
 
     printf("Creating %s\n", contact.a_user_name().c_str());
     printf("Creating %s\n", contact.b_user_name().c_str());
@@ -513,7 +517,7 @@ Lxcode ScyllaManager::createContact(const Contact &contact) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    std::unique_ptr<Contact> c;
+    Contact* c = nullptr;
 
     char a_user_id[CASS_UUID_STRING_LENGTH];
     char b_user_id[CASS_UUID_STRING_LENGTH];
@@ -725,11 +729,11 @@ Lxcode ScyllaManager::createContact(const Contact &contact) {
         cass_session_free(session);
         cass_cluster_free(cluster);
 
-        c = std::make_unique<Contact>();
+        c = google::protobuf::Arena::Create<Contact>(&arena);
         *c->mutable_a_user_id_string() = a_user_id;
         *c->mutable_b_user_id_string() = b_user_id;
 
-        return Lxcode::OK(c.release());
+        return Lxcode::OK(c);
     } catch (const std::exception e) {
         if (session)
             cass_session_free(session);
@@ -760,7 +764,7 @@ Lxcode ScyllaManager::createServer(const Server &server) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    Server *s = nullptr;
+    Server* s;
 
     try {
         // Set the contact points and authentication for the Scylla cluster
@@ -814,11 +818,8 @@ Lxcode ScyllaManager::createServer(const Server &server) {
         cass_session_free(session);
         cass_cluster_free(cluster);
 
-        return Lxcode::OK(s);
+        return Lxcode::OK(std::move(s));
     } catch (const std::exception e) {
-
-        if (s)
-            delete s;
         if (session)
             cass_session_free(session);
         if (cluster)
@@ -839,7 +840,7 @@ Lxcode ScyllaManager::createServer(const Server &server) {
     }
 }
 
-Lxcode ScyllaManager::getContacts(const char *&usser_id) {
+Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
     CassSession *session = cass_session_new();
     CassCluster *cluster = cass_cluster_new();
     CassFuture *connect_future = nullptr;
