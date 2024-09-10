@@ -6,7 +6,9 @@
 #include "clientPeerHandler/ClientPeerHandler.h"
 #include <cstdint>
 #include <cstdio>
+#include <google/protobuf/arena.h>
 #include <iostream>
+#include <memory>
 #include <mutex>
 
 #ifndef UNREFERENCED_PARAMETER
@@ -409,7 +411,7 @@ Error:
 
 #pragma region SignUp()
 
-Lxcode QuicClient::SignUp(const SignUpRequest &auth) {
+Lxcode QuicClient::SignUp(const SignUpRequest &auth, Arena &arena) {
     Request request;
     Body rpc_body;
     *rpc_body.mutable_su_request() = auth;
@@ -430,8 +432,7 @@ Lxcode QuicClient::SignUp(const SignUpRequest &auth) {
 
             if (ClientPeerHandler::signUpResponse.success) {
                 try {
-                    AuthResponse *ar = std::get<AuthResponse *>(
-                        ClientPeerHandler::signUpResponse.payload);
+                    AuthResponse* ar = std::get<AuthResponse*>(ClientPeerHandler::signUpResponse.payload);
                     auto response = Lxcode::OK(ar);
                     return response;
                 } catch (const std::exception &e) {
@@ -459,7 +460,7 @@ Lxcode QuicClient::SignUp(const SignUpRequest &auth) {
 
 #pragma region SignIn()
 
-Lxcode QuicClient::SignIn(const SignInRequest &auth) {
+Lxcode QuicClient::SignIn(const SignInRequest &auth, Arena &arena) {
     Request request;
     Body rpc_body;
     *rpc_body.mutable_si_request() = auth;
@@ -468,7 +469,7 @@ Lxcode QuicClient::SignIn(const SignInRequest &auth) {
 
     printf("Route %d", request.route());
     if (ClientRequest(request)) {
-
+        ClientPeerHandler::SetSignInArena(&arena);
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetLoginMutex());
         std::cout << "Waiting for respons\n";
@@ -483,8 +484,7 @@ Lxcode QuicClient::SignIn(const SignInRequest &auth) {
                 std::cout << "Login success\n";
 
                 try {
-                    AuthResponse *ar = std::get<AuthResponse *>(
-                        ClientPeerHandler::loginResponse.payload);
+                    AuthResponse* ar = google::protobuf::Arena::Create<AuthResponse>(&arena, *ClientPeerHandler::loginResponse.extract_payload<AuthResponse>().value());
                     auto response = Lxcode::OK(ar);
                     return response;
                 } catch (const std::exception &e) {
@@ -548,14 +548,14 @@ Error:
 #pragma endregion
 
 #pragma region AddContact
-Lxcode QuicClient::AddContact(const Contact &contact) {
+Lxcode QuicClient::AddContact(const Contact &contact, Arena &arena) {
 
     Request request;
     Body rpc_body;
     *rpc_body.mutable_ct_request() = contact;
     request.set_route(CREATE_CONTACT);
     if (ClientRequest(request)) {
-
+        ClientPeerHandler::SetContactPostArena(&arena);
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetContactMutex());
         std::cout << "Waiting for respons\n";
@@ -570,7 +570,7 @@ Lxcode QuicClient::AddContact(const Contact &contact) {
                 std::cout << "Contact post success\n";
 
                 try {
-                    Contact *qr = std::get<Contact*>(ClientPeerHandler::contactResponse_POST.payload);
+                    Contact* qr = google::protobuf::Arena::Create<Contact>(&arena,*ClientPeerHandler::contactResponse_POST.extract_payload<Contact>().value());
                     auto response = Lxcode::OK(qr);
                     return response;
                 } catch (const std::exception &e) {
@@ -596,25 +596,34 @@ Lxcode QuicClient::AddContact(const Contact &contact) {
 
 
 #pragma region AddContact
-Lxcode QuicClient::getContacts(const Request &rpc_request) {
+Lxcode QuicClient::getContacts(const char* user_id, Arena &arena) {
+
+    Request rpc_request;
+    Body rpc_body;
+    FetchContacts f_contacts;
+
+    *f_contacts.mutable_user_id() = user_id;
+    *rpc_body.mutable_f_contacts() = f_contacts;
+    *rpc_request.mutable_body() = rpc_body;
+    rpc_request.set_route(FETCH_CONTACTS_BY_ID);
 
     if (ClientRequest(rpc_request)) {
 
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetContactMutex());
         std::cout << "Waiting for respons\n";
-        ClientPeerHandler::waitingForContact_POST = true;
+        ClientPeerHandler::waitingForContact_GET = true;
 
         if (ClientPeerHandler::GetContactCv().wait_for(
                 lock, std::chrono::seconds(5),
-                [this] { return !ClientPeerHandler::waitingForContact_POST; })) {
+                [this] { return !ClientPeerHandler::waitingForContact_GET; })) {
             std::cout << "Response received\n";
 
-            if (ClientPeerHandler::contactResponse_POST.success) {
+            if (ClientPeerHandler::contactResponse_GET.success) {
                 std::cout << "Contact post success\n";
 
                 try {
-                    Contact *qr = std::get<Contact*>(ClientPeerHandler::contactResponse_POST.payload);
+                    Contact* qr = google::protobuf::Arena::Create<Contact>(&arena, *ClientPeerHandler::contactResponse_GET.extract_payload<Contact>().value());
                     auto response = Lxcode::OK(qr);
                     return response;
                 } catch (const std::exception &e) {
