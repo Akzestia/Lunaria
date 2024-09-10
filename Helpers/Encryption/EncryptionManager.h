@@ -13,6 +13,7 @@ class EncryptionManager {
     EncryptionManager() = default;
     friend class QuicServer;
     friend class RequestManager;
+    friend class ScyllaManager;
 
   protected:
     static bool encryptMessage(const char *, const char *, char **);

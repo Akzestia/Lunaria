@@ -11,9 +11,8 @@ bool EncryptionManager::ToSHA256(const std::string &input,
     SHA256_Final(hash, &sha256);
 
     char hexString[SHA256_DIGEST_LENGTH * 2 + 1];
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i)
         sprintf(hexString + (i * 2), "%02x", hash[i]);
-    }
     hexString[SHA256_DIGEST_LENGTH * 2] = 0;
 
     output = std::string(hexString);
@@ -68,9 +67,8 @@ bool EncryptionManager::generateKey(const char *userName, char **output) {
     size_t userNameLength = strlen(userName);
 
     unsigned int hash = 0;
-    for (size_t i = 0; i < userNameLength; ++i) {
+    for (size_t i = 0; i < userNameLength; ++i)
         hash = (hash * 31) + userName[i];
-    }
 
     char hashString[16];
     snprintf(hashString, sizeof(hashString), "%u", hash);
