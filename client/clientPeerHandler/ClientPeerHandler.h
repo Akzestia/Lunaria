@@ -4,10 +4,13 @@
 #include "../QuicResponse.hpp"
 #include <condition_variable>
 #include <cstdint>
+#include <google/protobuf/arena.h>
 #include <mutex>
 #include <shared_mutex>
 #include <sys/stat.h>
 #include <unordered_map>
+
+using Arena = google::protobuf::Arena;
 
 enum AuthType : uint8_t {
     T_SIGN_UP = 0,
@@ -25,6 +28,15 @@ class ClientPeerHandler {
     virtual ~ClientPeerHandler();
 
   protected:
+
+    static Arena* signInArenaRef;
+    static Arena* signUpArenaRef;
+    static Arena* contactPostArenaRef;
+
+    static void SetSignInArena(Arena *);
+    static void SetSignUpArena(Arena *);
+    static void SetContactPostArena(Arena *);
+
     static bool waitingForLogin;
     static QuicResponse loginResponse;
 
