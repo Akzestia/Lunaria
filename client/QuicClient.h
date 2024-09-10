@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <cstdio>
 #include <cstdlib>
+#include <google/protobuf/arena.h>
 #include <iostream>
 #include <mutex>
 #include <shared_mutex>
@@ -19,6 +20,8 @@
 #include "../tokio-cpp/ThreadPool.h"
 #include "clientPeerHandler/ClientPeerHandler.h"
 
+using Arena = google::protobuf::Arena;
+
 class QuicClient : protected ClientPeerHandler {
   public:
     void Connect();
@@ -29,11 +32,11 @@ class QuicClient : protected ClientPeerHandler {
 
     QuicClient& getRef();
 
-    Lxcode SignUp(const SignUpRequest &);
-    Lxcode SignIn(const SignInRequest &);
-    Lxcode AddContact(const Contact &);
+    Lxcode SignUp(const SignUpRequest &, Arena &);
+    Lxcode SignIn(const SignInRequest &, Arena &);
+    Lxcode AddContact(const Contact &, Arena &);
 
-    Lxcode getContacts(const Request &);
+    Lxcode getContacts(const char*, Arena &);
 
     void openPeer(const char* PeerIp, uint16_t UdpPort);
     void sendToPeer();
