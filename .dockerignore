@@ -21,6 +21,7 @@ vpn/
 Windows/
 GUI/
 chatbot/
+native/
 
 !proto/build
 !compile.proto.sh
