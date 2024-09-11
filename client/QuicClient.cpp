@@ -623,7 +623,7 @@ Lxcode QuicClient::getContacts(const char* user_id, Arena &arena) {
                 std::cout << "Contact post success\n";
 
                 try {
-                    Contact* qr = google::protobuf::Arena::Create<Contact>(&arena, *ClientPeerHandler::contactResponse_GET.extract_payload<Contact>().value());
+                    std::set<User>* qr = google::protobuf::Arena::Create<std::set<User>>(&arena, *ClientPeerHandler::contactResponse_GET.extract_payload<std::set<User>*>().value());
                     auto response = Lxcode::OK(qr);
                     return response;
                 } catch (const std::exception &e) {
