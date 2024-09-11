@@ -5,31 +5,33 @@
 #include "../proto/build/contact.pb.h"
 #include "../proto/build/message.pb.h"
 #include <google/protobuf/arena.h>
+#include <optional>
 #include <set>
 #include <variant>
-#include <optional>
 
 using QuicResponsePayload =
-    std::variant<AuthResponse*,
-                std::set<Message*>,
-                std::set<Contact*>, Contact*>;
+    std::variant<AuthResponse *, std::set<Message> *, std::set<Contact> *,
+                 std::set<User> *, Contact *>;
 
 struct QuicResponse {
     bool success;
     QuicResponsePayload payload;
-    google::protobuf::Arena* arena;
+    google::protobuf::Arena *arena;
 
     QuicResponse() : success(false), payload(), arena(nullptr) {}
 
-    explicit QuicResponse(bool success, google::protobuf::Arena* arena = nullptr)
+    explicit QuicResponse(bool success,
+                          google::protobuf::Arena *arena = nullptr)
         : success(success), payload(), arena(arena) {}
 
-    QuicResponse(const QuicResponse &other) : success(other.success), arena(other.arena) {
+    QuicResponse(const QuicResponse &other)
+        : success(other.success), arena(other.arena) {
         payload = other.payload;
     }
 
     QuicResponse(QuicResponse &&other) noexcept
-        : success(other.success), payload(std::move(other.payload)), arena(other.arena) {
+        : success(other.success), payload(std::move(other.payload)),
+          arena(other.arena) {
         other.arena = nullptr;
     }
 
@@ -52,21 +54,16 @@ struct QuicResponse {
         return *this;
     }
 
-    template <typename T>
-    void set_payload(T* message) {
-        payload = message;
-    }
+    template <typename T> void set_payload(T *message) { payload = message; }
 
-    template <typename T>
-    std::optional<T*> get_payload() const {
-        if (auto ptr = std::get_if<T*>(&payload)) {
+    template <typename T> std::optional<T *> get_payload() const {
+        if (auto ptr = std::get_if<T *>(&payload)) {
             return *ptr;
         }
         return std::nullopt;
     }
 
-    template <typename T>
-    std::optional<T*> extract_payload() {
+    template <typename T> std::optional<T *> extract_payload() {
         return get_payload<T>();
     }
 
