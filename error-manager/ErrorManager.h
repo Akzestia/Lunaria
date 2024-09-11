@@ -17,7 +17,7 @@
 
 using LxPayload =
     std::variant<User*, Contact*, Server*, Message*, AuthResponse*,
-                 std::set<User>*, std::set<Message>*>;
+                 std::set<User>*, std::set<Message>*, std::set<Contact>*>;
 
 enum class LxcodeType : uint8_t {
     OK = 0x00,
