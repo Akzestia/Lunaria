@@ -32,10 +32,12 @@ class ClientPeerHandler {
     static Arena* signInArenaRef;
     static Arena* signUpArenaRef;
     static Arena* contactPostArenaRef;
+    static Arena* contactGetArenaRef;
 
     static void SetSignInArena(Arena *);
     static void SetSignUpArena(Arena *);
     static void SetContactPostArena(Arena *);
+    static void SetContactGetArena(Arena *);
 
     static bool waitingForLogin;
     static QuicResponse loginResponse;

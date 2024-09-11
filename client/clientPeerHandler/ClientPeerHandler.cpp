@@ -8,6 +8,7 @@
 #include <google/protobuf/arena.h>
 #include <iostream>
 #include <memory>
+#include <set>
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -155,7 +156,9 @@ void ClientPeerHandler::ReleaseAnyMutex(std::mutex &lock,
 
     } break;
     case T_CONTACT_GET: {
-
+        ClientPeerHandler::contactResponse_GET.success = success;
+        if(success)
+            ClientPeerHandler::contactResponse_GET = QuicResponse(quicResponse);
     } break;
     case T_CONTACT_DELETE: {
 
@@ -230,7 +233,7 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         if (response->body().has_f_contacts_response()) {
 
             QuicResponse quicResponse;
-
+            quicResponse.payload = google::protobuf::Arena::Create<std::set<User>>(contactGetArenaRef, response->body().f_contacts_response());
             ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_GET, true,
                             quicResponse);
             return true;
