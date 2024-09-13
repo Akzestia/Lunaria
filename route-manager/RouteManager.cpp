@@ -89,6 +89,7 @@ Lxcode RouteManager::getContacts(const char *&user_id, Arena &arena) {
     Lxcode code = ScyllaManager::getContacts(user_id, arena);
 
     if (code == Lxcode::OK()) {
+        printf("Successfully fetched contacts");
         return code;
     }
 
