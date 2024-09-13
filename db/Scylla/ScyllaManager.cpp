@@ -850,6 +850,8 @@ Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
 
+    std::set<User>* contacts = nullptr;
+
     try {
 
         // Set the contact points and authentication for the Scylla cluster
@@ -870,8 +872,8 @@ Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
         cass_future_free(connect_future);
 
         statement = cass_statement_new(
-            "SELECT user_password FROM lunnaria_service.UserCredentials "
-            "WHERE user_name = ?",
+            "SELECT a_user_id FROM lunnaria_service.Contacts "
+            "WHERE a_user_id = ?",
             1);
         cass_statement_bind_string(statement, 0, usser_id);
 
@@ -892,17 +894,30 @@ Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
                                     "Failed to execute query");
         }
 
-        result = cass_future_get_result(result_future);
-        iterator = cass_iterator_from_result(result);
-        if (!cass_iterator_next(iterator)) {
-            std::cerr << "User not found" << std::endl;
-            cass_iterator_free(iterator);
-            cass_result_free(result);
+        cass_future_free(result_future);
+        cass_statement_free(statement);
+
+        statement = cass_statement_new(
+            "SELECT a_user_id, b_user_id FROM lunnaria_service.Contacts "
+            "WHERE ? IN (a_user_id, b_user_id)",
+            1);
+        cass_statement_bind_string(statement, 0, usser_id);
+
+        result_future = cass_session_execute(session, statement);
+        if (cass_future_error_code(result_future) != CASS_OK) {
+            const char *error_message;
+            size_t error_message_length;
+            cass_future_error_message(result_future, &error_message,
+                                      &error_message_length);
+            std::cerr << "Error executing query: "
+                      << std::string(error_message, error_message_length)
+                      << std::endl;
             cass_future_free(result_future);
             cass_statement_free(statement);
             cass_session_free(session);
             cass_cluster_free(cluster);
-            return Lxcode::DB_ERROR(DB_ERROR_USER_NOT_FOUND, "User not found");
+            return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED,
+                                    "Failed to execute query");
         }
 
         return Lxcode::OK();
