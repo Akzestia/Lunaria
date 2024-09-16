@@ -8,7 +8,6 @@
 #include <google/protobuf/arena.h>
 #include <iostream>
 #include <memory>
-#include <set>
 
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
@@ -50,9 +49,10 @@ bool ClientPeerHandler::waitingForServer_PUT = false;
 bool ClientPeerHandler::waitingForServer_DELETE = false;
 bool ClientPeerHandler::waitingForServer_GET = false;
 
-Arena* ClientPeerHandler::signInArenaRef = nullptr;
-Arena* ClientPeerHandler::signUpArenaRef = nullptr;
-Arena* ClientPeerHandler::contactPostArenaRef = nullptr;
+Arena *ClientPeerHandler::signInArenaRef = nullptr;
+Arena *ClientPeerHandler::signUpArenaRef = nullptr;
+Arena *ClientPeerHandler::contactPostArenaRef = nullptr;
+Arena *ClientPeerHandler::contactGetArenaRef = nullptr;
 
 ClientPeerHandler::~ClientPeerHandler() {
     std::cout << "\nPeers ~\n";
@@ -144,7 +144,6 @@ void ClientPeerHandler::ReleaseAnyMutex(std::mutex &lock,
     std::unique_lock<std::mutex> ulock(lock);
     switch (type) {
     case T_CONTACT_POST: {
-        ClientPeerHandler::contactResponse_POST.success = success;
         if (success) {
             ClientPeerHandler::contactResponse_POST =
                 QuicResponse(quicResponse);
@@ -156,15 +155,39 @@ void ClientPeerHandler::ReleaseAnyMutex(std::mutex &lock,
 
     } break;
     case T_CONTACT_GET: {
-        ClientPeerHandler::contactResponse_GET.success = success;
-        if(success)
+        if (success)
             ClientPeerHandler::contactResponse_GET = QuicResponse(quicResponse);
+        Cv.notify_one();
+        ClientPeerHandler::waitingForContact_GET = false;
     } break;
     case T_CONTACT_DELETE: {
 
     } break;
     }
     printf("\nNotifiedY\n");
+}
+
+void ClientPeerHandler::ReleaseAll() {
+    std::unique_lock<std::mutex> loginLock(loginMutex, std::defer_lock);
+    std::unique_lock<std::mutex> signupLock(signupMutex, std::defer_lock);
+    std::unique_lock<std::mutex> contactLock(contactMutex, std::defer_lock);
+
+    std::lock(loginLock, signupLock, contactLock);
+
+    waitingForLogin = false;
+    waitingForSignUp = false;
+    waitingForContact_POST = false;
+    waitingForContact_PUT = false;
+    waitingForContact_DELETE = false;
+    waitingForContact_GET = false;
+    waitingForServer_POST = false;
+    waitingForServer_PUT = false;
+    waitingForServer_DELETE = false;
+    waitingForServer_GET = false;
+
+    login_Cv.notify_all();
+    signup_Cv.notify_all();
+    contact_Cv.notify_all();
 }
 
 bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
@@ -175,11 +198,13 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     if (!response->ParseFromArray(data, dataSize)) {
         std::cerr << "Error: Failed to parse the Cord into a response"
                   << std::endl;
+        ClientPeerHandler::ReleaseAll();
         return false;
     }
 
     if (response->has_error() || !response->has_body()) {
         printf("Error code: %d", response->error().code());
+        ClientPeerHandler::ReleaseAll();
         return false;
     }
 
@@ -216,12 +241,16 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         return true;
     }
     case POST_RESPONSE_CONTACT: {
+        std::cout << "Has ct_response: " << response->body().has_ct_response()
+                  << "\n";
+        std::cout << "Has rpc_body: " << response->has_body() << "\n";
         if (response->body().has_ct_response()) {
             std::cout << "Contact response\n";
             QuicResponse quicResponse;
             quicResponse.payload = google::protobuf::Arena::Create<Contact>(
                 contactPostArenaRef, response->body().ct_response());
-            ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, true,
+            quicResponse.success = true;
+            ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_POST, 1,
                             quicResponse);
             return true;
         }
@@ -231,9 +260,17 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     }
     case FETCH_CONTACTS_RESPONSE: {
         if (response->body().has_f_contacts_response()) {
-
+            std::cout
+                << "FETCH_CONTACTS_RESPONSE: "
+                << response->body().f_contacts_response().response().size()
+                << '\n';
             QuicResponse quicResponse;
-            quicResponse.payload = google::protobuf::Arena::Create<std::set<User>>(contactGetArenaRef, response->body().f_contacts_response());
+            quicResponse.payload =
+                google::protobuf::Arena::Create<ArenaVector<User>>(
+                    contactGetArenaRef,
+                    response->body().f_contacts_response().response().begin(),
+                    response->body().f_contacts_response().response().end());
+            quicResponse.success = true;
             ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_GET, true,
                             quicResponse);
             return true;
@@ -247,20 +284,19 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     }
 }
 
-// TODO proper handling
 void ClientPeerHandler::HandlePeer(HQUIC Stream, const uint8_t &data,
                                    size_t dataSize) {
     SetPeer(Stream, data, dataSize);
 }
 
-void ClientPeerHandler::SetSignInArena(Arena *arena){
-    signInArenaRef = arena;
-}
+void ClientPeerHandler::SetSignInArena(Arena *arena) { signInArenaRef = arena; }
 
-void ClientPeerHandler::SetSignUpArena(Arena *arena){
-    signUpArenaRef = arena;
-}
+void ClientPeerHandler::SetSignUpArena(Arena *arena) { signUpArenaRef = arena; }
 
-void ClientPeerHandler::SetContactPostArena(Arena *arena){
+void ClientPeerHandler::SetContactPostArena(Arena *arena) {
     contactPostArenaRef = arena;
+}
+
+void ClientPeerHandler::SetContactGetArena(Arena *arena) {
+    contactGetArenaRef = arena;
 }

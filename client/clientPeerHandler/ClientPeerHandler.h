@@ -68,6 +68,8 @@ class ClientPeerHandler {
                     ReleaseMutexType release_type, bool succes,
                     const QuicResponse &quic_response = QuicResponse());
 
+    static void ReleaseAll();
+
     static std::mutex &GetLoginMutex();
     static std::condition_variable_any &GetLoginCv();
 
