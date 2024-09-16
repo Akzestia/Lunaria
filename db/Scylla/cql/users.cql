@@ -18,3 +18,9 @@ CREATE TABLE IF NOT EXISTS Users (
 
     PRIMARY KEY((user_name), id)
 );
+
+CREATE TABLE IF NOT EXISTS UsersByID (
+    id UUID,
+    user_name TEXT,
+    PRIMARY KEY((id))
+);
