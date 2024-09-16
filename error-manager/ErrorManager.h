@@ -6,6 +6,7 @@
 #include "../proto/build/message.pb.h"
 #include "../proto/build/server.pb.h"
 #include "../proto/build/user.pb.h"
+#include "../Helpers/ArenaMemoryResource/ArenaMemoryResource.hpp"
 
 #include <cstdint>
 #include <cstdio>
@@ -16,8 +17,8 @@
 #include <variant>
 
 using LxPayload =
-    std::variant<User*, Contact*, Server*, Message*, AuthResponse*,
-                 std::set<User>*, std::set<Message>*, std::set<Contact>*>;
+    std::variant<User *, Contact *, Server *, Message *, AuthResponse *,
+                 ArenaSet<User> *, ArenaVector<User> *, ArenaSet<Message> *, ArenaSet<Contact> *>;
 
 enum class LxcodeType : uint8_t {
     OK = 0x00,
@@ -39,44 +40,47 @@ struct Lxcode {
           response(std::move(response)), payload(std::move(payload)) {}
 
     // OK template for arena-allocated payload
-    template <typename T>
-    static Lxcode OK(T* payload) {
-        return Lxcode(LxcodeType::OK, true, 0x00, "Success", LxPayload(payload));
+    template <typename T> static Lxcode OK(T *payload) {
+        return Lxcode(LxcodeType::OK, true, 0x00, "Success",
+                      LxPayload(payload));
     }
 
     static Lxcode OK() { return Lxcode(LxcodeType::OK, true, 0x00, "Success"); }
 
     template <typename T>
-    static Lxcode AUTH_ERROR(google::protobuf::Arena* arena, uint8_t code,
-                             const std::string& message, T* payload) {
-        return Lxcode(LxcodeType::AUTH_ERROR, false, code, message, LxPayload(payload));
+    static Lxcode AUTH_ERROR(google::protobuf::Arena *arena, uint8_t code,
+                             const std::string &message, T *payload) {
+        return Lxcode(LxcodeType::AUTH_ERROR, false, code, message,
+                      LxPayload(payload));
     }
 
-    static Lxcode AUTH_ERROR(uint8_t code, const std::string& message) {
+    static Lxcode AUTH_ERROR(uint8_t code, const std::string &message) {
         return Lxcode(LxcodeType::AUTH_ERROR, false, code, message);
     }
 
     template <typename T>
-    static Lxcode DB_ERROR(google::protobuf::Arena* arena, uint8_t code,
-                           const std::string& message, T* payload) {
-        return Lxcode(LxcodeType::DB_ERROR, false, code, message, LxPayload(payload));
+    static Lxcode DB_ERROR(google::protobuf::Arena *arena, uint8_t code,
+                           const std::string &message, T *payload) {
+        return Lxcode(LxcodeType::DB_ERROR, false, code, message,
+                      LxPayload(payload));
     }
 
-    static Lxcode DB_ERROR(uint8_t code, const std::string& message) {
+    static Lxcode DB_ERROR(uint8_t code, const std::string &message) {
         return Lxcode(LxcodeType::DB_ERROR, false, code, message);
     }
 
     template <typename T>
-    static Lxcode UNKNOWN_ERROR(google::protobuf::Arena* arena, const std::string& message,
-                                T* payload) {
-        return Lxcode(LxcodeType::UNKNOWN_ERROR, false, 0xFF, message, LxPayload(payload));
+    static Lxcode UNKNOWN_ERROR(google::protobuf::Arena *arena,
+                                const std::string &message, T *payload) {
+        return Lxcode(LxcodeType::UNKNOWN_ERROR, false, 0xFF, message,
+                      LxPayload(payload));
     }
 
-    static Lxcode UNKNOWN_ERROR(const std::string& message) {
+    static Lxcode UNKNOWN_ERROR(const std::string &message) {
         return Lxcode(LxcodeType::UNKNOWN_ERROR, false, 0xFF, message);
     }
 
-    bool operator==(const Lxcode& other) const {
+    bool operator==(const Lxcode &other) const {
         return type == other.type && is_successful == other.is_successful &&
                error_code == other.error_code;
     }
