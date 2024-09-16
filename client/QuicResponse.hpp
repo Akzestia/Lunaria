@@ -1,17 +1,17 @@
 #ifndef QUICRESPONSE_H
 #define QUICRESPONSE_H
 
+#include "../Helpers/ArenaMemoryResource/ArenaMemoryResource.hpp"
 #include "../proto/build/authResponse.pb.h"
 #include "../proto/build/contact.pb.h"
 #include "../proto/build/message.pb.h"
 #include <google/protobuf/arena.h>
 #include <optional>
-#include <set>
 #include <variant>
 
 using QuicResponsePayload =
-    std::variant<AuthResponse *, std::set<Message> *, std::set<Contact> *,
-                 std::set<User> *, Contact *>;
+    std::variant<AuthResponse *, ArenaSet<Message> *, ArenaSet<Contact> *,
+                 ArenaSet<User> *, ArenaVector<User> *, Contact *>;
 
 struct QuicResponse {
     bool success;
