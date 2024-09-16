@@ -4,27 +4,28 @@ import "authResponse.proto";
 import "contact.proto";
 import "message.proto";
 import "server.proto";
+import "user.proto";
 
 message FetchContacts {
-    string user_id = 1;
+    bytes user_id = 1;
 }
 
 message FetchDmMessages {
-    string user_id = 1;
+    bytes user_id = 1;
     string fetch_user_name = 2;
 }
 
 message FetchServers {
-    string user_id = 1;
+    bytes user_id = 1;
 }
 
 message FetchChannelMessages {
-    string server_id = 1;
+    bytes server_id = 1;
     string channel_name = 2;
 }
 
 message FetchServerMembers {
-    string server_id = 1;
+    bytes server_id = 1;
 }
 
 message SignInRequest {
@@ -40,7 +41,7 @@ message SignUpRequest {
 }
 
 message FetchResponseContacts {
-    repeated Contact response = 1;
+    repeated User response = 1;
 }
 
 message FetchResponseServers {
@@ -64,7 +65,7 @@ message Body {
         Contact ct_request = 9;
         Contact ct_response = 10;
         FetchResponseContacts f_contacts_response = 11;
-        FetchResponseContacts f_servers_response = 12;
-        FetchResponseContacts f_messages_response = 13;
+        FetchResponseServers f_servers_response = 12;
+        FetchResponseMessages f_messages_response = 13;
     }
 }
