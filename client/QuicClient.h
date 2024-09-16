@@ -18,11 +18,10 @@
 #include "../error-manager/ErrorManager.h"
 #include "../NetBird/VpnManager.h"
 #include "../tokio-cpp/ThreadPool.h"
-#include "clientPeerHandler/ClientPeerHandler.h"
 
 using Arena = google::protobuf::Arena;
 
-class QuicClient : protected ClientPeerHandler {
+class QuicClient {
   public:
     void Connect();
 
@@ -35,8 +34,7 @@ class QuicClient : protected ClientPeerHandler {
     Lxcode SignUp(const SignUpRequest &, Arena &);
     Lxcode SignIn(const SignInRequest &, Arena &);
     Lxcode AddContact(const Contact &, Arena &);
-
-    Lxcode getContacts(const char*, Arena &);
+    Lxcode GetContacts(const char*, Arena &);
 
     void openPeer(const char* PeerIp, uint16_t UdpPort);
     void sendToPeer();
@@ -50,9 +48,6 @@ class QuicClient : protected ClientPeerHandler {
   private:
 
     bool ping();
-
-    using ClientPeerHandler::HandlePeer;
-    using ClientPeerHandler::onPeerShutdown;
 
     const QUIC_API_TABLE *MsQuic = nullptr;
     static bool disconnected;

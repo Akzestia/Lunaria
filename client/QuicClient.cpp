@@ -1,4 +1,5 @@
 #include "QuicClient.h"
+#include "../Helpers/ArenaMemoryResource/ArenaMemoryResource.hpp"
 #include "../Helpers/fileChecks.hpp"
 #include "../route-manager/Routes.hpp"
 #include "./QuicResponse.hpp"
@@ -8,7 +9,6 @@
 #include <cstdio>
 #include <google/protobuf/arena.h>
 #include <iostream>
-#include <memory>
 #include <mutex>
 
 #ifndef UNREFERENCED_PARAMETER
@@ -117,6 +117,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
     case QUIC_STREAM_EVENT_SEND_COMPLETE:
         free(Event->SEND_COMPLETE.ClientContext);
         printf("[strm][%p] Data sent\n", Stream);
+        printf("[strm][%p] Data sent\n", Stream);
         break;
     case QUIC_STREAM_EVENT_RECEIVE: {
         printf("[strm][%p] Data received\n", Stream);
@@ -128,7 +129,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
 
         std::printf("\n\nReceived Cord from [%p]", Stream);
 
-        HandlePeer(Stream, (*data), dataSize);
+        ClientPeerHandler::HandlePeer(Stream, (*data), dataSize);
 
         MsQuic->StreamReceiveComplete(Stream, Event->RECEIVE.TotalBufferLength);
 
@@ -138,7 +139,7 @@ _IRQL_requires_max_(DISPATCH_LEVEL)
         break;
     case QUIC_STREAM_EVENT_PEER_SEND_SHUTDOWN:
         printf("[strm][%p] Peer shut down\n", Stream);
-        onPeerShutdown(Stream, this);
+        ClientPeerHandler::onPeerShutdown(Stream, this);
         break;
     case QUIC_STREAM_EVENT_SHUTDOWN_COMPLETE: {
         printf("[strm][%p] All done\n", Stream);
@@ -412,6 +413,9 @@ Error:
 #pragma region SignUp()
 
 Lxcode QuicClient::SignUp(const SignUpRequest &auth, Arena &arena) {
+
+    ArenaMemoryResource mem_resource(&arena);
+
     Request request;
     Body rpc_body;
     *rpc_body.mutable_su_request() = auth;
@@ -432,7 +436,11 @@ Lxcode QuicClient::SignUp(const SignUpRequest &auth, Arena &arena) {
 
             if (ClientPeerHandler::signUpResponse.success) {
                 try {
-                    AuthResponse* ar = std::get<AuthResponse*>(ClientPeerHandler::signUpResponse.payload);
+                    AuthResponse *ar =
+                        google::protobuf::Arena::Create<AuthResponse>(
+                            &arena, *ClientPeerHandler::signUpResponse
+                                         .extract_payload<AuthResponse>()
+                                         .value());
                     auto response = Lxcode::OK(ar);
                     return response;
                 } catch (const std::exception &e) {
@@ -484,7 +492,11 @@ Lxcode QuicClient::SignIn(const SignInRequest &auth, Arena &arena) {
                 std::cout << "Login success\n";
 
                 try {
-                    AuthResponse* ar = google::protobuf::Arena::Create<AuthResponse>(&arena, *ClientPeerHandler::loginResponse.extract_payload<AuthResponse>().value());
+                    AuthResponse *ar =
+                        google::protobuf::Arena::Create<AuthResponse>(
+                            &arena, *ClientPeerHandler::loginResponse
+                                         .extract_payload<AuthResponse>()
+                                         .value());
                     auto response = Lxcode::OK(ar);
                     return response;
                 } catch (const std::exception &e) {
@@ -550,10 +562,13 @@ Error:
 #pragma region AddContact
 Lxcode QuicClient::AddContact(const Contact &contact, Arena &arena) {
 
+    std::printf("A USER %s", contact.a_user_name().c_str());
+    std::printf("B USER %s", contact.b_user_name().c_str());
     Request request;
     Body rpc_body;
     *rpc_body.mutable_ct_request() = contact;
     request.set_route(CREATE_CONTACT);
+    *request.mutable_body() = rpc_body;
     if (ClientRequest(request)) {
         ClientPeerHandler::SetContactPostArena(&arena);
         std::cout << "Request started\n";
@@ -562,15 +577,19 @@ Lxcode QuicClient::AddContact(const Contact &contact, Arena &arena) {
         ClientPeerHandler::waitingForContact_POST = true;
 
         if (ClientPeerHandler::GetContactCv().wait_for(
-                lock, std::chrono::seconds(5),
-                [this] { return !ClientPeerHandler::waitingForContact_POST; })) {
+                lock, std::chrono::seconds(5), [this] {
+                    return !ClientPeerHandler::waitingForContact_POST;
+                })) {
             std::cout << "Response received\n";
 
             if (ClientPeerHandler::contactResponse_POST.success) {
                 std::cout << "Contact post success\n";
 
                 try {
-                    Contact* qr = google::protobuf::Arena::Create<Contact>(&arena,*ClientPeerHandler::contactResponse_POST.extract_payload<Contact>().value());
+                    Contact *qr = google::protobuf::Arena::Create<Contact>(
+                        &arena, *ClientPeerHandler::contactResponse_POST
+                                     .extract_payload<Contact>()
+                                     .value());
                     auto response = Lxcode::OK(qr);
                     return response;
                 } catch (const std::exception &e) {
@@ -581,7 +600,8 @@ Lxcode QuicClient::AddContact(const Contact &contact, Arena &arena) {
 
             } else {
                 std::cout << "Contact post failed\n";
-                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Contact post failed");
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                        "Contact post failed");
             }
         } else {
             std::cout << "Timeout waiting for response\n";
@@ -594,9 +614,8 @@ Lxcode QuicClient::AddContact(const Contact &contact, Arena &arena) {
 }
 #pragma endregion
 
-
 #pragma region AddContact
-Lxcode QuicClient::getContacts(const char* user_id, Arena &arena) {
+Lxcode QuicClient::GetContacts(const char *user_id, Arena &arena) {
 
     Request rpc_request;
     Body rpc_body;
@@ -620,10 +639,14 @@ Lxcode QuicClient::getContacts(const char* user_id, Arena &arena) {
             std::cout << "Response received\n";
 
             if (ClientPeerHandler::contactResponse_GET.success) {
-                std::cout << "Contact post success\n";
+                std::cout << "Contact get success\n";
 
                 try {
-                    std::set<User>* qr = google::protobuf::Arena::Create<std::set<User>>(&arena, *ClientPeerHandler::contactResponse_GET.extract_payload<std::set<User>*>().value());
+                    ArenaVector<User> *qr =
+                        google::protobuf::Arena::Create<ArenaVector<User>>(
+                            &arena, *ClientPeerHandler::contactResponse_GET
+                                         .extract_payload<ArenaVector<User>>()
+                                         .value());
                     auto response = Lxcode::OK(qr);
                     return response;
                 } catch (const std::exception &e) {
@@ -633,8 +656,9 @@ Lxcode QuicClient::getContacts(const char* user_id, Arena &arena) {
                 }
 
             } else {
-                std::cout << "Contact post failed\n";
-                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED, "Contact post failed");
+                std::cout << "Contact get failed\n";
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                        "Contact post failed");
             }
         } else {
             std::cout << "Timeout waiting for response\n";
