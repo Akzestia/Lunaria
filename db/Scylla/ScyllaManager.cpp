@@ -1,6 +1,7 @@
 #include "ScyllaManager.h"
 #include "../../Helpers/Encryption/EncryptionManager.h"
 #include <cassandra.h>
+#include <cstddef>
 #include <cstdint>
 #include <cstdio>
 #include <ctime>
@@ -8,6 +9,7 @@
 #include <google/protobuf/arena.h>
 #include <iomanip>
 #include <iostream>
+#include <vector>
 
 std::string ScyllaManager::_host = "";
 std::string ScyllaManager::_keyspace = "";
@@ -70,7 +72,7 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si, Arena &arena) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    User* u = nullptr;
+    User *u = nullptr;
 
     try {
         cass_cluster_set_contact_points(cluster, _host.c_str());
@@ -190,6 +192,13 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si, Arena &arena) {
         }
 
         row = cass_iterator_get_row(iterator);
+
+        CassUuid user_id_uuid;
+        cass_value_get_uuid(cass_row_get_column(row, 0), &user_id_uuid);
+
+        char user_id_str[CASS_UUID_STRING_LENGTH];
+        cass_uuid_string(user_id_uuid, user_id_str);
+
         u = google::protobuf::Arena::Create<User>(&arena);
         const char *display_name;
         size_t display_name_length;
@@ -206,7 +215,9 @@ Lxcode ScyllaManager::getUser(const SignInRequest &si, Arena &arena) {
         cass_value_get_string(cass_row_get_column(row, 0), &user_id,
                               &user_id_length);
 
-        u->set_user_id(std::string(user_id, user_id_length));
+        std::cout << "Izu (UUID): " << user_id_str << "\n";
+
+        u->set_user_id(std::string(user_id_str));
         u->set_user_name(user_name);
         u->set_user_email(std::string(user_email, user_email_length));
         u->set_display_name(std::string(display_name, display_name_length));
@@ -253,7 +264,12 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su, Arena &arena) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    User* u = nullptr;
+    User *u = nullptr;
+
+    CassUuidGen *uuid_gen = cass_uuid_gen_new();
+    CassUuid uuid;
+    cass_uuid_gen_random(uuid_gen, &uuid);
+    cass_uuid_gen_free(uuid_gen);
 
     try {
         // Set the contact points and authentication for the Scylla cluster
@@ -324,8 +340,6 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su, Arena &arena) {
             1);
         cass_statement_bind_string(statement, 0, su.user_email().c_str());
 
-        std::cout << "Executing query BEFORE EMAIIL" << std::endl;
-
         result_future = cass_session_execute(session, statement);
         if (cass_future_error_code(result_future) != CASS_OK) {
             const char *error_message;
@@ -368,15 +382,24 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su, Arena &arena) {
         auto timestamp = std::chrono::system_clock::to_time_t(now);
         int64_t millis_since_epoch = static_cast<int64_t>(timestamp) * 1000;
 
+        char uuid_str[37]; // UUID string representation is 36 bytes plus null
+                           // terminator
+        cass_uuid_string(uuid, uuid_str);
+
+        std::cout << "UUID() = " << uuid_str << "\n";
+
         statement = cass_statement_new(
             "INSERT INTO lunnaria_service.Users (id, display_name, user_name, "
             "user_email, user_avatar, online_status, joined_at, last_activity) "
-            "VALUES (uuid(), 'User', ?, ?, NULL, 0, ?, ?)",
-            4);
-        cass_statement_bind_string(statement, 0, su.user_name().c_str());
-        cass_statement_bind_string(statement, 1, su.user_email().c_str());
-        cass_statement_bind_int64(statement, 2, millis_since_epoch);
+            "VALUES (?, 'User', ?, ?, NULL, 0, ?, ?)",
+            5);
+        cass_statement_bind_uuid(statement, 0, uuid);
+        cass_statement_bind_string(statement, 1, su.user_name().c_str());
+        cass_statement_bind_string(statement, 2, su.user_email().c_str());
         cass_statement_bind_int64(statement, 3, millis_since_epoch);
+        cass_statement_bind_int64(statement, 4, millis_since_epoch);
+
+        std::cout << "After UUID\n";
 
         result_future = cass_session_execute(session, statement);
         if (cass_future_error_code(result_future) != CASS_OK) {
@@ -405,8 +428,8 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su, Arena &arena) {
         EncryptionManager::ToSHA256(su.user_password(), output);
         statement =
             cass_statement_new("INSERT INTO lunnaria_service.UserCredentials "
-                               "(user_name, user_password, user_email) "
-                               "VALUES (?, ?, ?)",
+                               "(id, user_name, user_password, user_email) "
+                               "VALUES (uuid(), ?, ?, ?)",
                                3);
         cass_statement_bind_string(statement, 0, su.user_name().c_str());
         cass_statement_bind_string(statement, 1, output.c_str());
@@ -440,6 +463,35 @@ Lxcode ScyllaManager::createUser(const SignUpRequest &su, Arena &arena) {
                                "VALUES (?) ",
                                1);
         cass_statement_bind_string(statement, 0, su.user_email().c_str());
+
+        result_future = cass_session_execute(session, statement);
+        if (cass_future_error_code(result_future) != CASS_OK) {
+            const char *error_message;
+            size_t error_message_length;
+            cass_future_error_message(result_future, &error_message,
+                                      &error_message_length);
+            std::cerr << "Error executing query: "
+                      << std::string(error_message, error_message_length)
+                      << std::endl;
+            cass_future_free(result_future);
+            cass_statement_free(statement);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED,
+                                    "Failed to execute query");
+        }
+
+        cass_future_free(result_future);
+        cass_statement_free(statement);
+
+        std::cout << "Before ByID\n";
+
+        statement = cass_statement_new("INSERT INTO lunnaria_service.UsersByID "
+                                       "(id, user_name) "
+                                       "VALUES (?, ?)",
+                                       2);
+        cass_statement_bind_uuid(statement, 0, uuid);
+        cass_statement_bind_string(statement, 1, su.user_name().c_str());
 
         result_future = cass_session_execute(session, statement);
         if (cass_future_error_code(result_future) != CASS_OK) {
@@ -517,7 +569,7 @@ Lxcode ScyllaManager::createContact(const Contact &contact, Arena &arena) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    Contact* c = nullptr;
+    Contact *c = nullptr;
 
     char a_user_id[CASS_UUID_STRING_LENGTH];
     char b_user_id[CASS_UUID_STRING_LENGTH];
@@ -764,7 +816,7 @@ Lxcode ScyllaManager::createServer(const Server &server) {
     const CassResult *result = nullptr;
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
-    Server* s;
+    Server *s;
 
     try {
         // Set the contact points and authentication for the Scylla cluster
@@ -840,7 +892,15 @@ Lxcode ScyllaManager::createServer(const Server &server) {
     }
 }
 
-Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
+Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arena) {
+
+    CassUuid usser_id_uuid;
+    CassError rc = cass_uuid_from_string(usser_id, &usser_id_uuid);
+    if (rc != CASS_OK) {
+        return Lxcode::DB_ERROR(DB_ERROR_INVALID_INPUT,
+                                "Failed to convert user_id to UUID");
+    }
+
     CassSession *session = cass_session_new();
     CassCluster *cluster = cass_cluster_new();
     CassFuture *connect_future = nullptr;
@@ -850,7 +910,14 @@ Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
     CassIterator *iterator = nullptr;
     const CassRow *row = nullptr;
 
-    std::set<User>* contacts = nullptr;
+    ArenaVector<User> *users = nullptr;
+
+    std::cout << "Fetching contact data with id [" << usser_id << "]\n";
+
+    CassUuid id;
+    char id_str[CASS_UUID_STRING_LENGTH];
+    std::map<std::string, char> contacts;
+    std::vector<std::string> v_user_names;
 
     try {
 
@@ -872,7 +939,7 @@ Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
         cass_future_free(connect_future);
 
         statement = cass_statement_new(
-            "SELECT a_user_id FROM lunnaria_service.Contacts "
+            "SELECT a_user_id, b_user_id FROM lunnaria_service.Contacts "
             "WHERE a_user_id = ?",
             1);
         cass_statement_bind_string(statement, 0, usser_id);
@@ -894,12 +961,49 @@ Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
                                     "Failed to execute query");
         }
 
+        // Debug: Confirm query executed successfully
+        std::cout << "Query executed successfully for a_user_id: " << usser_id
+                  << std::endl;
+
+        result = cass_future_get_result(result_future);
+        iterator = cass_iterator_from_result(result);
+
+        while (cass_iterator_next(iterator)) {
+            row = cass_iterator_get_row(iterator);
+            const CassValue *a_id =
+                cass_row_get_column_by_name(row, "a_user_id");
+            const CassValue *b_id =
+                cass_row_get_column_by_name(row, "b_user_id");
+
+            const char *a_id_str;
+            size_t a_id_length;
+            if (cass_value_get_string(a_id, &a_id_str, &a_id_length) ==
+                CASS_OK) {
+                std::string a_id_value(a_id_str, a_id_length);
+                std::cout << "a_user_id: " << a_id_value << std::endl;
+                if (usser_id != a_id_value)
+                    contacts[a_id_value] = 'a';
+            }
+
+            const char *b_id_str;
+            size_t b_id_length;
+            if (cass_value_get_string(b_id, &b_id_str, &b_id_length) ==
+                CASS_OK) {
+                std::string b_id_value(b_id_str, b_id_length);
+                std::cout << "b_user_id: " << b_id_value << std::endl;
+                if (usser_id != b_id_value)
+                    contacts[b_id_value] = 'b';
+            }
+        }
+
+        cass_result_free(result);
+        cass_iterator_free(iterator);
         cass_future_free(result_future);
         cass_statement_free(statement);
 
         statement = cass_statement_new(
             "SELECT a_user_id, b_user_id FROM lunnaria_service.Contacts "
-            "WHERE ? IN (a_user_id, b_user_id)",
+            "WHERE b_user_id = ?",
             1);
         cass_statement_bind_string(statement, 0, usser_id);
 
@@ -920,7 +1024,220 @@ Lxcode ScyllaManager::getContacts(const char *&usser_id, Arena &arenas) {
                                     "Failed to execute query");
         }
 
-        return Lxcode::OK();
+        // Debug: Confirm query executed successfully
+        std::cout << "Query executed successfully for b_user_id: " << usser_id
+                  << std::endl;
+
+        result = cass_future_get_result(result_future);
+        iterator = cass_iterator_from_result(result);
+
+        while (cass_iterator_next(iterator)) {
+            row = cass_iterator_get_row(iterator);
+            const CassValue *a_id =
+                cass_row_get_column_by_name(row, "a_user_id");
+            const CassValue *b_id =
+                cass_row_get_column_by_name(row, "b_user_id");
+
+            const char *a_id_str;
+            size_t a_id_length;
+            if (cass_value_get_string(a_id, &a_id_str, &a_id_length) ==
+                CASS_OK) {
+                std::string a_id_value(a_id_str, a_id_length);
+                std::cout << "a_user_id: " << a_id_value << std::endl;
+                if (usser_id != a_id_value)
+                    contacts[a_id_value] = 'a';
+            }
+
+            const char *b_id_str;
+            size_t b_id_length;
+            if (cass_value_get_string(b_id, &b_id_str, &b_id_length) ==
+                CASS_OK) {
+                std::string b_id_value(b_id_str, b_id_length);
+                std::cout << "b_user_id: " << b_id_value << std::endl;
+                if (usser_id != b_id_value)
+                    contacts[b_id_value] = 'b';
+            }
+        }
+        cass_result_free(result);
+        cass_iterator_free(iterator);
+        cass_future_free(result_future);
+        cass_statement_free(statement);
+
+        std::ostringstream oss;
+        for (const auto &pair : contacts) {
+            if (oss.tellp() != 0)
+                oss << ",";
+            oss << pair.first;
+        }
+        std::string idList = oss.str();
+
+        std::cout << "List [" << idList << "]\n";
+
+        std::string query =
+            "SELECT user_name FROM lunnaria_service.UsersByID WHERE id IN (" +
+            idList + ")";
+
+        statement = cass_statement_new(query.c_str(), 0);
+
+        result_future = cass_session_execute(session, statement);
+        if (cass_future_error_code(result_future) != CASS_OK) {
+            const char *error_message;
+            size_t error_message_length;
+            cass_future_error_message(result_future, &error_message,
+                                      &error_message_length);
+            std::cerr << "Error executing query: "
+                      << std::string(error_message, error_message_length)
+                      << std::endl;
+            cass_future_free(result_future);
+            cass_statement_free(statement);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED,
+                                    "Failed to execute query");
+        }
+
+        result = cass_future_get_result(result_future);
+        iterator = cass_iterator_from_result(result);
+
+        while (cass_iterator_next(iterator)) {
+            row = cass_iterator_get_row(iterator);
+            const CassValue *name_value =
+                cass_row_get_column_by_name(row, "user_name");
+
+            std::string user_name;
+            const char *name;
+            size_t name_length;
+            if (cass_value_get_string(name_value, &name, &name_length) ==
+                CASS_OK) {
+                std::cout << "UX NAME -> " << name << '\n';
+                user_name.assign(name, name_length);
+                v_user_names.push_back(user_name);
+            }
+        }
+
+        cass_result_free(result);
+        cass_iterator_free(iterator);
+        cass_future_free(result_future);
+        cass_statement_free(statement);
+
+        std::ostringstream xx;
+        for (const auto &pair : v_user_names) {
+            if (xx.tellp() != 0)
+                xx << ",";
+            xx << '\'' << pair << '\'';
+        }
+        std::string nameList = xx.str();
+
+        std::cout << "NX List -> " << nameList << '\n';
+
+        query = "SELECT * FROM lunnaria_service.Users WHERE user_name IN (" +
+                nameList + ")";
+
+        statement = cass_statement_new(query.c_str(), 0);
+
+        result_future = cass_session_execute(session, statement);
+        if (cass_future_error_code(result_future) != CASS_OK) {
+            const char *error_message;
+            size_t error_message_length;
+            cass_future_error_message(result_future, &error_message,
+                                      &error_message_length);
+            std::cerr << "Error executing query: "
+                      << std::string(error_message, error_message_length)
+                      << std::endl;
+            cass_future_free(result_future);
+            cass_statement_free(statement);
+            cass_session_free(session);
+            cass_cluster_free(cluster);
+            return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED,
+                                    "Failed to execute query");
+        }
+
+        result = cass_future_get_result(result_future);
+        iterator = cass_iterator_from_result(result);
+
+        users = google::protobuf::Arena::Create<ArenaVector<User>>(&arena);
+
+        while (cass_iterator_next(iterator)) {
+            row = cass_iterator_get_row(iterator);
+
+            const CassValue *name_value =
+                cass_row_get_column_by_name(row, "user_name");
+            const CassValue *display_name_value =
+                cass_row_get_column_by_name(row, "display_name");
+            const CassValue *user_email_value =
+                cass_row_get_column_by_name(row, "user_email");
+            const CassValue *user_avatar_value =
+                cass_row_get_column_by_name(row, "user_avatar");
+            const CassValue *online_status_value =
+                cass_row_get_column_by_name(row, "online_status");
+            const CassValue *joined_at_value =
+                cass_row_get_column_by_name(row, "joined_at");
+            const CassValue *last_activity_value =
+                cass_row_get_column_by_name(row, "last_activity");
+
+            std::string user_name, display_name, user_email, user_avatar;
+            int32_t online_status;
+            int64_t last_activity;
+
+            auto get_string_value =
+                [](const CassValue *cass_value) -> std::string {
+                const char *str;
+                size_t str_length;
+                if (cass_value &&
+                    cass_value_get_string(cass_value, &str, &str_length) ==
+                        CASS_OK) {
+                    return std::string(str, str_length);
+                }
+                return "";
+            };
+
+            auto get_int64_value = [](const CassValue *cass_value) -> int64_t {
+                cass_int64_t value;
+                if (cass_value &&
+                    cass_value_get_int64(cass_value, &value) == CASS_OK) {
+                    return value;
+                }
+                return 0;
+            };
+
+            auto get_int32_value = [](const CassValue *cass_value) -> int32_t {
+                cass_int32_t value;
+                if (cass_value &&
+                    cass_value_get_int32(cass_value, &value) == CASS_OK) {
+                    return value;
+                }
+                return 0;
+            };
+
+            user_name = get_string_value(name_value);
+            display_name = get_string_value(display_name_value);
+            user_email = get_string_value(user_email_value);
+            user_avatar = get_string_value(user_avatar_value);
+            online_status = get_int32_value(online_status_value);
+            last_activity = get_int64_value(last_activity_value);
+
+            User *user = google::protobuf::Arena::Create<User>(&arena);
+            user->set_user_name(user_name);
+            user->set_display_name(display_name);
+            user->set_user_email(user_email);
+            user->set_user_avatar(user_avatar);
+            user->set_online_status(online_status);
+            user->set_last_activity(last_activity);
+
+            users->push_back(*user);
+        }
+
+        std::cout << "Final  count -> " << users->size() << "\n";
+
+        // Clean up resources
+        cass_future_free(result_future);
+        cass_statement_free(statement);
+        cass_result_free(result);
+        cass_iterator_free(iterator);
+        cass_session_free(session);
+        cass_cluster_free(cluster);
+
+        return Lxcode::OK(users);
     } catch (const std::exception e) {
         if (session)
             cass_session_free(session);
