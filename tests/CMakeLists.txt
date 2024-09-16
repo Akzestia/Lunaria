@@ -53,6 +53,7 @@ add_executable(server
     ${HELPERS_DIR}/ConnectionManager/ConnectionManager.cpp
     ${HELPERS_DIR}/AuthManager/AuthManager.cpp
     ${HELPERS_DIR}/Encryption/EncryptionManager.cpp
+    ${HELPERS_DIR}/ArenaMemoryResource/ArenaMemoryResource.hpp
     ${DB_DIR}/Scylla/ScyllaManager.cpp
     ${HELPERS_DIR}/PeerHandler/PeerHandler.cpp
 )
