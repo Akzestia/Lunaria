@@ -255,6 +255,94 @@ bool PeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
 
         return false;
     }
+    case SEND_MESSAGE_TO_USER:{
+        std::cout << "Sending message...\n";
+
+        Arena arena;
+        Response *rpc_response =
+            google::protobuf::Arena::Create<Response>(&arena);
+
+        if(!request->has_body() || !request->body().has_send_message_to_user()){
+            *rpc_response->mutable_error() = Error();
+
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, *rpc_response);
+            std::cout << "Sending message failed\n";
+            return false;
+        }
+
+        Lxcode response = RouteManager::sendMessageToUser(request->body().send_message_to_user(), arena);
+
+        if(response == Lxcode::OK()){
+            std::cout << "Sent message\n";
+
+            rpc_response->set_route(SEND_MESSAGE_TO_USER_RESPONSE);
+            Body *rpc_body = google::protobuf::Arena::Create<Body>(&arena);
+            Message *m_r = std::get<Message*>(response.payload);
+
+            *rpc_body->mutable_send_message_response() = *m_r;
+            *rpc_response->mutable_body() = *rpc_body;
+
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, *rpc_response);
+        }
+
+        *rpc_response->mutable_error() = Error();
+
+        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
+                                                              *rpc_response);
+        std::cout << "Sending message failed\n";
+
+        return false;
+    }
+    case FETCH_DM_MESSAGES:{
+        std::cout << "Fetching message...\n";
+
+        Arena arena;
+        Response *rpc_response =
+            google::protobuf::Arena::Create<Response>(&arena);
+
+        if(!request->has_body() || !request->body().has_f_dmmessages()){
+            *rpc_response->mutable_error() = Error();
+
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, *rpc_response);
+            std::cout << "Fetching message failed\n";
+            return false;
+        }
+
+        Lxcode response = RouteManager::getMessages(request->body().f_dmmessages(), arena);
+
+        if(response == Lxcode::OK()){
+            std::cout << "Fetched message\n";
+
+            rpc_response->set_route(FETCH_DM_MESSAGES_RESPONSE);
+            Body *rpc_body = google::protobuf::Arena::Create<Body>(&arena);
+
+            FetchResponseMessages* m_fr = google::protobuf::Arena::Create<FetchResponseMessages>(&arena);
+
+            auto* ptr = std::get<ArenaSet<Message>*>(response.payload);
+            google::protobuf::RepeatedPtrField<Message>* field = m_fr->mutable_response();
+            field->Assign(ptr->begin(), ptr->end());
+
+            std::cout << "BEFORE F BODY: " << m_fr->response().size() << "\n";
+            *rpc_body->mutable_f_messages_response() = *m_fr;
+            *rpc_response->mutable_body() = *rpc_body;
+            std::cout << "AFTER F BODY: " << rpc_response->body().f_messages_response().response().size() << "\n";
+
+            reinterpret_cast<QuicServer *>(context)->SendResponse(
+                Stream, *rpc_response);
+            return true;
+        }
+
+        *rpc_response->mutable_error() = Error();
+
+        reinterpret_cast<QuicServer *>(context)->SendResponse(Stream,
+                                                              *rpc_response);
+        std::cout << "Fetching message failed\n";
+
+        return false;
+    } break;
     default:
         std::cerr << "Error: Unknown route" << std::endl;
         return false;
