@@ -57,8 +57,20 @@ Lxcode RouteManager::handleSignIn(const SignInRequest &si, Arena &arena) {
     ;
 }
 
-Lxcode RouteManager::getMessages(const char *&user_id, Arena &) {
-    return Lxcode::UNKNOWN_ERROR("Not implemented");
+Lxcode RouteManager::getMessages(const FetchDmMessages &request, Arena &arena) {
+
+    std::cout << "Fetching for: " << request.user_id().c_str() << "\n";
+    std::cout << "Fetching With: " << request.fetch_user_name().c_str() << "\n";
+
+    Lxcode code = ScyllaManager::getMessages(request.user_id().c_str(), request.fetch_user_name().c_str(), arena);
+
+    if (code == Lxcode::OK()) {
+        printf("Successfully fetched messages");
+        return code;
+    }
+
+
+    return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED, "");
 }
 
 Lxcode RouteManager::createContact(const Payload &payload, Arena &arena) {
@@ -90,6 +102,17 @@ Lxcode RouteManager::getContacts(const char *&user_id, Arena &arena) {
 
     if (code == Lxcode::OK()) {
         printf("Successfully fetched contacts");
+        return code;
+    }
+
+    return Lxcode::DB_ERROR(DB_ERROR_QUERY_FAILED, "");
+}
+
+Lxcode RouteManager::sendMessageToUser(const Message &message, Arena &arena){
+    Lxcode code = ScyllaManager::sendMessageToUser(message, arena);
+
+    if (code == Lxcode::OK()) {
+        printf("Successfully sent message");
         return code;
     }
 

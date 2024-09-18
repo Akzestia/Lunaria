@@ -43,7 +43,7 @@ class RouteManager {
     static Lxcode handleSignUp(const SignUpRequest &, Arena &);
     static Lxcode handleSignIn(const SignInRequest &, Arena &);
 
-    static Lxcode getMessages(const char *&, Arena &);
+    static Lxcode getMessages(const FetchDmMessages &, Arena &);
     static Lxcode getContacts(const char *&, Arena &);
     static Lxcode getServers(const char *&, Arena &);
 
@@ -51,6 +51,8 @@ class RouteManager {
 
     static Lxcode updateUser(const Payload &, Arena &);
     static Lxcode updateServer(const Payload &, Arena &);
+
+    static Lxcode sendMessageToUser(const Message &, Arena &);
 
     // RouteManager() : DbManager() {};
 
