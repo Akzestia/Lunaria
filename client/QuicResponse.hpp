@@ -11,7 +11,7 @@
 
 using QuicResponsePayload =
     std::variant<AuthResponse *, ArenaSet<Message> *, ArenaSet<Contact> *,
-                 ArenaSet<User> *, ArenaVector<User> *, Contact *>;
+                 ArenaSet<User> *, ArenaVector<User> *, Contact *, Message *>;
 
 struct QuicResponse {
     bool success;
