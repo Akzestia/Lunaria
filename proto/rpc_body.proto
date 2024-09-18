@@ -12,7 +12,7 @@ message FetchContacts {
 
 message FetchDmMessages {
     bytes user_id = 1;
-    string fetch_user_name = 2;
+    bytes fetch_user_name = 2;
 }
 
 message FetchServers {
@@ -21,9 +21,9 @@ message FetchServers {
 
 message FetchChannelMessages {
     bytes server_id = 1;
-    string channel_name = 2;
+    bytes channel_name = 2;
 }
-
+S
 message FetchServerMembers {
     bytes server_id = 1;
 }
@@ -67,5 +67,7 @@ message Body {
         FetchResponseContacts f_contacts_response = 11;
         FetchResponseServers f_servers_response = 12;
         FetchResponseMessages f_messages_response = 13;
+        Message send_message_to_user = 14;
+        Message send_message_response = 15;
     }
 }

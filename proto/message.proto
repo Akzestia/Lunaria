@@ -1,9 +1,10 @@
 syntax = "proto3";
 
 message Message {
-    int32 sender_id = 1;
-    int32 receiver_id = 2;
-    string text_content = 3;
+    bytes sender_id = 1;
+    bytes receiver_id = 2;
+    bytes text_content = 3;
     repeated bytes byte_content = 4;
-    string created_at = 5;
+    int64 created_at = 5;
+    optional sint32 type = 6;
 }
