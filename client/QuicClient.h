@@ -27,6 +27,8 @@ class QuicClient {
 
     void Disconnect();
 
+    Lxcode SendMessageToUser(const Message &, Arena &);
+
     HQUIC getConnection();
 
     QuicClient& getRef();
@@ -35,6 +37,7 @@ class QuicClient {
     Lxcode SignIn(const SignInRequest &, Arena &);
     Lxcode AddContact(const Contact &, Arena &);
     Lxcode GetContacts(const char*, Arena &);
+    Lxcode GetMessagesWithUser(const char*, const char*, Arena &);
 
     void openPeer(const char* PeerIp, uint16_t UdpPort);
     void sendToPeer();

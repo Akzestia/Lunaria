@@ -423,7 +423,7 @@ Lxcode QuicClient::SignUp(const SignUpRequest &auth, Arena &arena) {
     *request.mutable_body() = rpc_body;
 
     if (ClientRequest(request)) {
-
+        ClientPeerHandler::SetSignUpArena(&arena);
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetSignUpMutex());
         std::cout << "Waiting for respons\n";
@@ -627,7 +627,7 @@ Lxcode QuicClient::GetContacts(const char *user_id, Arena &arena) {
     rpc_request.set_route(FETCH_CONTACTS_BY_ID);
 
     if (ClientRequest(rpc_request)) {
-
+        ClientPeerHandler::SetContactGetArena(&arena);
         std::cout << "Request started\n";
         std::unique_lock<std::mutex> lock(ClientPeerHandler::GetContactMutex());
         std::cout << "Waiting for respons\n";
@@ -670,3 +670,112 @@ Lxcode QuicClient::GetContacts(const char *user_id, Arena &arena) {
     return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to send");
 }
 #pragma endregion
+
+Lxcode QuicClient::SendMessageToUser(const Message &message, Arena &arena) {
+    Request rpc_request;
+    Body rpc_body;
+
+    *rpc_body.mutable_send_message_to_user() = message;
+    *rpc_request.mutable_body() = rpc_body;
+
+    rpc_request.set_route(SEND_MESSAGE_TO_USER);
+
+    if (ClientRequest(rpc_request)) {
+        ClientPeerHandler::SetMessagePostArena(&arena);
+        std::cout << "Request started\n";
+        std::unique_lock<std::mutex> lock(ClientPeerHandler::GetMessageMutex());
+        std::cout << "Waiting for respons\n";
+        ClientPeerHandler::waitingForMessage_POST = true;
+
+        if (ClientPeerHandler::GetMessageCv().wait_for(
+                lock, std::chrono::seconds(5), [this] {
+                    return !ClientPeerHandler::waitingForMessage_POST;
+                })) {
+            std::cout << "Response received\n";
+
+            if (ClientPeerHandler::messageResponse_POST.success) {
+                std::cout << "Message post success\n";
+                try {
+                    Message *qr =
+                        google::protobuf::Arena::Create<Message>(
+                            &arena, *ClientPeerHandler::messageResponse_POST
+                                         .extract_payload<Message>()
+                                         .value());
+                    auto response = Lxcode::OK(qr);
+                    return response;
+                } catch (const std::exception &e) {
+                    std::cerr << e.what() << '\n';
+                    return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                            "Message post failed");
+                }
+
+            } else {
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                        "Message post failed");
+            }
+        } else {
+            std::cout << "Timeout waiting for response\n";
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect");
+        }
+    }
+
+    return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to send");
+}
+
+
+Lxcode QuicClient::GetMessagesWithUser(const char* user_id, const char* receiver_id, Arena &arena){
+    Request rpc_request;
+    Body rpc_body;
+
+    FetchDmMessages f_dm;
+    *f_dm.mutable_user_id() = user_id;
+    *f_dm.mutable_fetch_user_name() = receiver_id;
+
+    *rpc_body.mutable_f_dmmessages() = f_dm;
+    *rpc_request.mutable_body()  = rpc_body;
+    rpc_request.set_route(FETCH_DM_MESSAGES);
+
+    if(ClientRequest(rpc_request)){
+        ClientPeerHandler::SetMessageGetArena(&arena);
+        std::cout << "Request started\n";
+        std::unique_lock<std::mutex> lock(ClientPeerHandler::GetMessageMutex());
+        std::cout << "Waiting for respons\n";
+        ClientPeerHandler::waitingForMessage_GET = true;
+
+        if (ClientPeerHandler::GetMessageCv().wait_for(
+                lock, std::chrono::seconds(5),
+                [this] { return !ClientPeerHandler::waitingForMessage_GET; })) {
+            std::cout << "Response received\n";
+
+            if (ClientPeerHandler::messageResponse_GET.success) {
+                std::cout << "Message get success\n";
+
+                try {
+                    ArenaSet<Message> *qr =
+                        google::protobuf::Arena::Create<ArenaSet<Message>>(
+                            &arena, *ClientPeerHandler::messageResponse_GET
+                                         .extract_payload<ArenaSet<Message>>()
+                                         .value());
+                    auto response = Lxcode::OK(qr);
+                    return response;
+                } catch (const std::exception &e) {
+                    std::cerr << e.what() << '\n';
+                    return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                            "Contact post failed");
+                }
+
+            } else {
+                std::cout << "Contact get failed\n";
+                return Lxcode::DB_ERROR(DB_ERROR_LOGIN_FAILED,
+                                        "Contact post failed");
+            }
+        } else {
+            std::cout << "Timeout waiting for response\n";
+            return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED,
+                                    "Failed to connect");
+        }
+    }
+
+    return Lxcode::DB_ERROR(DB_ERROR_CONNECTION_FAILED, "Failed to send");
+}
