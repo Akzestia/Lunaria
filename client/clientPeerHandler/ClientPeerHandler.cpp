@@ -9,6 +9,14 @@
 #include <iostream>
 #include <memory>
 
+bool operator<(const Message& lhs, const Message& rhs) {
+    return lhs.created_at() < rhs.created_at();
+}
+
+bool operator>(const Message& lhs, const Message& rhs) {
+    return lhs.created_at() > rhs.created_at();
+}
+
 std::unordered_map<HQUIC, uint8_t *> *ClientPeerHandler::peers =
     new std::unordered_map<HQUIC, uint8_t *>();
 std::unordered_map<HQUIC, size_t> *ClientPeerHandler::peerDataSizes =
@@ -22,6 +30,9 @@ std::condition_variable_any ClientPeerHandler::signup_Cv = {};
 
 std::mutex ClientPeerHandler::contactMutex = {};
 std::condition_variable_any ClientPeerHandler::contact_Cv = {};
+
+std::mutex ClientPeerHandler::messageMutex = {};
+std::condition_variable_any ClientPeerHandler::message_Cv = {};
 
 QuicResponse ClientPeerHandler::loginResponse = defaultQuicResponse;
 bool ClientPeerHandler::waitingForLogin = false;
@@ -49,10 +60,22 @@ bool ClientPeerHandler::waitingForServer_PUT = false;
 bool ClientPeerHandler::waitingForServer_DELETE = false;
 bool ClientPeerHandler::waitingForServer_GET = false;
 
+QuicResponse ClientPeerHandler::messageResponse_POST = defaultQuicResponse;
+QuicResponse ClientPeerHandler::messageResponse_PUT = defaultQuicResponse;
+QuicResponse ClientPeerHandler::messageResponse_DELETE = defaultQuicResponse;
+QuicResponse ClientPeerHandler::messageResponse_GET = defaultQuicResponse;
+
+bool ClientPeerHandler::waitingForMessage_POST = false;
+bool ClientPeerHandler::waitingForMessage_PUT = false;
+bool ClientPeerHandler::waitingForMessage_DELETE = false;
+bool ClientPeerHandler::waitingForMessage_GET = false;
+
 Arena *ClientPeerHandler::signInArenaRef = nullptr;
 Arena *ClientPeerHandler::signUpArenaRef = nullptr;
 Arena *ClientPeerHandler::contactPostArenaRef = nullptr;
 Arena *ClientPeerHandler::contactGetArenaRef = nullptr;
+Arena *ClientPeerHandler::messageGetArenaRef = nullptr;
+Arena *ClientPeerHandler::messagePostArenaRef = nullptr;
 
 ClientPeerHandler::~ClientPeerHandler() {
     std::cout << "\nPeers ~\n";
@@ -105,6 +128,12 @@ std::mutex &ClientPeerHandler::GetContactMutex() { return contactMutex; }
 
 std::condition_variable_any &ClientPeerHandler::GetContactCv() {
     return contact_Cv;
+}
+
+std::mutex &ClientPeerHandler::GetMessageMutex() { return messageMutex; }
+
+std::condition_variable_any &ClientPeerHandler::GetMessageCv() {
+    return message_Cv;
 }
 
 void ClientPeerHandler::ReleaseAuthMutex(std::mutex &lock,
@@ -163,6 +192,23 @@ void ClientPeerHandler::ReleaseAnyMutex(std::mutex &lock,
     case T_CONTACT_DELETE: {
 
     } break;
+    case T_MESSAGE_POST: {
+        if (success)
+            ClientPeerHandler::messageResponse_POST =
+                QuicResponse(quicResponse);
+        Cv.notify_one();
+        ClientPeerHandler::waitingForMessage_POST = false;
+    } break;
+    case T_MESSAGE_GET: {
+        if (success)
+            ClientPeerHandler::messageResponse_GET =
+                QuicResponse(quicResponse);
+        Cv.notify_one();
+        ClientPeerHandler::waitingForMessage_GET = false;
+    } break;
+    default: {
+
+    }
     }
     printf("\nNotifiedY\n");
 }
@@ -171,8 +217,9 @@ void ClientPeerHandler::ReleaseAll() {
     std::unique_lock<std::mutex> loginLock(loginMutex, std::defer_lock);
     std::unique_lock<std::mutex> signupLock(signupMutex, std::defer_lock);
     std::unique_lock<std::mutex> contactLock(contactMutex, std::defer_lock);
+    std::unique_lock<std::mutex> messageLock(messageMutex, std::defer_lock);
 
-    std::lock(loginLock, signupLock, contactLock);
+    std::lock(loginLock, signupLock, contactLock, messageLock);
 
     waitingForLogin = false;
     waitingForSignUp = false;
@@ -184,17 +231,21 @@ void ClientPeerHandler::ReleaseAll() {
     waitingForServer_PUT = false;
     waitingForServer_DELETE = false;
     waitingForServer_GET = false;
+    waitingForMessage_GET = false;
+    waitingForMessage_POST = false;
 
     login_Cv.notify_all();
     signup_Cv.notify_all();
     contact_Cv.notify_all();
+    message_Cv.notify_all();
 }
 
 bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
     uint8_t *data = (*peers)[Stream];
     size_t dataSize = (*peerDataSizes)[Stream];
 
-    std::unique_ptr<Response> response = std::make_unique<Response>();
+    Arena ax;
+    Response *response = google::protobuf::Arena::Create<Response>(&ax);
     if (!response->ParseFromArray(data, dataSize)) {
         std::cerr << "Error: Failed to parse the Cord into a response"
                   << std::endl;
@@ -278,6 +329,43 @@ bool ClientPeerHandler::onPeerShutdown(HQUIC Stream, void *context) {
         ReleaseAnyMutex(contactMutex, contact_Cv, T_CONTACT_GET, false);
         return false;
     }
+    case SEND_MESSAGE_TO_USER_RESPONSE: {
+        if (response->body().has_send_message_response()) {
+            std::cout << "SEND_MESSAGE_TO_USER_RESPONSE: " << '\n';
+            QuicResponse quicResponse;
+
+            quicResponse.payload = google::protobuf::Arena::Create<Message>(
+                messagePostArenaRef, response->body().send_message_response());
+            quicResponse.success = true;
+
+            ReleaseAnyMutex(messageMutex, message_Cv, T_MESSAGE_POST, true,
+                            quicResponse);
+            return true;
+        }
+        ReleaseAnyMutex(messageMutex, message_Cv, T_MESSAGE_POST, false);
+        return false;
+    }
+    case FETCH_DM_MESSAGES_RESPONSE: {
+        if (response->body().has_f_messages_response()) {
+            std::cout << "FETCH_DM_MESSAGES_RESPONSE: " << response->body().f_messages_response().response().size() << '\n';
+            QuicResponse quicResponse;
+
+            quicResponse.payload =
+                google::protobuf::Arena::Create<ArenaSet<Message>>(
+                    messageGetArenaRef,
+                    response->body().f_messages_response().response().begin(),
+                    response->body().f_messages_response().response().end());
+            quicResponse.success = true;
+
+            std::cout << "FETCH_DM_MESSAGES_RESPONSE F: " << std::get<ArenaSet<Message>*>(quicResponse.payload)->size() << '\n';
+            ReleaseAnyMutex(messageMutex, message_Cv, T_MESSAGE_GET, true,
+                            quicResponse);
+
+            return true;
+        }
+        ReleaseAnyMutex(messageMutex, message_Cv, T_MESSAGE_GET, false);
+        return false;
+    }
     default:
         std::cerr << "Error: Unknown route\n";
         return false;
@@ -299,4 +387,11 @@ void ClientPeerHandler::SetContactPostArena(Arena *arena) {
 
 void ClientPeerHandler::SetContactGetArena(Arena *arena) {
     contactGetArenaRef = arena;
+}
+
+void ClientPeerHandler::SetMessageGetArena(Arena *arena) {
+    messageGetArenaRef = arena;
+}
+void ClientPeerHandler::SetMessagePostArena(Arena *arena) {
+    messagePostArenaRef = arena;
 }

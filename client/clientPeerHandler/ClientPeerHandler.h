@@ -21,6 +21,10 @@ enum ReleaseMutexType : uint8_t {
     T_CONTACT_PUT = 3,
     T_CONTACT_GET = 4,
     T_CONTACT_DELETE = 5,
+    T_MESSAGE_POST = 6,
+    T_MESSAGE_PUT = 7,
+    T_MESSAGE_GET = 8,
+    T_MESSAGE_DELETE = 9,
 };
 
 class ClientPeerHandler {
@@ -28,16 +32,19 @@ class ClientPeerHandler {
     virtual ~ClientPeerHandler();
 
   protected:
-
-    static Arena* signInArenaRef;
-    static Arena* signUpArenaRef;
-    static Arena* contactPostArenaRef;
-    static Arena* contactGetArenaRef;
+    static Arena *signInArenaRef;
+    static Arena *signUpArenaRef;
+    static Arena *contactPostArenaRef;
+    static Arena *contactGetArenaRef;
+    static Arena *messageGetArenaRef;
+    static Arena *messagePostArenaRef;
 
     static void SetSignInArena(Arena *);
     static void SetSignUpArena(Arena *);
     static void SetContactPostArena(Arena *);
     static void SetContactGetArena(Arena *);
+    static void SetMessageGetArena(Arena *);
+    static void SetMessagePostArena(Arena *);
 
     static bool waitingForLogin;
     static QuicResponse loginResponse;
@@ -54,6 +61,11 @@ class ClientPeerHandler {
         waitingForServer_DELETE, waitingForServer_GET;
     static QuicResponse serverResponse_POST, serverResponse_PUT,
         serverResponse_DELETE, serverResponse_GET;
+
+    static bool waitingForMessage_POST, waitingForMessage_PUT,
+        waitingForMessage_DELETE, waitingForMessage_GET;
+    static QuicResponse messageResponse_POST, messageResponse_PUT,
+        messageResponse_DELETE, messageResponse_GET;
 
     static void HandlePeer(HQUIC Stream, const uint8_t &data, size_t dataSize);
     static std::unordered_map<HQUIC, uint8_t *> *GetPeers();
@@ -79,6 +91,9 @@ class ClientPeerHandler {
     static std::mutex &GetContactMutex();
     static std::condition_variable_any &GetContactCv();
 
+    static std::mutex &GetMessageMutex();
+    static std::condition_variable_any &GetMessageCv();
+
   private:
     static std::mutex loginMutex;
     static std::condition_variable_any login_Cv;
@@ -88,6 +103,9 @@ class ClientPeerHandler {
 
     static std::mutex contactMutex;
     static std::condition_variable_any contact_Cv;
+
+    static std::mutex messageMutex;
+    static std::condition_variable_any message_Cv;
 
     static std::unordered_map<HQUIC, uint8_t *> *peers;
     static std::unordered_map<HQUIC, size_t> *peerDataSizes;
