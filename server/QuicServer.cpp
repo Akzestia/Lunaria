@@ -259,6 +259,9 @@ Error:
 
 void QuicServer::SendResponse(const HQUIC &Stream, const Response &response) {
     QUIC_BUFFER *SendBuffer;
+    if(response.body().has_f_messages_response()){
+        std::cout << "WHY THE F*CK: " << response.body().f_messages_response().response().size();
+    }
 
     size_t size = response.ByteSizeLong();
     std::vector<uint8_t> *buffer = new std::vector<uint8_t>(size);
