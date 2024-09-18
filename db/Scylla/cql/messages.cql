@@ -8,8 +8,8 @@ USE lunnaria_service;
 
 CREATE TABLE IF NOT EXISTS Messages (
     id UUID,
-    sender_id UUID,
-    receiver_id UUID,
+    sender_id TEXT,
+    receiver_id TEXT,
     text_content TEXT,
     byte_content BLOB,
     created_at TIMESTAMP,
