@@ -27,7 +27,7 @@ class ScyllaManager {
     static Lxcode getUser(const SignInRequest &, Arena &);
     // Lxcode getMembers(const Server &);
     static Lxcode getContacts(const char* &, Arena &);
-    static Lxcode getMessages(const User &);
+    static Lxcode getMessages(const char* , const char* , Arena &);
     static Lxcode getServers(const User &);
 #pragma endregion
 
@@ -36,6 +36,7 @@ class ScyllaManager {
     static Lxcode createContact(const Contact &, Arena &);
     static Lxcode createMessage(const Message &);
     static Lxcode createServer(const Server &);
+    static Lxcode sendMessageToUser(const Message &, Arena &);
 #pragma endregion
 
 #pragma region PUT
