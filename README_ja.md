@@ -1,3 +1,7 @@
+> [!IMPORTANT]   
+> このプロジェクトの新しいバージョンが [Zurui](https://github.com/Akzestia/Zurui) リポジトリで利用可能になりました。
+> Zurui はプロジェクトを完全に書き直したもので、QUIC プロトコルのカスタム実装とさまざまな新機能が特徴です。
+
 # Lunaria
 <p align="center">
   <img src="./github-pages/images/tenor-nibutani.gif" alt="Lunaria ロゴ" width="200" height="200">
