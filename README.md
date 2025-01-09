@@ -1,3 +1,7 @@
+> [!IMPORTANT]  
+> The newer version of this project is now available in the [Zurui](https://github.com/Akzestia/Zurui) repository.
+> Zurui is a complete rewrite of the project, featuring a custom implementation of the QUIC protocol along with a range of new features.
+
 # Lunaria
 
 <p align="center">
